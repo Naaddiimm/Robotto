@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'movie_detail.dart';
+import 'Gstore.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      home: MovieDetail(),
+      home: CartPage(),
     );
   }
 }
