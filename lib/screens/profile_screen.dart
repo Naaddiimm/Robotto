@@ -9,6 +9,7 @@ import 'profile_personal_info_screen.dart';
 import 'profile_security_screen.dart';
 import 'profile_about_us_screen.dart';
 import 'profile_contact_us_screen.dart';
+import 'welcome_screen.dart'; // Import Welcome Screen for redirect
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -301,6 +302,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ProfileContactUsScreen()),
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: surfaceHigh,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: surface, width: 1),
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: errorColor),
+            SizedBox(width: 12),
+            Text(
+              "Delete Account",
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                color: mainText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: const Text(
+          "Are you sure you want to permanently delete your account? This action cannot be undone and all your data will be lost.",
+          style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
+            color: secondaryText,
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                color: secondaryText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: errorColor.withValues(alpha: 0.1),
+              foregroundColor: errorColor,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () async {
+              final navigatorContext = context;
+              Navigator.pop(context); // Close dialog
+
+              if (_currentUser?.id != null) {
+                // Delete user from Database
+                await _userRepository.deleteUser(_currentUser!.id!);
+                // Clear session
+                await _authService.logout();
+                
+                if (!navigatorContext.mounted) return;
+                
+                // Redirect to Welcome Screen
+                Navigator.pushAndRemoveUntil(
+                  navigatorContext,
+                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                  (route) => false,
+                );
+              }
+            },
+            child: const Text(
+              "Delete",
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -617,6 +703,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+
+                    // --- Delete Account Button ---
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: errorColor,
+                          side: BorderSide(color: errorColor.withValues(alpha: 0.5), width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        onPressed: _showDeleteAccountDialog,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete_outline, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Delete My Account',
+                              style: TextStyle(
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
