@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'profile_screen.dart'; // Import ProfileScreen
 import 'drawer_screen.dart'; // Import DrawerScreen
+import '../shop/shop_module.dart'; // Import ShopModule
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           IndexedStack(
             index: _selectedIndex,
             children: [
-              _buildPlaceholderScreen("Marketplace"),
+              const ShopModule(),
               _buildPlaceholderScreen("Forum"),
               _buildPlaceholderScreen("Courses"),
               _buildPlaceholderScreen("Events"),
