@@ -162,7 +162,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
         visibility: _selectedVisibility,
         imagePath: _selectedImage?.path,
         members: [
-          const ProjectMember(
+          ProjectMember(
             id: 'm1',
             name: 'Vous (Chef de Projet)',
             role: 'Lead Robotics Engineer',

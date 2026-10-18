@@ -30,7 +30,7 @@ class KanbanItem {
     this.assignee = 'Alex Rivera',
     this.meetingInfo = 'Google Meet • Lundi 15:00',
     this.usefulLinks = 'https://docs.ros.org',
-    this.attachedFileName = 'schema_circuit_v1.pdf',
+    this.attachedFileName = '',
   });
 }
 
@@ -49,12 +49,10 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String _taskViewMode = 'Kanban'; // Liste or Kanban
-  final TextEditingController _newTaskTitleController =
-      TextEditingController();
+  String _taskViewMode = 'Kanban'; // 'Liste' or 'Kanban'
+  final TextEditingController _newTaskTitleController = TextEditingController();
 
   final List<KanbanItem> _kanbanTasks = [
-    // À faire
     KanbanItem(
       id: 'k1',
       title: 'Assembler le châssis',
@@ -103,8 +101,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       status: 'todo',
       assignee: 'Ines H.',
     ),
-
-    // En cours
     KanbanItem(
       id: 'k6',
       title: 'Configurer ESP32',
@@ -135,8 +131,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       status: 'doing',
       assignee: 'Sami B.',
     ),
-
-    // Terminées
     KanbanItem(
       id: 'k9',
       title: 'Installation Arduino IDE',
@@ -184,9 +178,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     super.dispose();
   }
 
+  // ─── TASK DETAILS MODAL ──────────────────────────────────────────────────────
+
   void _showTaskDetailsModal(KanbanItem item) {
     AudioHelper.playClickSound();
-
     final titleCtrl = TextEditingController(text: item.title);
     final assigneeCtrl = TextEditingController(text: item.assignee);
     final dateCtrl = TextEditingController(text: item.date);
@@ -203,324 +198,267 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-              ),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Modal Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.task_alt_rounded,
-                                color: Color(0xFF00F5C4), size: 22),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Détails de la tâche',
-                              style: GoogleFonts.poppins(
+        return StatefulBuilder(builder: (context, setModalState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [
+                        const Icon(Icons.task_alt_rounded,
+                            color: Color(0xFF00F5C4), size: 22),
+                        const SizedBox(width: 8),
+                        Text('Détails de la tâche',
+                            style: GoogleFonts.poppins(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close_rounded,
-                              color: Color(0xFF94A3B8)),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
+                                color: Colors.white)),
+                      ]),
+                      IconButton(
+                        icon: const Icon(Icons.close_rounded,
+                            color: Color(0xFF94A3B8)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
 
-                    // Task Title
-                    TextField(
-                      controller: titleCtrl,
-                      style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                      decoration: InputDecoration(
-                        labelText: 'Titre de la tâche',
-                        labelStyle:
-                            GoogleFonts.poppins(color: const Color(0xFF00F5C4)),
-                        filled: true,
-                        fillColor: const Color(0xFF090D16),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF1E2942)),
-                        ),
+                  // Task Title
+                  TextField(
+                    controller: titleCtrl,
+                    style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      labelText: 'Titre de la tâche',
+                      labelStyle: GoogleFonts.poppins(
+                          color: const Color(0xFF00F5C4)),
+                      filled: true,
+                      fillColor: const Color(0xFF090D16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            const BorderSide(color: Color(0xFF1E2942)),
                       ),
                     ),
-                    const SizedBox(height: 14),
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 1. Assigner à
-                    _buildModalTextField(
-                      controller: assigneeCtrl,
-                      label: '👤 Assigner à',
-                      hint: 'ex: Alex Rivera',
-                      icon: Icons.person_outline_rounded,
-                    ),
-                    const SizedBox(height: 14),
+                  _buildModalTextField(
+                    controller: assigneeCtrl,
+                    label: '👤 Assigner à',
+                    hint: 'ex: Alex Rivera',
+                    icon: Icons.person_outline_rounded,
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 2. Priorité
-                    Text(
-                      '🚨 Priorité',
+                  Text('🚨 Priorité',
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF94A3B8),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        'Haute priorité',
-                        'Moyenne priorité',
-                        'Basse priorité'
-                      ].map((prio) {
-                        final isSel = selectedPriority == prio;
-                        Color pColor = Colors.pinkAccent;
-                        if (prio == 'Moyenne priorité') pColor = Colors.amber;
-                        if (prio == 'Basse priorité') pColor = Colors.tealAccent;
-
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: ChoiceChip(
-                              label: Text(
-                                prio.split(' ')[0],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: isSel
-                                      ? const Color(0xFF090D16)
-                                      : Colors.white70,
-                                ),
-                              ),
-                              selected: isSel,
-                              selectedColor: pColor,
-                              backgroundColor: const Color(0xFF090D16),
-                              onSelected: (val) {
-                                AudioHelper.playClickSound();
-                                setModalState(() {
-                                  selectedPriority = prio;
-                                });
-                              },
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF94A3B8))),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      'Haute priorité',
+                      'Moyenne priorité',
+                      'Basse priorité'
+                    ].map((prio) {
+                      final isSel = selectedPriority == prio;
+                      Color pColor = Colors.pinkAccent;
+                      if (prio == 'Moyenne priorité') pColor = Colors.amber;
+                      if (prio == 'Basse priorité') pColor = Colors.tealAccent;
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: ChoiceChip(
+                            label: Center(
+                              child: Text(prio.split(' ')[0],
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: isSel
+                                          ? const Color(0xFF090D16)
+                                          : Colors.white70)),
                             ),
+                            selected: isSel,
+                            selectedColor: pColor,
+                            backgroundColor: const Color(0xFF090D16),
+                            onSelected: (_) {
+                              AudioHelper.playClickSound();
+                              setModalState(() => selectedPriority = prio);
+                            },
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 14),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 3. Date limite
-                    _buildModalTextField(
-                      controller: dateCtrl,
-                      label: '📅 Date limite',
-                      hint: 'ex: 25 oct. 2025',
-                      icon: Icons.calendar_today_rounded,
-                    ),
-                    const SizedBox(height: 14),
+                  _buildModalTextField(
+                    controller: dateCtrl,
+                    label: '📅 Date limite',
+                    hint: 'ex: 25 oct. 2025',
+                    icon: Icons.calendar_today_rounded,
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 4. Date de réunion / meet
-                    _buildModalTextField(
-                      controller: meetingCtrl,
-                      label: '📹 Date de réunion / Meet',
-                      hint: 'ex: Google Meet • Lundi 15:00',
-                      icon: Icons.video_camera_front_rounded,
-                    ),
-                    const SizedBox(height: 14),
+                  _buildModalTextField(
+                    controller: meetingCtrl,
+                    label: '📹 Date de réunion / Meet',
+                    hint: 'ex: Google Meet • Lundi 15:00',
+                    icon: Icons.video_camera_front_rounded,
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 5. Liens utiles
-                    _buildModalTextField(
-                      controller: linksCtrl,
-                      label: '🔗 Liens utiles',
-                      hint: 'ex: https://github.com/robotto/repo',
-                      icon: Icons.link_rounded,
-                    ),
-                    const SizedBox(height: 14),
+                  _buildModalTextField(
+                    controller: linksCtrl,
+                    label: '🔗 Liens utiles',
+                    hint: 'ex: https://github.com/robotto/repo',
+                    icon: Icons.link_rounded,
+                  ),
+                  const SizedBox(height: 14),
 
-                    // 6. Fichier / Pièce jointe avec bouton Téléverser
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '📎 Fichier / Pièce jointe',
+                  // File attachment
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('📎 Fichier / Pièce jointe',
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF94A3B8),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                AudioHelper.playClickSound();
-                                try {
-                                  final result =
-                                      await FilePicker.platform.pickFiles();
-                                  if (result != null &&
-                                      result.files.isNotEmpty) {
-                                    AudioHelper.playSuccessSound();
-                                    fileCtrl.text = result.files.single.name;
-                                    setModalState(() {});
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Fichier "${result.files.single.name}" sélectionné !',
-                                          ),
-                                          backgroundColor:
-                                              const Color(0xFF00F5C4),
-                                        ),
-                                      );
-                                    }
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF94A3B8))),
+                          GestureDetector(
+                            onTap: () async {
+                              AudioHelper.playClickSound();
+                              try {
+                                final result =
+                                    await FilePicker.platform.pickFiles();
+                                if (result != null &&
+                                    result.files.isNotEmpty) {
+                                  AudioHelper.playSuccessSound();
+                                  fileCtrl.text = result.files.single.name;
+                                  setModalState(() {});
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Fichier "${result.files.single.name}" sélectionné !'),
+                                      backgroundColor:
+                                          const Color(0xFF00F5C4),
+                                    ));
                                   }
-                                } catch (_) {}
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF00F5C4),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.upload_file_rounded,
-                                      size: 14,
-                                      color: Color(0xFF090D16),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Téléverser',
-                                      style: GoogleFonts.poppins(
+                                }
+                              } catch (_) {}
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF00F5C4),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(children: [
+                                const Icon(Icons.upload_file_rounded,
+                                    size: 14, color: Color(0xFF090D16)),
+                                const SizedBox(width: 4),
+                                Text('Téléverser',
+                                    style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF090D16),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        TextField(
-                          controller: fileCtrl,
-                          style: GoogleFonts.poppins(
-                              color: Colors.white, fontSize: 13),
-                          decoration: InputDecoration(
-                            hintText: 'ex: chassis_3d_v2.stl',
-                            hintStyle: GoogleFonts.poppins(
-                                color: const Color(0xFF64748B), fontSize: 12),
-                            prefixIcon: const Icon(Icons.attach_file_rounded,
-                                color: Color(0xFF00F5C4), size: 18),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.folder_open_rounded,
-                                  color: Color(0xFF00F5C4)),
-                              onPressed: () async {
-                                AudioHelper.playClickSound();
-                                try {
-                                  final result =
-                                      await FilePicker.platform.pickFiles();
-                                  if (result != null &&
-                                      result.files.isNotEmpty) {
-                                    AudioHelper.playSuccessSound();
-                                    fileCtrl.text = result.files.single.name;
-                                    setModalState(() {});
-                                  }
-                                } catch (_) {}
-                              },
-                            ),
-                            filled: true,
-                            fillColor: const Color(0xFF090D16),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFF1E2942)),
+                                        color: const Color(0xFF090D16))),
+                              ]),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 22),
-
-                    // Save Button
-                    AnimatedButton(
-                      isPrimary: true,
-                      onPressed: () {
-                        AudioHelper.playSuccessSound();
-                        setState(() {
-                          item.title = titleCtrl.text.trim();
-                          item.assignee = assigneeCtrl.text.trim();
-                          item.priority = selectedPriority;
-                          if (selectedPriority == 'Haute priorité') {
-                            item.priorityColor = Colors.pinkAccent;
-                          } else if (selectedPriority == 'Moyenne priorité') {
-                            item.priorityColor = Colors.amber;
-                          } else {
-                            item.priorityColor = Colors.tealAccent;
-                          }
-                          item.date = dateCtrl.text.trim();
-                          item.meetingInfo = meetingCtrl.text.trim();
-                          item.usefulLinks = linksCtrl.text.trim();
-                          item.attachedFileName = fileCtrl.text.trim();
-                        });
-                        Navigator.pop(context);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Tâche mise à jour avec succès !'),
-                            backgroundColor: Color(0xFF00F5C4),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00F5C4),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Enregistrer les modifications',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF090D16),
-                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: fileCtrl,
+                        style: GoogleFonts.poppins(
+                            color: Colors.white, fontSize: 13),
+                        decoration: InputDecoration(
+                          hintText: 'ex: chassis_3d_v2.stl',
+                          hintStyle: GoogleFonts.poppins(
+                              color: const Color(0xFF64748B), fontSize: 12),
+                          prefixIcon: const Icon(Icons.attach_file_rounded,
+                              color: Color(0xFF00F5C4), size: 18),
+                          filled: true,
+                          fillColor: const Color(0xFF090D16),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                                color: Color(0xFF1E2942)),
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+
+                  AnimatedButton(
+                    isPrimary: true,
+                    onPressed: () {
+                      AudioHelper.playSuccessSound();
+                      setState(() {
+                        item.title = titleCtrl.text.trim();
+                        item.assignee = assigneeCtrl.text.trim();
+                        item.priority = selectedPriority;
+                        item.priorityColor =
+                            selectedPriority == 'Haute priorité'
+                                ? Colors.pinkAccent
+                                : selectedPriority == 'Moyenne priorité'
+                                    ? Colors.amber
+                                    : Colors.tealAccent;
+                        item.date = dateCtrl.text.trim();
+                        item.meetingInfo = meetingCtrl.text.trim();
+                        item.usefulLinks = linksCtrl.text.trim();
+                        item.attachedFileName = fileCtrl.text.trim();
+                      });
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Tâche mise à jour avec succès !'),
+                        backgroundColor: Color(0xFF00F5C4),
+                      ));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF00F5C4),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Center(
+                        child: Text('Enregistrer les modifications',
+                            style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF090D16))),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
-        );
+            ),
+          );
+        });
       },
     );
   }
@@ -534,23 +472,21 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF94A3B8),
-          ),
-        ),
+        Text(label,
+            style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF94A3B8))),
         const SizedBox(height: 5),
         TextField(
           controller: controller,
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle:
-                GoogleFonts.poppins(color: const Color(0xFF64748B), fontSize: 12),
-            prefixIcon: Icon(icon, color: const Color(0xFF00F5C4), size: 18),
+            hintStyle: GoogleFonts.poppins(
+                color: const Color(0xFF64748B), fontSize: 12),
+            prefixIcon:
+                Icon(icon, color: const Color(0xFF00F5C4), size: 18),
             filled: true,
             fillColor: const Color(0xFF090D16),
             contentPadding:
@@ -564,6 +500,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       ],
     );
   }
+
+  // ─── ADD TASK DIALOG ─────────────────────────────────────────────────────────
 
   void _showAddTaskDialog() {
     showModalBottomSheet(
@@ -585,29 +523,34 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Ajouter une tâche',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              Text('Ajouter une tâche',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
               const SizedBox(height: 16),
               TextField(
                 controller: _newTaskTitleController,
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                autofocus: true,
+                style:
+                    GoogleFonts.poppins(color: Colors.white, fontSize: 14),
                 decoration: InputDecoration(
                   hintText: 'Titre de la tâche...',
                   hintStyle:
                       GoogleFonts.poppins(color: const Color(0xFF64748B)),
-                  prefixIcon:
-                      const Icon(Icons.task_alt_rounded, color: Color(0xFF00F5C4)),
+                  prefixIcon: const Icon(Icons.task_alt_rounded,
+                      color: Color(0xFF00F5C4)),
                   filled: true,
                   fillColor: const Color(0xFF090D16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF1E2942)),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF1E2942)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                        color: Color(0xFF00F5C4), width: 1.5),
                   ),
                 ),
               ),
@@ -615,19 +558,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               AnimatedButton(
                 isPrimary: true,
                 onPressed: () {
-                  if (_newTaskTitleController.text.isNotEmpty) {
+                  final title = _newTaskTitleController.text.trim();
+                  if (title.isNotEmpty) {
                     AudioHelper.playSuccessSound();
                     setState(() {
-                      _kanbanTasks.add(
-                        KanbanItem(
-                          id: 'k_${DateTime.now().millisecondsSinceEpoch}',
-                          title: _newTaskTitleController.text.trim(),
-                          priority: 'Haute priorité',
-                          priorityColor: Colors.pinkAccent,
-                          date: 'Aujourd\'hui',
-                          status: 'todo',
-                        ),
-                      );
+                      _kanbanTasks.add(KanbanItem(
+                        id: 'k_${DateTime.now().millisecondsSinceEpoch}',
+                        title: title,
+                        priority: 'Haute priorité',
+                        priorityColor: Colors.pinkAccent,
+                        date: 'Aujourd\'hui',
+                        status: 'todo',
+                      ));
                     });
                     _newTaskTitleController.clear();
                     Navigator.pop(context);
@@ -641,14 +583,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
-                    child: Text(
-                      'Ajouter la Tâche',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF090D16),
-                      ),
-                    ),
+                    child: Text('Ajouter la Tâche',
+                        style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF090D16))),
                   ),
                 ),
               ),
@@ -659,40 +598,231 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     );
   }
 
+  // ─── MOVE TASK ────────────────────────────────────────────────────────────────
+
   void _moveTask(KanbanItem item, String newStatus) {
     if (item.status == newStatus) return;
-
     AudioHelper.playSuccessSound();
-    setState(() {
-      item.status = newStatus;
-    });
-
-    String statusLabel = 'À faire';
-    if (newStatus == 'doing') statusLabel = 'En cours';
-    if (newStatus == 'done') statusLabel = 'Terminées';
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.swap_horiz_rounded, color: Color(0xFF00F5C4)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Tâche "${item.title}" déplacée vers "$statusLabel"',
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.5),
-              ),
-            ),
-          ],
-        ),
+    setState(() => item.status = newStatus);
+    final label = newStatus == 'todo'
+        ? 'À faire'
+        : newStatus == 'doing'
+            ? 'En cours'
+            : 'Terminées';
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Row(children: [
+          const Icon(Icons.swap_horiz_rounded, color: Color(0xFF00F5C4)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text('Tâche "${item.title}" déplacée vers "$label"',
+                style: GoogleFonts.poppins(
+                    color: Colors.white, fontSize: 12.5)),
+          ),
+        ]),
         duration: const Duration(seconds: 2),
         backgroundColor: const Color(0xFF131B2C),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ));
+  }
+
+  // ─── DELETE TASK ──────────────────────────────────────────────────────────────
+
+  void _deleteTask(KanbanItem item) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF111827),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Color(0xFF1F2937)),
+        ),
+        title: Text('Supprimer la tâche ?',
+            style: GoogleFonts.poppins(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        content: Text('La tâche "${item.title}" sera définitivement supprimée.',
+            style: GoogleFonts.poppins(
+                color: const Color(0xFF94A3B8), fontSize: 13)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Annuler',
+                style: GoogleFonts.poppins(color: const Color(0xFF6B7280))),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              setState(() => _kanbanTasks.removeWhere((t) => t.id == item.id));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Tâche supprimée'),
+                backgroundColor: Colors.redAccent,
+                behavior: SnackBarBehavior.floating,
+              ));
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            child: Text('Supprimer',
+                style: GoogleFonts.poppins(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
       ),
     );
   }
+
+  // ─── INVITE MEMBER DIALOG ─────────────────────────────────────────────────────
+
+  void _showInviteMemberDialog() {
+    AudioHelper.playClickSound();
+    final nameCtrl = TextEditingController();
+    final roleCtrl = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF131B2C),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                const Icon(Icons.person_add_rounded,
+                    color: Color(0xFF00F5C4), size: 22),
+                const SizedBox(width: 8),
+                Text('Inviter un membre',
+                    style: GoogleFonts.poppins(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+              ]),
+              const SizedBox(height: 20),
+              _buildModalTextField(
+                controller: nameCtrl,
+                label: '👤 Nom du membre',
+                hint: 'ex: Youssef K.',
+                icon: Icons.person_outline_rounded,
+              ),
+              const SizedBox(height: 14),
+              _buildModalTextField(
+                controller: roleCtrl,
+                label: '🛠️ Rôle dans le projet',
+                hint: 'ex: Électronicien, Designer 3D...',
+                icon: Icons.work_outline_rounded,
+              ),
+              const SizedBox(height: 22),
+              AnimatedButton(
+                isPrimary: true,
+                onPressed: () {
+                  final name = nameCtrl.text.trim();
+                  final role = roleCtrl.text.trim();
+                  if (name.isNotEmpty && role.isNotEmpty) {
+                    AudioHelper.playSuccessSound();
+                    setState(() {
+                      widget.project.members.add(ProjectMember(
+                        id: 'mem_${DateTime.now().millisecondsSinceEpoch}',
+                        name: name,
+                        role: role,
+                      ));
+                    });
+                    Navigator.pop(ctx);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('$name a rejoint l\'équipe !',
+                          style: GoogleFonts.poppins(color: Colors.white)),
+                      backgroundColor: const Color(0xFF131B2C),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ));
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00F5C4),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Center(
+                    child: Text('Inviter',
+                        style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF090D16))),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // ─── CHANGE STATUS ────────────────────────────────────────────────────────────
+
+  void _showChangeStatusDialog() {
+    AudioHelper.playClickSound();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF131B2C),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Changer le statut du projet',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+              const SizedBox(height: 16),
+              ...['En cours', 'En pause', 'Terminé'].map((s) {
+                final isActive = widget.project.status == s;
+                return ListTile(
+                  leading: Icon(
+                    isActive
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    color: isActive
+                        ? const Color(0xFF00F5C4)
+                        : const Color(0xFF64748B),
+                  ),
+                  title: Text(s,
+                      style: GoogleFonts.poppins(
+                          color: isActive ? const Color(0xFF00F5C4) : Colors.white,
+                          fontWeight:
+                              isActive ? FontWeight.bold : FontWeight.normal)),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    setState(() => widget.project.status = s);
+                  },
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // ─── SCAFFOLD ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -702,7 +832,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         backgroundColor: const Color(0xFF090D16),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () {
             AudioHelper.playClickSound();
             Navigator.pop(context);
@@ -711,18 +842,29 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         title: Text(
           widget.project.title,
           style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         actions: [
-          IconButton(
+          PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-            onPressed: () {
-              AudioHelper.playClickSound();
+            color: const Color(0xFF131B2C),
+            onSelected: (value) {
+              if (value == 'status') _showChangeStatusDialog();
             },
+            itemBuilder: (ctx) => [
+              PopupMenuItem(
+                value: 'status',
+                child: Row(children: [
+                  const Icon(Icons.swap_horiz_rounded,
+                      size: 18, color: Color(0xFF00F5C4)),
+                  const SizedBox(width: 10),
+                  Text('Changer le statut',
+                      style:
+                          GoogleFonts.poppins(fontSize: 13, color: Colors.white)),
+                ]),
+              ),
+            ],
           ),
         ],
       ),
@@ -733,15 +875,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: BackgroundWavesPainter(),
-            ),
-          ),
+          Positioned.fill(child: CustomPaint(painter: BackgroundWavesPainter())),
           SafeArea(
             child: Column(
               children: [
-                // Top TabBar
                 TabBar(
                   controller: _tabController,
                   indicatorColor: const Color(0xFF00F5C4),
@@ -750,8 +887,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   unselectedLabelColor: const Color(0xFF94A3B8),
                   labelStyle: GoogleFonts.poppins(
                       fontSize: 12, fontWeight: FontWeight.bold),
-                  unselectedLabelStyle: GoogleFonts.poppins(
-                      fontSize: 12, fontWeight: FontWeight.normal),
+                  unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
                   tabs: const [
                     Tab(text: 'Vue d\'ensemble'),
                     Tab(text: 'Tâches'),
@@ -759,22 +897,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     Tab(text: 'Fichiers'),
                   ],
                 ),
-
-                // Main Content Body
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      // Tab 1: Vue d'ensemble
                       _buildOverviewTab(),
-
-                      // Tab 2: Tâches & Kanban Drag and Drop
-                      _buildTasksKanbanTab(),
-
-                      // Tab 3: Équipe
+                      _buildTasksTab(),
                       _buildTeamTab(),
-
-                      // Tab 4: Fichiers
                       _buildFilesTab(),
                     ],
                   ),
@@ -787,6 +916,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     );
   }
 
+  // ─── TAB 1: VUE D'ENSEMBLE ────────────────────────────────────────────────────
+
   Widget _buildOverviewTab() {
     final progress = widget.project.progressPercentage;
 
@@ -796,7 +927,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Hero Banner Image Box
+          // Hero Banner
           Stack(
             children: [
               ClipRRect(
@@ -808,44 +939,43 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   child: (widget.project.imagePath != null &&
                           widget.project.imagePath!.isNotEmpty)
                       ? (kIsWeb
-                          ? Image.network(
-                              widget.project.imagePath!,
+                          ? Image.network(widget.project.imagePath!,
                               width: double.infinity,
                               height: 180,
                               fit: BoxFit.cover,
-                              errorBuilder: (ctx, err, stack) =>
-                                  _buildHeroPlaceholder(),
-                            )
-                          : Image.file(
-                              File(widget.project.imagePath!),
+                              errorBuilder: (context, error, stack) =>
+                                  _buildHeroPlaceholder())
+                          : Image.file(File(widget.project.imagePath!),
                               width: double.infinity,
                               height: 180,
                               fit: BoxFit.cover,
-                              errorBuilder: (ctx, err, stack) =>
-                                  _buildHeroPlaceholder(),
-                            ))
+                              errorBuilder: (context, error, stack) =>
+                                  _buildHeroPlaceholder()))
                       : _buildHeroPlaceholder(),
                 ),
               ),
-
-              // Status Badge top right
               Positioned(
                 right: 12,
                 top: 12,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00F5C4),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    widget.project.status,
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF090D16),
+                child: GestureDetector(
+                  onTap: _showChangeStatusDialog,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: _statusColor(widget.project.status),
+                      borderRadius: BorderRadius.circular(20),
                     ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Text(widget.project.status,
+                          style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF090D16))),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.edit_rounded,
+                          size: 12, color: Color(0xFF090D16)),
+                    ]),
                   ),
                 ),
               ),
@@ -853,72 +983,100 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           ),
           const SizedBox(height: 16),
 
-          // Title
-          Text(
-            widget.project.title,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
+          // Title & Category
+          Text(widget.project.title,
+              style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
           const SizedBox(height: 4),
-
-          // Category Subtitle
-          Row(
-            children: [
-              const Icon(Icons.smart_toy_outlined,
-                  color: Color(0xFF00F5C4), size: 16),
-              const SizedBox(width: 6),
-              Text(
-                widget.project.category,
+          Row(children: [
+            const Icon(Icons.smart_toy_outlined,
+                color: Color(0xFF00F5C4), size: 16),
+            const SizedBox(width: 6),
+            Text(widget.project.category,
                 style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: const Color(0xFF94A3B8),
-                  fontWeight: FontWeight.w500,
-                ),
+                    fontSize: 13,
+                    color: const Color(0xFF94A3B8),
+                    fontWeight: FontWeight.w500)),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E2942),
+                borderRadius: BorderRadius.circular(8),
               ),
-            ],
-          ),
+              child: Text(widget.project.level,
+                  style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      color: const Color(0xFF00F5C4),
+                      fontWeight: FontWeight.w600)),
+            ),
+          ]),
           const SizedBox(height: 12),
 
-          // Description Paragraph
-          Text(
-            widget.project.description,
-            style: GoogleFonts.poppins(
-              fontSize: 12.5,
-              color: const Color(0xFFCBD5E1),
-              height: 1.45,
+          // Description
+          Text(widget.project.description,
+              style: GoogleFonts.poppins(
+                  fontSize: 12.5,
+                  color: const Color(0xFFCBD5E1),
+                  height: 1.45)),
+          const SizedBox(height: 8),
+
+          // Objectives
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0E1626),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                  color: const Color(0xFF00F5C4).withValues(alpha: 0.25)),
             ),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Icon(Icons.flag_outlined,
+                  color: Color(0xFF00F5C4), size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Objectifs',
+                          style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF00F5C4))),
+                      const SizedBox(height: 2),
+                      Text(widget.project.objectives,
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: const Color(0xFFCBD5E1),
+                              height: 1.4)),
+                    ]),
+              ),
+            ]),
           ),
           const SizedBox(height: 16),
 
-          // Progression Bar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Progression globale',
+          // Progress
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Progression globale',
                 style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: const Color(0xFF94A3B8),
-                ),
-              ),
-              Text(
-                '${(progress * 100).toInt()}%',
-                style: GoogleFonts.poppins(
+                    fontSize: 12, color: const Color(0xFF94A3B8))),
+            Text(
+              progress > 0
+                  ? '${(progress * 100).toInt()}%'
+                  : '${widget.project.completedTasksCount}/${widget.project.tasks.length} tâches',
+              style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
+                  color: Colors.white),
+            ),
+          ]),
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
-              value: progress > 0 ? progress : 0.65,
+              value: progress,
               minHeight: 8,
               backgroundColor: const Color(0xFF1E293B),
               valueColor:
@@ -927,7 +1085,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           ),
           const SizedBox(height: 20),
 
-          // Key Info Pillars Row
+          // Stats Row
           Container(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
             decoration: BoxDecoration(
@@ -939,73 +1097,95 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildInfoColumn(
-                  icon: Icons.groups_rounded,
-                  title: '${widget.project.members.length}',
-                  subtitle: 'membres',
-                ),
-                Container(width: 1, height: 30, color: const Color(0xFF1E2942)),
+                    icon: Icons.groups_rounded,
+                    title: '${widget.project.members.length}',
+                    subtitle: 'membres'),
+                Container(
+                    width: 1, height: 30, color: const Color(0xFF1E2942)),
                 _buildInfoColumn(
-                  icon: Icons.calendar_today_rounded,
-                  title: widget.project.dueDate,
-                  subtitle: 'Date limite',
-                ),
-                Container(width: 1, height: 30, color: const Color(0xFF1E2942)),
+                    icon: Icons.calendar_today_rounded,
+                    title: widget.project.dueDate,
+                    subtitle: 'Échéance'),
+                Container(
+                    width: 1, height: 30, color: const Color(0xFF1E2942)),
                 _buildInfoColumn(
-                  icon: Icons.public_rounded,
-                  title: widget.project.visibility,
-                  subtitle: 'Visibilité',
-                ),
+                    icon: Icons.public_rounded,
+                    title: widget.project.visibility,
+                    subtitle: 'Visibilité'),
               ],
             ),
           ),
-
           const SizedBox(height: 24),
 
-          // Prochaines étapes Section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Prochaines étapes',
+          // Milestones / Prochaines étapes
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Jalons & Étapes',
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                'Voir tout',
-                style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+            Text(
+              '${widget.project.reachedMilestonesCount}/${widget.project.milestones.isNotEmpty ? widget.project.milestones.length : 3} atteints',
+              style: GoogleFonts.poppins(
                   fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF00F5C4),
-                ),
-              ),
-            ],
-          ),
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF00F5C4)),
+            ),
+          ]),
           const SizedBox(height: 12),
 
-          _buildStepCard(
-            stepNumber: '1',
-            title: 'Conception mécanique',
-            subtitle: '15 oct. 2025 · 2 tâches',
-          ),
-          _buildStepCard(
-            stepNumber: '2',
-            title: 'Montage électronique',
-            subtitle: '25 oct. 2025 · 3 tâches',
-          ),
-          _buildStepCard(
-            stepNumber: '3',
-            title: 'Programmation & tests',
-            subtitle: '10 nov. 2025 · 4 tâches',
-          ),
+          // If milestones exist use them, otherwise show default steps
+          if (widget.project.milestones.isNotEmpty)
+            ...widget.project.milestones.asMap().entries.map((entry) {
+              final i = entry.key;
+              final ms = entry.value;
+              return _buildMilestoneCard(
+                stepNumber: '${i + 1}',
+                title: ms.title,
+                subtitle: ms.dueDate,
+                isReached: ms.isReached,
+                onTap: () {
+                  setState(() => ms.isReached = !ms.isReached);
+                },
+              );
+            })
+          else ...[
+            _buildMilestoneCard(
+                stepNumber: '1',
+                title: 'Conception mécanique',
+                subtitle: '15 oct. 2025 · 2 tâches'),
+            _buildMilestoneCard(
+                stepNumber: '2',
+                title: 'Montage électronique',
+                subtitle: '25 oct. 2025 · 3 tâches'),
+            _buildMilestoneCard(
+                stepNumber: '3',
+                title: 'Programmation & tests',
+                subtitle: '10 nov. 2025 · 4 tâches'),
+          ],
+
+          const SizedBox(height: 80),
         ],
       ),
     );
   }
 
-  Widget _buildTasksKanbanTab() {
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'En cours':
+        return const Color(0xFF00F5C4);
+      case 'En pause':
+        return const Color(0xFFF59E0B);
+      case 'Terminé':
+        return const Color(0xFF3B82F6);
+      default:
+        return const Color(0xFF00F5C4);
+    }
+  }
+
+  // ─── TAB 2: TÂCHES ────────────────────────────────────────────────────────────
+
+  Widget _buildTasksTab() {
     final todoTasks = _kanbanTasks.where((t) => t.status == 'todo').toList();
     final doingTasks = _kanbanTasks.where((t) => t.status == 'doing').toList();
     final doneTasks = _kanbanTasks.where((t) => t.status == 'done').toList();
@@ -1014,83 +1194,215 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       children: [
         const SizedBox(height: 12),
 
-        // Mode Switcher (Liste vs Kanban)
+        // Mode Switcher
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF131B2C),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFF1E2942)),
-                  ),
-                  child: Row(
-                    children: [
-                      _buildTaskModeButton('Liste'),
-                      _buildTaskModeButton('Kanban'),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: const Color(0xFF131B2C),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF1E2942)),
+            ),
+            child: Row(children: [
+              _buildTaskModeButton('Liste'),
+              _buildTaskModeButton('Kanban'),
+            ]),
           ),
         ),
 
         const SizedBox(height: 16),
 
-        // Interactive Drag and Drop Kanban Columns
         Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Column 1: À faire (todo)
-                _buildKanbanDragTargetColumn(
-                  columnStatus: 'todo',
-                  title: 'À faire',
-                  count: todoTasks.length,
-                  titleColor: Colors.white,
-                  items: todoTasks,
-                ),
-
-                const SizedBox(width: 12),
-
-                // Column 2: En cours (doing)
-                _buildKanbanDragTargetColumn(
-                  columnStatus: 'doing',
-                  title: 'En cours',
-                  count: doingTasks.length,
-                  titleColor: const Color(0xFF00F5C4),
-                  items: doingTasks,
-                ),
-
-                const SizedBox(width: 12),
-
-                // Column 3: Terminées (done)
-                _buildKanbanDragTargetColumn(
-                  columnStatus: 'done',
-                  title: 'Terminées',
-                  count: doneTasks.length,
-                  titleColor: const Color(0xFF00F5C4),
-                  items: doneTasks,
-                ),
-              ],
-            ),
-          ),
+          child: _taskViewMode == 'Kanban'
+              ? _buildKanbanView(todoTasks, doingTasks, doneTasks)
+              : _buildListView(),
         ),
       ],
     );
   }
 
+  // Kanban drag-and-drop view
+  Widget _buildKanbanView(
+    List<KanbanItem> todoTasks,
+    List<KanbanItem> doingTasks,
+    List<KanbanItem> doneTasks,
+  ) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildKanbanDragTargetColumn(
+            columnStatus: 'todo',
+            title: 'À faire',
+            count: todoTasks.length,
+            titleColor: Colors.white,
+            items: todoTasks,
+          ),
+          const SizedBox(width: 12),
+          _buildKanbanDragTargetColumn(
+            columnStatus: 'doing',
+            title: 'En cours',
+            count: doingTasks.length,
+            titleColor: const Color(0xFF00F5C4),
+            items: doingTasks,
+          ),
+          const SizedBox(width: 12),
+          _buildKanbanDragTargetColumn(
+            columnStatus: 'done',
+            title: 'Terminées',
+            count: doneTasks.length,
+            titleColor: const Color(0xFF00F5C4),
+            items: doneTasks,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // List view (flat, grouped by status)
+  Widget _buildListView() {
+    final groups = {
+      'À faire': _kanbanTasks.where((t) => t.status == 'todo').toList(),
+      'En cours': _kanbanTasks.where((t) => t.status == 'doing').toList(),
+      'Terminées': _kanbanTasks.where((t) => t.status == 'done').toList(),
+    };
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      physics: const BouncingScrollPhysics(),
+      children: groups.entries.map((entry) {
+        if (entry.value.isEmpty) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: entry.key == 'Terminées'
+                        ? const Color(0xFF00F5C4)
+                        : entry.key == 'En cours'
+                            ? Colors.amber
+                            : const Color(0xFF64748B),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(entry.key,
+                    style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 6, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E2942),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text('${entry.value.length}',
+                      style: GoogleFonts.poppins(
+                          fontSize: 10, color: Colors.white70)),
+                ),
+              ]),
+            ),
+            ...entry.value.map((item) => _buildListTaskTile(item)),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildListTaskTile(KanbanItem item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF131B2C),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF1E2942)),
+      ),
+      child: ListTile(
+        leading: GestureDetector(
+          onTap: () {
+            AudioHelper.playSuccessSound();
+            setState(() => item.status =
+                item.status == 'done' ? 'todo' : 'done');
+          },
+          child: Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: item.status == 'done'
+                  ? const Color(0xFF00F5C4)
+                  : Colors.transparent,
+              border: Border.all(
+                color: item.status == 'done'
+                    ? const Color(0xFF00F5C4)
+                    : const Color(0xFF64748B),
+                width: 2,
+              ),
+            ),
+            child: item.status == 'done'
+                ? const Icon(Icons.check_rounded,
+                    size: 14, color: Color(0xFF090D16))
+                : null,
+          ),
+        ),
+        title: Text(
+          item.title,
+          style: GoogleFonts.poppins(
+            fontSize: 13,
+            color: item.status == 'done'
+                ? const Color(0xFF64748B)
+                : Colors.white,
+            decoration: item.status == 'done'
+                ? TextDecoration.lineThrough
+                : null,
+          ),
+        ),
+        subtitle: Text(
+          '${item.assignee} · ${item.date}',
+          style:
+              GoogleFonts.poppins(fontSize: 11, color: const Color(0xFF64748B)),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: item.priorityColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                item.priority.split(' ')[0],
+                style: GoogleFonts.poppins(
+                    fontSize: 9, color: item.priorityColor),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert_rounded,
+                  size: 18, color: Color(0xFF64748B)),
+              onPressed: () => _showTaskDetailsModal(item),
+            ),
+          ],
+        ),
+        onTap: () => _showTaskDetailsModal(item),
+      ),
+    );
+  }
+
   Widget _buildTaskModeButton(String mode) {
     final isSelected = _taskViewMode == mode;
-
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -1104,15 +1416,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: Text(
-              mode,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color:
-                    isSelected ? const Color(0xFF090D16) : const Color(0xFF94A3B8),
-              ),
-            ),
+            child: Text(mode,
+                style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.w500,
+                    color: isSelected
+                        ? const Color(0xFF090D16)
+                        : const Color(0xFF94A3B8))),
           ),
         ),
       ),
@@ -1127,13 +1438,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     required List<KanbanItem> items,
   }) {
     return DragTarget<KanbanItem>(
-      onWillAcceptWithDetails: (details) => true,
-      onAcceptWithDetails: (details) {
-        _moveTask(details.data, columnStatus);
-      },
-      builder: (context, candidateData, rejectedData) {
+      onWillAcceptWithDetails: (_) => true,
+      onAcceptWithDetails: (details) => _moveTask(details.data, columnStatus),
+      builder: (context, candidateData, _) {
         final isHovered = candidateData.isNotEmpty;
-
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: 195,
@@ -1152,10 +1460,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           ),
           child: Column(
             children: [
-              // Header Badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: const Color(0xFF090D16),
                   borderRadius: BorderRadius.circular(20),
@@ -1163,14 +1470,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: titleColor,
-                      ),
-                    ),
+                    Text(title,
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: titleColor)),
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -1179,29 +1483,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                         color: const Color(0xFF1E2942),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text(
-                        '$count',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text('$count',
+                          style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
-
-              // Draggable Cards List
               Expanded(
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return _buildDraggableKanbanCard(item);
-                  },
+                  itemBuilder: (_, index) =>
+                      _buildDraggableKanbanCard(items[index]),
                 ),
               ),
             ],
@@ -1213,9 +1510,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
 
   Widget _buildDraggableKanbanCard(KanbanItem item) {
     final cardWidget = GestureDetector(
-      onTap: () {
-        _showTaskDetailsModal(item);
-      },
+      onTap: () => _showTaskDetailsModal(item),
       child: Container(
         width: 175,
         margin: const EdgeInsets.only(bottom: 10),
@@ -1244,14 +1539,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                         size: 15, color: Color(0xFF00F5C4)),
                   ),
                 Expanded(
-                  child: Text(
-                    item.title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: Text(item.title,
+                      style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white)),
                 ),
                 PopupMenuButton<String>(
                   icon: const Icon(Icons.more_vert_rounded,
@@ -1262,87 +1554,95 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   onSelected: (action) {
                     if (action == 'details') {
                       _showTaskDetailsModal(item);
+                    } else if (action == 'delete') {
+                      _deleteTask(item);
                     } else {
                       _moveTask(item, action);
                     }
                   },
-                  itemBuilder: (context) => [
+                  itemBuilder: (_) => [
                     PopupMenuItem(
                       value: 'details',
-                      child: Text('⚙️ Voir / Modifier détails',
+                      child: Text('⚙️ Voir / Modifier',
                           style: GoogleFonts.poppins(
-                              fontSize: 12, color: const Color(0xFF00F5C4))),
+                              fontSize: 12,
+                              color: const Color(0xFF00F5C4))),
                     ),
                     if (item.status != 'todo')
                       PopupMenuItem(
                         value: 'todo',
-                        child: Text('Déplacer vers À faire',
+                        child: Text('→ À faire',
                             style: GoogleFonts.poppins(
                                 fontSize: 12, color: Colors.white)),
                       ),
                     if (item.status != 'doing')
                       PopupMenuItem(
                         value: 'doing',
-                        child: Text('Déplacer vers En cours',
+                        child: Text('→ En cours',
                             style: GoogleFonts.poppins(
                                 fontSize: 12, color: Colors.white)),
                       ),
                     if (item.status != 'done')
                       PopupMenuItem(
                         value: 'done',
-                        child: Text('Déplacer vers Terminées',
+                        child: Text('→ Terminées',
                             style: GoogleFonts.poppins(
                                 fontSize: 12, color: Colors.white)),
                       ),
+                    const PopupMenuDivider(),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Text('🗑️ Supprimer',
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: Colors.redAccent)),
+                    ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 8),
-
             if (item.status != 'done') ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: item.priorityColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
-                  item.priority,
-                  style: GoogleFonts.poppins(
-                    fontSize: 9.5,
-                    fontWeight: FontWeight.bold,
-                    color: item.priorityColor,
-                  ),
-                ),
+                child: Text(item.priority,
+                    style: GoogleFonts.poppins(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.bold,
+                        color: item.priorityColor)),
               ),
               const SizedBox(height: 10),
             ],
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
-                  children: [
-                    CircleAvatar(radius: 8, backgroundColor: Color(0xFF00F5C4)),
-                    SizedBox(width: 2),
-                    CircleAvatar(radius: 8, backgroundColor: Colors.amber),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today_rounded,
-                        size: 11, color: Color(0xFF94A3B8)),
-                    const SizedBox(width: 3),
-                    Text(
-                      item.date,
+                Row(children: [
+                  CircleAvatar(
+                    radius: 8,
+                    backgroundColor: const Color(0xFF00F5C4),
+                    child: Text(
+                      item.assignee.isNotEmpty
+                          ? item.assignee[0].toUpperCase()
+                          : '?',
                       style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: const Color(0xFF94A3B8),
-                      ),
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF090D16)),
                     ),
-                  ],
-                ),
+                  ),
+                ]),
+                Row(children: [
+                  const Icon(Icons.calendar_today_rounded,
+                      size: 11, color: Color(0xFF94A3B8)),
+                  const SizedBox(width: 3),
+                  Text(item.date,
+                      style: GoogleFonts.poppins(
+                          fontSize: 10, color: const Color(0xFF94A3B8))),
+                ]),
               ],
             ),
           ],
@@ -1356,72 +1656,382 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         color: Colors.transparent,
         child: SizedBox(
           width: 175,
-          child: Transform.rotate(
-            angle: 0.04,
-            child: cardWidget,
-          ),
+          child: Transform.rotate(angle: 0.04, child: cardWidget),
         ),
       ),
-      childWhenDragging: Opacity(
-        opacity: 0.25,
-        child: cardWidget,
-      ),
+      childWhenDragging: Opacity(opacity: 0.25, child: cardWidget),
       child: cardWidget,
     );
   }
 
-  Widget _buildStepCard({
+  // ─── TAB 3: ÉQUIPE ────────────────────────────────────────────────────────────
+
+  Widget _buildTeamTab() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${widget.project.members.length} membres',
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              AnimatedButton(
+                isPrimary: true,
+                onPressed: _showInviteMemberDialog,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00F5C4),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(children: [
+                    const Icon(Icons.person_add_rounded,
+                        size: 14, color: Color(0xFF090D16)),
+                    const SizedBox(width: 4),
+                    Text('Inviter',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF090D16))),
+                  ]),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            physics: const BouncingScrollPhysics(),
+            itemCount: widget.project.members.length,
+            itemBuilder: (context, index) {
+              final m = widget.project.members[index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF131B2C),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFF1E2942)),
+                ),
+                child: Row(children: [
+                  CircleAvatar(
+                    backgroundColor:
+                        const Color(0xFF00F5C4).withValues(alpha: 0.2),
+                    child: Text(
+                      m.name[0].toUpperCase(),
+                      style: GoogleFonts.poppins(
+                          color: const Color(0xFF00F5C4),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(m.name,
+                            style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        Text(m.role,
+                            style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: const Color(0xFF94A3B8))),
+                      ],
+                    ),
+                  ),
+                  if (m.id != 'user_me')
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.more_vert_rounded,
+                          size: 18, color: Color(0xFF64748B)),
+                      color: const Color(0xFF131B2C),
+                      onSelected: (action) {
+                        if (action == 'remove') {
+                          setState(() => widget.project.members
+                              .removeWhere((mem) => mem.id == m.id));
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: 'remove',
+                          child: Text('Retirer du projet',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: Colors.redAccent)),
+                        ),
+                      ],
+                    ),
+                ]),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── TAB 4: FICHIERS ──────────────────────────────────────────────────────────
+
+  Widget _buildFilesTab() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${widget.project.files.length} fichier(s) partagé(s)',
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  AudioHelper.playClickSound();
+                  try {
+                    final result = await FilePicker.platform.pickFiles();
+                    if (result != null && result.files.isNotEmpty) {
+                      AudioHelper.playSuccessSound();
+                      setState(() {
+                        widget.project.files.add(ProjectFile(
+                          id:
+                              'f_${DateTime.now().millisecondsSinceEpoch}',
+                          name: result.files.single.name,
+                          type: _getFileType(result.files.single.name),
+                          uploadedBy: 'Vous',
+                          uploadedAt: _formatDate(DateTime.now()),
+                          path: result.files.single.path,
+                        ));
+                      });
+                    }
+                  } catch (_) {}
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00F5C4),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(children: [
+                    const Icon(Icons.upload_rounded,
+                        size: 14, color: Color(0xFF090D16)),
+                    const SizedBox(width: 4),
+                    Text('Partager',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF090D16))),
+                  ]),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: widget.project.files.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.folder_open_rounded,
+                          size: 56, color: Color(0xFF1E2942)),
+                      const SizedBox(height: 12),
+                      Text('Aucun fichier partagé pour le moment',
+                          style: GoogleFonts.poppins(
+                              color: const Color(0xFF94A3B8), fontSize: 13)),
+                      const SizedBox(height: 6),
+                      Text('Appuyez sur "Partager" pour ajouter un fichier.',
+                          style: GoogleFonts.poppins(
+                              color: const Color(0xFF4B5563),
+                              fontSize: 11)),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: widget.project.files.length,
+                  itemBuilder: (context, index) {
+                    final f = widget.project.files[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF131B2C),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFF1E2942)),
+                      ),
+                      child: Row(children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: _fileTypeColor(f.type)
+                                .withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(_fileTypeIcon(f.type),
+                              color: _fileTypeColor(f.type), size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(f.name,
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                  overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Par ${f.uploadedBy} · ${f.uploadedAt}',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: const Color(0xFF64748B)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline_rounded,
+                              size: 18, color: Color(0xFF64748B)),
+                          onPressed: () {
+                            setState(() => widget.project.files
+                                .removeWhere((file) => file.id == f.id));
+                          },
+                        ),
+                      ]),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  // ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+  String _getFileType(String name) {
+    final ext = name.split('.').last.toLowerCase();
+    if (ext == 'pdf') return 'pdf';
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].contains(ext)) {
+      return 'image';
+    }
+    if (['dart', 'py', 'js', 'ts', 'cpp', 'c', 'h', 'ino', 'json', 'yaml']
+        .contains(ext)) {
+      return 'code';
+    }
+    return 'other';
+  }
+
+  IconData _fileTypeIcon(String type) {
+    switch (type) {
+      case 'pdf':
+        return Icons.picture_as_pdf_rounded;
+      case 'image':
+        return Icons.image_rounded;
+      case 'code':
+        return Icons.code_rounded;
+      default:
+        return Icons.insert_drive_file_rounded;
+    }
+  }
+
+  Color _fileTypeColor(String type) {
+    switch (type) {
+      case 'pdf':
+        return Colors.redAccent;
+      case 'image':
+        return Colors.purpleAccent;
+      case 'code':
+        return const Color(0xFF00F5C4);
+      default:
+        return Colors.blueAccent;
+    }
+  }
+
+  String _formatDate(DateTime dt) {
+    const months = [
+      'jan.', 'fév.', 'mars', 'avr.', 'mai', 'juin',
+      'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'
+    ];
+    return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
+  }
+
+  Widget _buildMilestoneCard({
     required String stepNumber,
     required String title,
     required String subtitle,
+    bool isReached = false,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF131B2C),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF1E2942)),
-      ),
-      child: Row(
-        children: [
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF131B2C),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isReached
+                ? const Color(0xFF00F5C4).withValues(alpha: 0.5)
+                : const Color(0xFF1E2942),
+          ),
+        ),
+        child: Row(children: [
           CircleAvatar(
             radius: 14,
-            backgroundColor: const Color(0xFF00F5C4),
-            child: Text(
-              stepNumber,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF090D16),
-              ),
-            ),
+            backgroundColor: isReached
+                ? const Color(0xFF00F5C4)
+                : const Color(0xFF1E2942),
+            child: isReached
+                ? const Icon(Icons.check_rounded,
+                    size: 16, color: Color(0xFF090D16))
+                : Text(stepNumber,
+                    style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: const Color(0xFF94A3B8),
-                  ),
-                ),
+                Text(title,
+                    style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: isReached
+                            ? const Color(0xFF64748B)
+                            : Colors.white,
+                        decoration: isReached
+                            ? TextDecoration.lineThrough
+                            : null)),
+                Text(subtitle,
+                    style: GoogleFonts.poppins(
+                        fontSize: 11, color: const Color(0xFF94A3B8))),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8)),
-        ],
+          if (onTap != null)
+            const Icon(Icons.touch_app_rounded,
+                size: 16, color: Color(0xFF4B5563)),
+        ]),
       ),
     );
   }
@@ -1431,108 +2041,28 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     required String title,
     required String subtitle,
   }) {
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: const Color(0xFF00F5C4)),
-            const SizedBox(width: 4),
-            Text(
-              title,
-              style: GoogleFonts.poppins(
+    return Column(children: [
+      Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, size: 16, color: const Color(0xFF00F5C4)),
+        const SizedBox(width: 4),
+        Text(title,
+            style: GoogleFonts.poppins(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        Text(
-          subtitle,
+                color: Colors.white)),
+      ]),
+      Text(subtitle,
           style: GoogleFonts.poppins(
-            fontSize: 10,
-            color: const Color(0xFF94A3B8),
-          ),
-        ),
-      ],
-    );
+              fontSize: 10, color: const Color(0xFF94A3B8))),
+    ]);
   }
 
   Widget _buildHeroPlaceholder() {
     return Container(
       color: const Color(0xFF0E1626),
       child: const Center(
-        child: Icon(
-          Icons.smart_toy_rounded,
-          size: 64,
-          color: Color(0xFF00F5C4),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTeamTab() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: widget.project.members.length,
-      itemBuilder: (context, index) {
-        final m = widget.project.members[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFF131B2C),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF1E2942)),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: const Color(0xFF00F5C4).withValues(alpha: 0.2),
-                child: Text(
-                  m.name[0].toUpperCase(),
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF00F5C4),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      m.name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      m.role,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: const Color(0xFF94A3B8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildFilesTab() {
-    return Center(
-      child: Text(
-        'Aucun fichier partagé pour le moment',
-        style: GoogleFonts.poppins(color: const Color(0xFF94A3B8), fontSize: 13),
+        child: Icon(Icons.smart_toy_rounded,
+            size: 64, color: Color(0xFF00F5C4)),
       ),
     );
   }

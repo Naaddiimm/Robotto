@@ -4,7 +4,7 @@ class ProjectMember {
   final String role;
   final String avatarUrl;
 
-  const ProjectMember({
+  ProjectMember({
     required this.id,
     required this.name,
     required this.role,
@@ -42,21 +42,40 @@ class ProjectMilestone {
   });
 }
 
+class ProjectFile {
+  final String id;
+  final String name;
+  final String type; // 'pdf', 'image', 'code', 'other'
+  final String uploadedBy;
+  final String uploadedAt;
+  final String? path;
+
+  ProjectFile({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.uploadedBy,
+    required this.uploadedAt,
+    this.path,
+  });
+}
+
 class Project {
   final String id;
   final String title;
   final String description;
   final String objectives;
   final String level; // Débutant, Intermédiaire, Avancé
-  final String category; // Robotique mobile, IoT & Domotique, Électronique, etc.
+  final String category; // Bras Robotique, Robotique mobile, IoT & Domotique, etc.
   final String visibility; // Privé, Équipe, Public
-  final String status; // En cours, En pause, Terminé
+  String status; // En cours, En pause, Terminé
   final String dueDate;
   final String? imagePath;
   bool isJoined;
   final List<ProjectMember> members;
   final List<ProjectTask> tasks;
   final List<ProjectMilestone> milestones;
+  final List<ProjectFile> files;
 
   Project({
     required this.id,
@@ -73,11 +92,18 @@ class Project {
     required this.members,
     required this.tasks,
     required this.milestones,
-  });
+    List<ProjectFile>? files,
+  }) : files = files ?? [];
 
   double get progressPercentage {
     if (tasks.isEmpty) return 0.0;
     final completed = tasks.where((t) => t.isCompleted).length;
     return completed / tasks.length;
   }
+
+  int get completedTasksCount => tasks.where((t) => t.isCompleted).length;
+
+  int get pendingTasksCount => tasks.where((t) => !t.isCompleted).length;
+
+  int get reachedMilestonesCount => milestones.where((m) => m.isReached).length;
 }

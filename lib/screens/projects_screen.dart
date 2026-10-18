@@ -37,7 +37,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       status: 'En cours',
       dueDate: '30 nov. 2025',
       isJoined: false,
-      members: const [
+      members: [
         ProjectMember(id: 'm1', name: 'Alex Rivera', role: 'Lead Dev'),
         ProjectMember(id: 'm2', name: 'Sami B.', role: 'Designer 3D'),
         ProjectMember(id: 'm3', name: 'Youssef K.', role: 'Électronicien'),
@@ -79,7 +79,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       status: 'En cours',
       dueDate: '30 nov. 2025',
       isJoined: true,
-      members: const [
+      members: [
         ProjectMember(id: 'm1', name: 'Alex', role: 'Dev'),
         ProjectMember(id: 'm2', name: 'Sami', role: '3D'),
         ProjectMember(id: 'm3', name: 'Youssef', role: 'Elec'),
@@ -122,7 +122,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       status: 'En pause',
       dueDate: '15 déc. 2025',
       isJoined: true,
-      members: const [
+      members: [
         ProjectMember(id: 'm1', name: 'Nour', role: 'Lead'),
         ProjectMember(id: 'm2', name: 'Karem', role: 'Dev'),
         ProjectMember(id: 'm3', name: 'Lilia', role: 'UI'),
@@ -157,7 +157,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       status: 'Terminé',
       dueDate: '10 oct. 2025',
       isJoined: false,
-      members: const [
+      members: [
         ProjectMember(id: 'm1', name: 'Sonia', role: 'Pilote'),
         ProjectMember(id: 'm2', name: 'Mehdi', role: 'Dev'),
       ],
@@ -215,8 +215,10 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         final matchesSearch = p.title.toLowerCase().contains(query) ||
             p.category.toLowerCase().contains(query);
         final matchesUser = p.isJoined || p.visibility != 'Public';
+        // 'Terminés' pill maps to 'Terminé' in the model
+        final statusFilter = _selectedStatus == 'Terminés' ? 'Terminé' : _selectedStatus;
         final matchesStatus =
-            _selectedStatus == 'Tous' || p.status == _selectedStatus;
+            statusFilter == 'Tous' || p.status == statusFilter;
         return matchesSearch && matchesUser && matchesStatus;
       }).toList();
     }
@@ -327,7 +329,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       setState(() {
         project.isJoined = true;
         project.members.add(
-          const ProjectMember(
+          ProjectMember(
             id: 'user_me',
             name: 'Vous',
             role: 'Contributeur',
@@ -657,29 +659,29 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                           _buildStatCard(
                             icon: Icons.folder_outlined,
                             iconColor: const Color(0xFF00F5C4),
-                            value: '4',
-                            label: 'Actifs',
+                            value: '${_allProjects.where((p) => p.status == 'En cours').length}',
+                            label: 'En cours',
                           ),
                           const SizedBox(width: 8),
                           _buildStatCard(
                             icon: Icons.check_circle_outline_rounded,
                             iconColor: const Color(0xFF00F5C4),
-                            value: '12',
-                            label: 'Terminées',
+                            value: '${_allProjects.where((p) => p.status == 'Terminé').length}',
+                            label: 'Terminés',
                           ),
                           const SizedBox(width: 8),
                           _buildStatCard(
-                            icon: Icons.calendar_today_rounded,
+                            icon: Icons.pause_circle_outline_rounded,
                             iconColor: Colors.amber,
-                            value: '3',
-                            label: 'Échéances',
+                            value: '${_allProjects.where((p) => p.status == 'En pause').length}',
+                            label: 'En pause',
                           ),
                           const SizedBox(width: 8),
                           _buildStatCard(
                             icon: Icons.people_outline_rounded,
                             iconColor: const Color(0xFF3B82F6),
-                            value: '8',
-                            label: 'Équipe',
+                            value: '${_allProjects.expand((p) => p.members).length}',
+                            label: 'Membres',
                           ),
                         ],
                       ),
