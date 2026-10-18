@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'profile_screen.dart'; // Import ProfileScreen
-import 'drawer_screen.dart'; // Import DrawerScreen
-import '../shop/shop_module.dart'; // Import ShopModule
-import '../learning/learning_module.dart'; // Import LearningModule
+import 'profile_screen.dart';
+import 'drawer_screen.dart';
+import 'projects_screen.dart';
+import '../shop/shop_module.dart';
+import '../learning/learning_module.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -127,10 +128,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             children: [
               const ShopModule(),
               _buildPlaceholderScreen("Forum"),
-              const LearningModule(), // Courses tab — Cours & Formations
+              const LearningModule(),
               _buildPlaceholderScreen("Events"),
-              _buildPlaceholderScreen("Projects"),
-              const ProfileScreen(), // The newly created Profile Screen (Index 5)
+              const ProjectsScreen(),
+              const ProfileScreen(),
             ],
           ),
 
