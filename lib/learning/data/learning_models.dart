@@ -62,6 +62,24 @@ class CoursModel {
       lessons.where((l) => l.state == LessonState.done).length;
   double get progress =>
       lessons.isEmpty ? 0 : doneCount / lessons.length;
+
+  CoursModel copyWith({
+    String? title,
+    String? module,
+    String? description,
+    String? level,
+    String? duration,
+    List<LessonModel>? lessons,
+  }) => CoursModel(
+        id: id,
+        title: title ?? this.title,
+        module: module ?? this.module,
+        description: description ?? this.description,
+        level: level ?? this.level,
+        duration: duration ?? this.duration,
+        rating: rating,
+        lessons: lessons ?? this.lessons,
+      );
 }
 
 class FormationModel {
@@ -93,6 +111,24 @@ class FormationModel {
       modules.fold(0, (s, m) => s + m.doneCount);
   double get progress =>
       totalLessons == 0 ? 0 : doneLessons / totalLessons;
+
+  FormationModel copyWith({
+    String? title,
+    String? subtitle,
+    String? level,
+    String? duration,
+    List<ModuleModel>? modules,
+  }) => FormationModel(
+        id: id,
+        title: title ?? this.title,
+        subtitle: subtitle ?? this.subtitle,
+        instructor: instructor,
+        level: level ?? this.level,
+        duration: duration ?? this.duration,
+        rating: rating,
+        enrolled: enrolled,
+        modules: modules ?? this.modules,
+      );
 }
 
 // ── Sample data ───────────────────────────────────────────────────────────────
