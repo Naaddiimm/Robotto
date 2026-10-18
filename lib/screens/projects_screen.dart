@@ -387,6 +387,128 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     }
   }
 
+  // ─── EDIT / UPDATE PROJECT ────────────────────────────────────────────────────
+
+  void _openEditProjectScreen(Project project) {
+    AudioHelper.playClickSound();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateProjectScreen(
+          existingProject: project,
+          onProjectCreated: (_) {},
+          onProjectUpdated: (updated) {
+            setState(() {});
+          },
+        ),
+      ),
+    );
+  }
+
+  // ─── DELETE PROJECT ──────────────────────────────────────────────────────────
+
+  void _confirmDeleteProject(Project project) {
+    AudioHelper.playClickSound();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF111827),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: Color(0xFF1F2937)),
+          ),
+          title: Row(
+            children: [
+              const Icon(Icons.delete_forever_rounded,
+                  color: Colors.redAccent, size: 24),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Supprimer le projet ?',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Le projet "${project.title}" sera définitivement supprimé avec toutes ses tâches, fichiers et membres. Cette action est irréversible.',
+            style: GoogleFonts.poppins(
+              fontSize: 13,
+              color: const Color(0xFF9CA3AF),
+              height: 1.4,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                AudioHelper.playClickSound();
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Annuler',
+                style: GoogleFonts.poppins(
+                  color: const Color(0xFF6B7280),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _deleteProject(project);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                'Supprimer',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteProject(Project project) {
+    setState(() {
+      _allProjects.removeWhere((p) => p.id == project.id);
+    });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Projet "${project.title}" supprimé.',
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.5),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFF111827),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1039,6 +1161,61 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                   ),
                                 ),
                               ),
+                              // Edit / Delete menu (only in "Mes projets")
+                              if (_activeMainTab == 'Mes projets') ...[
+                                const SizedBox(width: 4),
+                                PopupMenuButton<String>(
+                                  icon: const Icon(
+                                    Icons.more_vert_rounded,
+                                    size: 18,
+                                    color: Color(0xFF9CA3AF),
+                                  ),
+                                  color: const Color(0xFF111827),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onSelected: (action) {
+                                    if (action == 'edit') {
+                                      _openEditProjectScreen(project);
+                                    } else if (action == 'delete') {
+                                      _confirmDeleteProject(project);
+                                    }
+                                  },
+                                  itemBuilder: (_) => [
+                                    PopupMenuItem(
+                                      value: 'edit',
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.edit_rounded,
+                                              size: 16,
+                                              color: Color(0xFF00F5C4)),
+                                          const SizedBox(width: 10),
+                                          Text('Modifier',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuDivider(),
+                                    PopupMenuItem(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                              Icons.delete_outline_rounded,
+                                              size: 16,
+                                              color: Colors.redAccent),
+                                          const SizedBox(width: 10),
+                                          Text('Supprimer',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Colors.redAccent)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                           const SizedBox(height: 2),

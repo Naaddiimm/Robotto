@@ -10,10 +10,15 @@ import '../utils/audio_helper.dart';
 
 class CreateProjectScreen extends StatefulWidget {
   final Function(Project) onProjectCreated;
+  // Optional: when provided, the screen works in "edit" mode and pre-fills the form
+  final Project? existingProject;
+  final Function(Project)? onProjectUpdated;
 
   const CreateProjectScreen({
     super.key,
     required this.onProjectCreated,
+    this.existingProject,
+    this.onProjectUpdated,
   });
 
   @override
@@ -43,6 +48,31 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     'Autre',
   ];
   static const List<String> visibilities = ['Privé', 'Équipe', 'Public'];
+
+  bool get _isEditMode => widget.existingProject != null;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill the form when editing an existing project
+    final existing = widget.existingProject;
+    if (existing != null) {
+      _titleController.text = existing.title;
+      _descriptionController.text = existing.description;
+      _objectivesController.text = existing.objectives;
+      _selectedLevel = existing.level;
+      _selectedCategory = categories.contains(existing.category)
+          ? existing.category
+          : 'Autre';
+      if (_selectedCategory == 'Autre') {
+        _customCategoryController.text = existing.category;
+      }
+      _selectedVisibility = existing.visibility;
+      if (existing.imagePath != null && existing.imagePath!.isNotEmpty) {
+        _selectedImage = XFile(existing.imagePath!);
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -142,6 +172,54 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     }
   }
 
+  // ─── CONTRÔLE DE SAISIE (validators) ─────────────────────────────────────────
+
+  String? _validateTitle(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return 'Le titre est requis.';
+    if (text.length < 3) return 'Le titre doit contenir au moins 3 caractères.';
+    if (text.length > 80) return 'Le titre ne doit pas dépasser 80 caractères.';
+    if (RegExp(r'^[\s]+$').hasMatch(text)) return 'Le titre est invalide.';
+    return null;
+  }
+
+  String? _validateDescription(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return 'La description est requise.';
+    if (text.length < 10) {
+      return 'La description doit contenir au moins 10 caractères.';
+    }
+    if (text.length > 500) {
+      return 'La description ne doit pas dépasser 500 caractères.';
+    }
+    return null;
+  }
+
+  String? _validateObjectives(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return 'Les objectifs sont requis.';
+    if (text.length < 10) {
+      return 'Les objectifs doivent contenir au moins 10 caractères.';
+    }
+    if (text.length > 300) {
+      return 'Les objectifs ne doivent pas dépasser 300 caractères.';
+    }
+    return null;
+  }
+
+  String? _validateCustomCategory(String? v) {
+    if (_selectedCategory != 'Autre') return null;
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return 'Veuillez préciser la catégorie.';
+    if (text.length < 2) {
+      return 'La catégorie doit contenir au moins 2 caractères.';
+    }
+    if (text.length > 40) {
+      return 'La catégorie ne doit pas dépasser 40 caractères.';
+    }
+    return null;
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       AudioHelper.playSuccessSound();
@@ -152,6 +230,48 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
               : _customCategoryController.text.trim())
           : _selectedCategory;
 
+      if (_isEditMode) {
+        // ─── UPDATE existing project in place ───
+        final existing = widget.existingProject!;
+        setState(() {
+          existing.title = _titleController.text.trim();
+          existing.description = _descriptionController.text.trim();
+          existing.objectives = _objectivesController.text.trim();
+          existing.level = _selectedLevel;
+          existing.category = finalCategory;
+          existing.visibility = _selectedVisibility;
+          existing.imagePath = _selectedImage?.path;
+        });
+
+        if (widget.onProjectUpdated != null) {
+          widget.onProjectUpdated!(existing);
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle_rounded, color: Color(0xFF00F5C4)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Projet "${existing.title}" mis à jour avec succès !',
+                    style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: const Color(0xFF131B2C),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+
+        Navigator.pop(context);
+        return;
+      }
+
+      // ─── CREATE new project ───
       final newProject = Project(
         id: 'proj_${DateTime.now().millisecondsSinceEpoch}',
         title: _titleController.text.trim(),
@@ -235,7 +355,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
           },
         ),
         title: Text(
-          'Créer un Projet',
+          _isEditMode ? 'Modifier le Projet' : 'Créer un Projet',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -350,8 +470,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                       label: 'Titre du projet',
                       hint: 'ex: Robot Suiveur de Ligne Autonome V2',
                       icon: Icons.title_rounded,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Titre requis' : null,
+                      maxLength: 80,
+                      validator: _validateTitle,
                     ),
                     const SizedBox(height: 18),
 
@@ -363,8 +483,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           'Expliquez en quelques lignes le concept de votre robot...',
                       icon: Icons.description_outlined,
                       maxLines: 3,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Description requise' : null,
+                      maxLength: 500,
+                      validator: _validateDescription,
                     ),
                     const SizedBox(height: 18),
 
@@ -376,8 +496,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           'ex: Résoudre un parcours en moins de 30s, intégration caméra...',
                       icon: Icons.flag_outlined,
                       maxLines: 2,
-                      validator: (v) =>
-                          v == null || v.isEmpty ? 'Objectifs requis' : null,
+                      maxLength: 300,
+                      validator: _validateObjectives,
                     ),
                     const SizedBox(height: 22),
 
@@ -424,10 +544,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                         label: 'Saisissez votre catégorie personnalisée',
                         hint: 'ex: Sous-marin, Exo-squelette, Prothèse...',
                         icon: Icons.category_rounded,
-                        validator: (v) => _selectedCategory == 'Autre' &&
-                                (v == null || v.isEmpty)
-                            ? 'Veuillez préciser la catégorie'
-                            : null,
+                        maxLength: 40,
+                        validator: _validateCustomCategory,
                       ),
                     ],
 
@@ -588,7 +706,9 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            'Créer le Projet',
+                            _isEditMode
+                                ? 'Enregistrer les modifications'
+                                : 'Créer le Projet',
                             style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -626,6 +746,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     required String hint,
     required IconData icon,
     int maxLines = 1,
+    int? maxLength,
     String? Function(String?)? validator,
   }) {
     return Column(
@@ -643,8 +764,10 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
         TextFormField(
           controller: controller,
           maxLines: maxLines,
+          maxLength: maxLength,
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
           validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.poppins(
@@ -654,6 +777,10 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
             fillColor: const Color(0xFF131B2C),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            counterStyle: GoogleFonts.poppins(
+              fontSize: 10,
+              color: const Color(0xFF64748B),
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: const BorderSide(color: Color(0xFF1E2942)),
@@ -670,6 +797,15 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
               borderRadius: BorderRadius.circular(14),
               borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
+            ),
+            errorStyle: GoogleFonts.poppins(
+              fontSize: 11,
+              color: Colors.redAccent,
+            ),
+            errorMaxLines: 2,
           ),
         ),
       ],

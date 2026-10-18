@@ -62,15 +62,15 @@ class ProjectFile {
 
 class Project {
   final String id;
-  final String title;
-  final String description;
-  final String objectives;
-  final String level; // Débutant, Intermédiaire, Avancé
-  final String category; // Bras Robotique, Robotique mobile, IoT & Domotique, etc.
-  final String visibility; // Privé, Équipe, Public
+  String title;
+  String description;
+  String objectives;
+  String level; // Débutant, Intermédiaire, Avancé
+  String category; // Bras Robotique, Robotique mobile, IoT & Domotique, etc.
+  String visibility; // Privé, Équipe, Public
   String status; // En cours, En pause, Terminé
-  final String dueDate;
-  final String? imagePath;
+  String dueDate;
+  String? imagePath;
   bool isJoined;
   final List<ProjectMember> members;
   final List<ProjectTask> tasks;
