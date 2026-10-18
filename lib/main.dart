@@ -1,12 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'screens/welcome_screen.dart';
 import 'learning/data/favourites_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Pre-load the favourites cache so isFavourite() checks are synchronous
-  // throughout the Learning module.
-  await FavouritesRepository.instance.init();
+
+  // sqflite only works natively on Android/iOS.
+  // For web, Windows, Linux, macOS — use sqflite_common_ffi.
+  if (!kIsWeb) {
+    if (defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+    // Pre-load the favourites cache (mobile + desktop only)
+    await FavouritesRepository.instance.init();
+  }
+
   runApp(const MyApp());
 }
 

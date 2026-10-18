@@ -4,6 +4,7 @@
 // The table is created on first use via a migration-safe IF NOT EXISTS.
 // ---------------------------------------------------------------------------
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
 import '../../data/database_helper.dart';
 
@@ -49,6 +50,11 @@ class FavouritesRepository {
 
   Future<void> init() async {
     if (_initialised) return;
+    // sqflite not available on web — skip DB init, use in-memory only
+    if (kIsWeb) {
+      _initialised = true;
+      return;
+    }
     final db = await DatabaseHelper.instance.database;
 
     // Safe migration — creates the table only if it doesn't exist yet
@@ -75,6 +81,7 @@ class FavouritesRepository {
   bool isFavourite(int id) => _cache.contains(id);
 
   Future<List<FavouriteLesson>> getAll() async {
+    if (kIsWeb) return [];
     final db = await DatabaseHelper.instance.database;
     final rows = await db.query(_table, orderBy: 'id ASC');
     return rows.map(FavouriteLesson.fromMap).toList();
@@ -86,6 +93,7 @@ class FavouritesRepository {
     required String duration,
     required String module,
   }) async {
+    if (kIsWeb) return;
     if (isFavourite(id)) {
       await _remove(id);
     } else {

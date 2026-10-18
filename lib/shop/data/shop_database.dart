@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -15,6 +16,9 @@ class ShopDatabase {
   ShopDatabase._init();
 
   Future<Database> get database async {
+    if (kIsWeb) {
+      throw UnsupportedError('ShopDatabase is not available on web. Use a web-compatible backend instead.');
+    }
     if (_database != null) return _database!;
     _database = await _initDB('robotto_shop.db');
     return _database!;

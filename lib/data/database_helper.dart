@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -8,6 +9,10 @@ class DatabaseHelper {
   DatabaseHelper._init();
 
   Future<Database> get database async {
+    // sqflite is not supported on web — throw clearly instead of crashing silently
+    if (kIsWeb) {
+      throw UnsupportedError('DatabaseHelper is not available on web platform.');
+    }
     if (_database != null) return _database!;
     _database = await _initDB('robotto.db');
     return _database!;
@@ -26,7 +31,6 @@ class DatabaseHelper {
   }
 
   Future<void> _configureDB(Database db) async {
-    // Enable foreign keys
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
@@ -81,6 +85,7 @@ class DatabaseHelper {
   }
 
   Future<void> close() async {
+    if (kIsWeb) return;
     final db = await instance.database;
     db.close();
   }
