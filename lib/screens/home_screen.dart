@@ -4,6 +4,8 @@ import 'drawer_screen.dart';
 import 'projects_screen.dart';
 import '../shop/shop_module.dart';
 import '../learning/learning_module.dart';
+import '../event/event_module.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -129,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               const ShopModule(),
               _buildPlaceholderScreen("Forum"),
               const LearningModule(),
-              _buildPlaceholderScreen("Events"),
+              const EventModule(),
               const ProjectsScreen(),
               const ProfileScreen(),
             ],
