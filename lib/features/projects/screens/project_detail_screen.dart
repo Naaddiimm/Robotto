@@ -823,6 +823,56 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     );
   }
 
+  // ─── DELETE PROJECT ───────────────────────────────────────────────────────────
+
+  void _confirmDeleteProject() {
+    AudioHelper.playClickSound();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceHigh,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(children: [
+          const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+          const SizedBox(width: 10),
+          Text('Supprimer le projet',
+              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+        ]),
+        content: Text(
+          'Êtes-vous sûr de vouloir supprimer "${widget.project.title}" ? Cette action est irréversible.',
+          style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textSoft),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Annuler',
+                style: GoogleFonts.poppins(
+                    fontSize: 13, color: AppTheme.textSoft)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent.withValues(alpha: 0.15),
+              foregroundColor: Colors.redAccent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.pop(context, 'deleted');
+            },
+            child: Text('Supprimer',
+                style: GoogleFonts.poppins(
+                    fontSize: 13, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ─── SCAFFOLD ─────────────────────────────────────────────────────────────────
 
   @override
@@ -852,6 +902,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             color: AppTheme.surface,
             onSelected: (value) {
               if (value == 'status') _showChangeStatusDialog();
+              if (value == 'delete') _confirmDeleteProject();
             },
             itemBuilder: (ctx) => [
               PopupMenuItem(
@@ -863,6 +914,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   Text('Changer le statut',
                       style:
                           GoogleFonts.poppins(fontSize: 13, color: Colors.white)),
+                ]),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(children: [
+                  const Icon(Icons.delete_outline_rounded,
+                      size: 18, color: Colors.redAccent),
+                  const SizedBox(width: 10),
+                  Text('Supprimer le projet',
+                      style: GoogleFonts.poppins(
+                          fontSize: 13, color: Colors.redAccent)),
                 ]),
               ),
             ],

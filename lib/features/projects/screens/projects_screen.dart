@@ -521,10 +521,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               painter: BackgroundWavesPainter(),
             ),
           ),
-          SafeArea(
-            child: FadeTransition(
-              opacity: _fadeAnim,
-              child: SingleChildScrollView(
+          Positioned.fill(
+            child: SafeArea(
+              child: FadeTransition(
+                opacity: _fadeAnim,
+                child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -899,11 +900,12 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         },
                       ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 120),
                   ],
                 ),
               ),
             ),
+          ),
           ),
         ],
       ),
@@ -1081,7 +1083,13 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               MaterialPageRoute(
                 builder: (context) => ProjectDetailScreen(project: project),
               ),
-            ).then((_) => setState(() {}));
+            ).then((result) {
+              if (result == 'deleted') {
+                _deleteProject(project);
+              } else {
+                setState(() {});
+              }
+            });
           },
           borderRadius: BorderRadius.circular(18),
           child: Padding(
