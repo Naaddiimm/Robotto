@@ -12,6 +12,7 @@ import '../data/repositories/cart_repository.dart';
 import '../validators/order_validators.dart';
 import '../widgets/shop_theme.dart';
 import '../widgets/shop_text_field.dart';
+import '../widgets/address_field_with_map.dart';
 import 'order_detail_screen.dart';
 import 'orders_screen.dart';
 
@@ -385,15 +386,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 if (_selectedMode !=
                                     Delivery.modeStorePickup) ...[
                                   const SizedBox(height: 16),
-                                  ShopTextField(
+                                  AddressFieldWithMap(
                                     label: 'Address',
                                     controller: _addressController,
-                                    hintText: 'Delivery address',
-                                    icon: Icons.home_outlined,
-                                    maxLines: 2,
-                                    validator: (value) =>
-                                        OrderValidators.validateAddress(
-                                            value, _selectedMode),
+                                    cityController: _cityController,
+                                    deliveryMode: _selectedMode,
+                                    onSuggestedZone: (zone) {
+                                      setState(() => _selectedZone = zone);
+                                    },
                                   ),
                                 ],
                                 const SizedBox(height: 16),

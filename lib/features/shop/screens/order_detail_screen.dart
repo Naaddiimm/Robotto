@@ -9,6 +9,7 @@ import '../data/repositories/order_repository.dart';
 import '../validators/order_validators.dart';
 import '../widgets/shop_theme.dart';
 import '../widgets/delivery_timeline.dart';
+import '../widgets/address_field_with_map.dart';
 
 /// Order detail: items, price breakdown, delivery info, timeline, and
 /// role-based actions (edit, cancel, advance, delete).
@@ -303,7 +304,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       ),
                       const SizedBox(height: 12),
                       if (mode != Delivery.modeStorePickup)
-                        _sheetField(addressCtl, 'Address'),
+                        AddressFieldWithMap(
+                          label: 'Address',
+                          controller: addressCtl,
+                          cityController: cityCtl,
+                          deliveryMode: mode,
+                          onSuggestedZone: (suggested) {
+                            setSheet(() => zone = suggested);
+                          },
+                        ),
                       if (mode != Delivery.modeStorePickup)
                         const SizedBox(height: 12),
                       // Quantity

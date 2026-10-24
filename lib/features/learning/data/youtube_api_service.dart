@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../core/config/api_keys.dart';
+//import '../../../core/config/api_keys.dart';
 
 class YouTubeVideoResult {
   final String videoId;
@@ -37,7 +37,7 @@ class YouTubeVideoResult {
 class YouTubeApiService {
   static const _baseSearch = 'https://www.googleapis.com/youtube/v3/search';
   static const _baseVideos = 'https://www.googleapis.com/youtube/v3/videos';
-  static const _key = ApiKeys.youTube;
+  static const _key = "AIzaSyAA4NGeOAy33aCwtKrjLmlOqCqTLGtSCaQ"/*ApiKeys.youTube*/;
 
   /// Search YouTube videos. Returns up to [maxResults] results.
   static Future<List<YouTubeVideoResult>> search(

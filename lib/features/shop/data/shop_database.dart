@@ -15,7 +15,12 @@ class ShopDatabase {
 
   ShopDatabase._init();
 
+  /// Override used only in tests to inject an in-memory database.
+  static Database? _testDatabase;
+  static void setTestDatabase(Database? db) => _testDatabase = db;
+
   Future<Database> get database async {
+    if (_testDatabase != null) return _testDatabase!;
     if (kIsWeb) {
       throw UnsupportedError('ShopDatabase is not available on web. Use a web-compatible backend instead.');
     }
