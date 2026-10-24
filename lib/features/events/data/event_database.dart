@@ -23,7 +23,7 @@ class EventDatabase {
     final path = join(dbPath, filePath);
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onConfigure: _configureDB,
       onUpgrade: _onUpgrade,
@@ -89,6 +89,7 @@ class EventDatabase {
         ticket_code   TEXT,
         registered_at TEXT NOT NULL,
         cancelled_at  TEXT,
+        checked_in_at TEXT,
         FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
         UNIQUE(event_id, user_id)
       )
@@ -157,7 +158,7 @@ class EventDatabase {
     await db.execute('CREATE INDEX idx_announcements_event ON event_announcements (event_id)');
   }
 
-  /// Migration non-destructive depuis v1 → v2
+  /// Migration non-destructive depuis v1 → v2 → v3
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       // Ajouter ticket_code à event_registrations si absent
@@ -188,6 +189,13 @@ class EventDatabase {
       await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_events_start_date ON events (start_date)',
       );
+    }
+    if (oldVersion < 3) {
+      // Ajouter checked_in_at pour la validation de présence par QR code
+      try {
+        await db.execute(
+            'ALTER TABLE event_registrations ADD COLUMN checked_in_at TEXT');
+      } catch (_) {} // colonne déjà présente
     }
   }
 

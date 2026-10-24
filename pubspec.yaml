@@ -28,6 +28,9 @@ dependencies:
   video_player: ^2.9.2
   record: ^7.1.2
   http: ^1.2.2
+  url_launcher: ^6.3.3
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.4.2
 
 dev_dependencies:
   flutter_test:

@@ -385,12 +385,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
               controller: _onlineLinkCtrl,
               style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
               decoration: EventTheme.inputDecoration(
-                  label: 'Lien en ligne', hint: 'https://…',
+                  label: 'Lien Google Meet / en ligne',
+                  hint: 'https://meet.google.com/xxx-yyyy-zzz',
                   prefix: const Icon(Icons.videocam_outlined, color: EventTheme.textSoft, size: 20)),
               keyboardType: TextInputType.url,
               validator: (v) {
                 if (_mode == 'enligne' && (v == null || v.trim().isEmpty)) {
                   return 'Le lien est obligatoire pour un événement en ligne.';
+                }
+                if (v != null && v.trim().isNotEmpty) {
+                  final uri = Uri.tryParse(v.trim());
+                  if (uri == null || !uri.hasScheme || uri.scheme != 'https') {
+                    return 'Le lien doit commencer par https://';
+                  }
                 }
                 return null;
               },

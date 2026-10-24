@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/event_model.dart';
 import '../models/competition_detail.dart';
 import '../models/competition_result.dart';
@@ -7,6 +8,7 @@ import '../services/registration_service.dart';
 import '../widgets/event_theme.dart';
 import 'competition_form_screen.dart';
 import 'team_screen.dart';
+import 'qr_scanner_screen.dart';
 
 class CompetitionDetailScreen extends StatefulWidget {
   final int eventId;
@@ -117,12 +119,68 @@ class _CompetitionDetailScreenState extends State<CompetitionDetailScreen> {
     }
   }
 
+  /// Retourne true si le lien est un lien Google Meet valide.
+  /// Vérifie que le host est exactement meet.google.com (ou sous-domaine direct).
+  bool _isMeetLink(String? link) {
+    if (link == null || link.trim().isEmpty) return false;
+    final normalized = _normalizeLink(link);
+    final uri = Uri.tryParse(normalized);
+    if (uri == null || uri.scheme != 'https') return false;
+    final host = uri.host.toLowerCase();
+    return host == 'meet.google.com' || host.endsWith('.meet.google.com');
+  }
+
+  /// Retourne true si le lien est une URL https valide quelconque.
+  bool _isValidHttpsLink(String? link) {
+    if (link == null || link.trim().isEmpty) return false;
+    final uri = Uri.tryParse(_normalizeLink(link));
+    return uri != null && uri.scheme == 'https' && uri.host.isNotEmpty;
+  }
+
+  /// Normalise un lien : ajoute https:// si aucun schéma n'est présent.
+  String _normalizeLink(String link) {
+    final t = link.trim();
+    if (!t.startsWith('http://') && !t.startsWith('https://')) {
+      return 'https://$t';
+    }
+    return t;
+  }
+
+  /// Ouvre le lien Google Meet dans le navigateur / application Meet.
+  Future<void> _openMeet() async {
+    final link = _event?.onlineLink;
+    if (link == null) return;
+    final uri = Uri.tryParse(link.trim());
+    if (uri == null) {
+      _showError('Lien Google Meet invalide.');
+      return;
+    }
+    final launched =
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched && mounted) {
+      _showError(
+          'Impossible d\'ouvrir le lien. Vérifiez que Google Meet est installé ou utilisez un navigateur.');
+    }
+  }
+
+  /// Ouvre le scanner QR pour valider les présences à cette compétition.
+  void _openScanner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => QrScannerScreen(
+          eventId: _event?.id,
+          eventTitle: _event?.title,
+        ),
+      ),
+    );
+  }
+
   Future<void> _cancelRegistration() async {
     final ok = await _confirmDialog(
       title: 'Annuler l\'inscription',
       message: 'Voulez-vous annuler votre inscription à cette compétition ?',
-    );
-    if (!ok || !mounted) return;
+    );    if (!ok || !mounted) return;
     final result = await _regService.cancel(
         eventId: widget.eventId, userId: widget.currentUserId!);
     if (!mounted) return;
@@ -368,6 +426,70 @@ class _CompetitionDetailScreenState extends State<CompetitionDetailScreen> {
         ],
 
         const SizedBox(height: 24),
+
+        // Bouton Google Meet (lien contenant meet.google.com)
+        if (_isMeetLink(e.onlineLink)) ...[
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A73E8),
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: _openMeet,
+            icon: const Icon(Icons.videocam_outlined),
+            label: const Text(
+              'Rejoindre Google Meet',
+              style: TextStyle(
+                  fontFamily: EventTheme.fontFamily,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ] else if (_isValidHttpsLink(e.onlineLink)) ...[
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: EventTheme.info,
+              side: BorderSide(color: EventTheme.info.withValues(alpha: 0.7)),
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: _openMeet,
+            icon: const Icon(Icons.open_in_new_outlined),
+            label: const Text(
+              'Rejoindre en ligne',
+              style: TextStyle(
+                  fontFamily: EventTheme.fontFamily,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+
+        // Bouton Scanner QR (utilisateurs connectés)
+        if (widget.currentUserId != null) ...[
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: EventTheme.mint,
+              side: BorderSide(
+                  color: EventTheme.mint.withValues(alpha: 0.7)),
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: _openScanner,
+            icon: const Icon(Icons.qr_code_scanner),
+            label: const Text(
+              'Scanner un QR code',
+              style: TextStyle(
+                  fontFamily: EventTheme.fontFamily,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
 
         // Bouton inscription
         if (widget.currentUserId != null) ...[

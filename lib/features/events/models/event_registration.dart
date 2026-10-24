@@ -7,6 +7,7 @@ class EventRegistration {
   final int? teamId;
   final String registeredAt;
   final String? cancelledAt;
+  final String? checkedInAt; // date/heure du scan QR de validation de présence
 
   // Champ calculé — rempli par le repository via JOIN
   final String? eventTitle;
@@ -22,11 +23,14 @@ class EventRegistration {
     this.teamId,
     required this.registeredAt,
     this.cancelledAt,
+    this.checkedInAt,
     this.eventTitle,
     this.eventType,
     this.eventStartDate,
     this.ticketCode,
   });
+
+  bool get isCheckedIn => checkedInAt != null;
 
   static const Map<String, String> statusLabels = {
     'confirmed': 'Confirmée',
@@ -42,6 +46,7 @@ class EventRegistration {
         'team_id': teamId,
         'registered_at': registeredAt,
         'cancelled_at': cancelledAt,
+        'checked_in_at': checkedInAt,
         'ticket_code': ticketCode,
       };
 
@@ -54,6 +59,7 @@ class EventRegistration {
         teamId: map['team_id'] as int?,
         registeredAt: map['registered_at'] as String,
         cancelledAt: map['cancelled_at'] as String?,
+        checkedInAt: map['checked_in_at'] as String?,
         ticketCode: map['ticket_code'] as String?,
         // JOIN columns
         eventTitle: map['title'] as String?,

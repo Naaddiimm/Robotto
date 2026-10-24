@@ -89,6 +89,42 @@ class RegistrationRepository {
   }
 
   // -------------------------------------------------------------------------
+  // CHECK-IN (validation de présence par QR code)
+  // -------------------------------------------------------------------------
+
+  /// Recherche une inscription par son ticket_code.
+  /// Retourne null si le code n'existe pas.
+  Future<EventRegistration?> getByTicketCode(String ticketCode) async {
+    final db = await _db.database;
+    final maps = await db.rawQuery('''
+      SELECT r.*, e.title, e.type, e.start_date
+      FROM event_registrations r
+      JOIN events e ON e.id = r.event_id
+      WHERE r.ticket_code = ?
+      LIMIT 1
+    ''', [ticketCode]);
+    if (maps.isEmpty) return null;
+    return EventRegistration.fromMap(maps.first);
+  }
+
+  /// Marque une inscription comme présente de façon atomique.
+  /// Utilise un UPDATE conditionnel pour éviter la double validation.
+  /// Retourne true si la mise à jour a réussi (exactement 1 ligne affectée),
+  /// false si checked_in_at était déjà défini (doublon détecté).
+  Future<bool> checkIn(int registrationId) async {
+    final db = await _db.database;
+    final now = DateTime.now().toIso8601String();
+    // WHERE checked_in_at IS NULL garantit l'atomicité : si déjà validé → 0 rows
+    final rows = await db.rawUpdate(
+      '''UPDATE event_registrations
+         SET checked_in_at = ?
+         WHERE id = ? AND checked_in_at IS NULL''',
+      [now, registrationId],
+    );
+    return rows == 1;
+  }
+
+  // -------------------------------------------------------------------------
   // UPDATE
   // -------------------------------------------------------------------------
 

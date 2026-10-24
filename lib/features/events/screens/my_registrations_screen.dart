@@ -4,6 +4,7 @@ import '../services/registration_service.dart';
 import '../widgets/event_theme.dart';
 import 'event_detail_screen.dart';
 import 'competition_detail_screen.dart';
+import 'ticket_screen.dart';
 
 /// Écran "Mes inscriptions" : liste toutes les inscriptions de l'utilisateur.
 class MyRegistrationsScreen extends StatefulWidget {
@@ -91,6 +92,11 @@ class _MyRegistrationsScreenState extends State<MyRegistrationsScreen> {
                 currentUserId: widget.currentUserId)));
   }
 
+  void _openTicket(EventRegistration reg) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (_) => TicketScreen(registration: reg)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +131,9 @@ class _MyRegistrationsScreenState extends State<MyRegistrationsScreen> {
                     itemBuilder: (_, i) => _RegCard(
                       reg: _registrations[i],
                       onTap: () => _openEvent(_registrations[i]),
+                      onTicket: _registrations[i].status == 'confirmed'
+                          ? () => _openTicket(_registrations[i])
+                          : null,
                       onCancel: _registrations[i].status == 'confirmed'
                           ? () => _cancel(_registrations[i])
                           : null,
@@ -138,9 +147,10 @@ class _MyRegistrationsScreenState extends State<MyRegistrationsScreen> {
 class _RegCard extends StatelessWidget {
   final EventRegistration reg;
   final VoidCallback onTap;
+  final VoidCallback? onTicket;
   final VoidCallback? onCancel;
 
-  const _RegCard({required this.reg, required this.onTap, this.onCancel});
+  const _RegCard({required this.reg, required this.onTap, this.onTicket, this.onCancel});
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +228,32 @@ class _RegCard extends StatelessWidget {
                 Text(reg.ticketCode ?? 'Billet #${reg.id}',
                     style: EventTheme.labelStyle.copyWith(fontSize: 11)),
               ]),
+              // Bouton Mon billet (inscriptions confirmées uniquement)
+              if (onTicket != null) ...[
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: EventTheme.mint,
+                      side: BorderSide(
+                          color: EventTheme.mint.withValues(alpha: 0.6)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    onPressed: onTicket,
+                    icon: const Icon(Icons.qr_code, size: 16),
+                    label: const Text(
+                      'Mon billet',
+                      style: TextStyle(
+                          fontFamily: EventTheme.fontFamily,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ]),
           ),
         ]),
