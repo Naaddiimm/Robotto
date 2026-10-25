@@ -149,13 +149,23 @@ class EventDatabase {
     ''');
 
     // Index
-    await db.execute('CREATE INDEX idx_events_organizer   ON events (organizer_id)');
+    await db.execute(
+      'CREATE INDEX idx_events_organizer   ON events (organizer_id)',
+    );
     await db.execute('CREATE INDEX idx_events_type        ON events (type)');
     await db.execute('CREATE INDEX idx_events_status      ON events (status)');
-    await db.execute('CREATE INDEX idx_events_start_date  ON events (start_date)');
-    await db.execute('CREATE INDEX idx_registrations_user  ON event_registrations (user_id)');
-    await db.execute('CREATE INDEX idx_registrations_event ON event_registrations (event_id)');
-    await db.execute('CREATE INDEX idx_announcements_event ON event_announcements (event_id)');
+    await db.execute(
+      'CREATE INDEX idx_events_start_date  ON events (start_date)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_registrations_user  ON event_registrations (user_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_registrations_event ON event_registrations (event_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_announcements_event ON event_announcements (event_id)',
+    );
   }
 
   /// Migration non-destructive depuis v1 → v2 → v3
@@ -164,7 +174,8 @@ class EventDatabase {
       // Ajouter ticket_code à event_registrations si absent
       try {
         await db.execute(
-            'ALTER TABLE event_registrations ADD COLUMN ticket_code TEXT');
+          'ALTER TABLE event_registrations ADD COLUMN ticket_code TEXT',
+        );
       } catch (_) {} // colonne déjà présente
 
       // Créer event_announcements si absent
@@ -194,7 +205,8 @@ class EventDatabase {
       // Ajouter checked_in_at pour la validation de présence par QR code
       try {
         await db.execute(
-            'ALTER TABLE event_registrations ADD COLUMN checked_in_at TEXT');
+          'ALTER TABLE event_registrations ADD COLUMN checked_in_at TEXT',
+        );
       } catch (_) {} // colonne déjà présente
     }
   }

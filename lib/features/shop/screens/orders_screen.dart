@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/order.dart';
 import '../data/repositories/order_repository.dart';
@@ -140,7 +141,8 @@ class _OrdersScreenState extends State<OrdersScreen>
   Widget _buildOrderList(List<Order> orders, bool isLoading) {
     if (isLoading) {
       return const Center(
-          child: CircularProgressIndicator(color: ShopTheme.mint));
+        child: CircularProgressIndicator(color: ShopTheme.mint),
+      );
     }
     if (orders.isEmpty) {
       return _buildEmptyState();
@@ -172,8 +174,7 @@ class _OrdersScreenState extends State<OrdersScreen>
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  OrderDetailScreen(orderId: order.id!),
+              builder: (context) => OrderDetailScreen(orderId: order.id!),
             ),
           );
           if (!mounted) return;

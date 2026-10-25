@@ -38,15 +38,20 @@ class GithubRepo {
       id: json['id'] as int,
       fullName: json['full_name'] as String? ?? '',
       name: json['name'] as String? ?? '',
-      ownerLogin: (json['owner'] as Map<String, dynamic>?)?['login'] as String? ?? '',
-      ownerAvatarUrl: (json['owner'] as Map<String, dynamic>?)?['avatar_url'] as String? ?? '',
-      description: json['description'] as String? ?? 'Aucune description disponible.',
+      ownerLogin:
+          (json['owner'] as Map<String, dynamic>?)?['login'] as String? ?? '',
+      ownerAvatarUrl:
+          (json['owner'] as Map<String, dynamic>?)?['avatar_url'] as String? ??
+          '',
+      description:
+          json['description'] as String? ?? 'Aucune description disponible.',
       htmlUrl: json['html_url'] as String? ?? '',
       language: json['language'] as String?,
       stargazersCount: json['stargazers_count'] as int? ?? 0,
       forksCount: json['forks_count'] as int? ?? 0,
       openIssuesCount: json['open_issues_count'] as int? ?? 0,
-      license: (json['license'] as Map<String, dynamic>?)?['spdx_id'] as String?,
+      license:
+          (json['license'] as Map<String, dynamic>?)?['spdx_id'] as String?,
       updatedAt: json['updated_at'] as String? ?? '',
       isPrivate: json['private'] as bool? ?? false,
       homepage: json['homepage'] as String?,

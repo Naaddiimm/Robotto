@@ -19,21 +19,21 @@ class EventTeam {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'event_id': eventId,
-        'name': name,
-        'leader_id': leaderId,
-        'created_at': createdAt,
-      };
+    'id': id,
+    'event_id': eventId,
+    'name': name,
+    'leader_id': leaderId,
+    'created_at': createdAt,
+  };
 
   factory EventTeam.fromMap(Map<String, dynamic> map) => EventTeam(
-        id: map['id'] as int?,
-        eventId: map['event_id'] as int,
-        name: map['name'] as String,
-        leaderId: map['leader_id'] as int,
-        createdAt: map['created_at'] as String,
-        memberCount: map['member_count'] as int?,
-      );
+    id: map['id'] as int?,
+    eventId: map['event_id'] as int,
+    name: map['name'] as String,
+    leaderId: map['leader_id'] as int,
+    createdAt: map['created_at'] as String,
+    memberCount: map['member_count'] as int?,
+  );
 }
 
 /// Membre d'une équipe.
@@ -53,18 +53,18 @@ class EventTeamMember {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'team_id': teamId,
-        'user_id': userId,
-        'role': role,
-        'joined_at': joinedAt,
-      };
+    'id': id,
+    'team_id': teamId,
+    'user_id': userId,
+    'role': role,
+    'joined_at': joinedAt,
+  };
 
   factory EventTeamMember.fromMap(Map<String, dynamic> map) => EventTeamMember(
-        id: map['id'] as int?,
-        teamId: map['team_id'] as int,
-        userId: map['user_id'] as int,
-        role: map['role'] as String,
-        joinedAt: map['joined_at'] as String,
-      );
+    id: map['id'] as int?,
+    teamId: map['team_id'] as int,
+    userId: map['user_id'] as int,
+    role: map['role'] as String,
+    joinedAt: map['joined_at'] as String,
+  );
 }

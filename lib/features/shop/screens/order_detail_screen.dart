@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/order.dart';
 import '../data/models/order_item.dart';
@@ -49,8 +50,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       _isLoading = false;
       if (detail != null && userId != null) {
         _isBuyer = detail.order.buyerId == userId;
-        _isSeller =
-            detail.items.any((item) => item.sellerId == userId);
+        _isSeller = detail.items.any((item) => item.sellerId == userId);
       }
     });
 
@@ -94,13 +94,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   String _statusLabel(String status) {
     switch (status) {
-      case Order.statusPending: return 'Pending';
-      case Order.statusPreparing: return 'Preparing';
-      case Order.statusShipped: return 'Shipped';
-      case Order.statusOutForDelivery: return 'Out for Delivery';
-      case Order.statusDelivered: return 'Delivered';
-      case Order.statusCancelled: return 'Cancelled';
-      default: return status;
+      case Order.statusPending:
+        return 'Pending';
+      case Order.statusPreparing:
+        return 'Preparing';
+      case Order.statusShipped:
+        return 'Shipped';
+      case Order.statusOutForDelivery:
+        return 'Out for Delivery';
+      case Order.statusDelivered:
+        return 'Delivered';
+      case Order.statusCancelled:
+        return 'Cancelled';
+      default:
+        return status;
     }
   }
 
@@ -131,8 +138,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           _loadOrder();
         } catch (e) {
           if (!mounted) return;
-          _showFlushbar(e.toString().replaceAll('Exception: ', ''),
-              isError: true);
+          _showFlushbar(
+            e.toString().replaceAll('Exception: ', ''),
+            isError: true,
+          );
         }
       },
     );
@@ -144,7 +153,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       title: 'Cancel Order',
       icon: Icons.cancel_outlined,
       iconColor: ShopTheme.error,
-      message: 'Are you sure you want to cancel this order? Stock will be restored.',
+      message:
+          'Are you sure you want to cancel this order? Stock will be restored.',
       confirmText: 'Cancel Order',
       confirmColor: ShopTheme.error,
       onConfirm: () async {
@@ -158,8 +168,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           _loadOrder();
         } catch (e) {
           if (!mounted) return;
-          _showFlushbar(e.toString().replaceAll('Exception: ', ''),
-              isError: true);
+          _showFlushbar(
+            e.toString().replaceAll('Exception: ', ''),
+            isError: true,
+          );
         }
       },
     );
@@ -186,8 +198,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Navigator.pop(context, true);
         } catch (e) {
           if (!mounted) return;
-          _showFlushbar(e.toString().replaceAll('Exception: ', ''),
-              isError: true);
+          _showFlushbar(
+            e.toString().replaceAll('Exception: ', ''),
+            isError: true,
+          );
         }
       },
     );
@@ -219,7 +233,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             return SafeArea(
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: 24, right: 24, top: 24,
+                  left: 24,
+                  right: 24,
+                  top: 24,
                   bottom: MediaQuery.of(context).viewInsets.bottom + 24,
                 ),
                 child: SingleChildScrollView(
@@ -227,13 +243,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Edit Order Details',
-                          style: TextStyle(
-                            fontFamily: ShopTheme.fontFamily,
-                            color: ShopTheme.text,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      Text(
+                        'Edit Order Details',
+                        style: TextStyle(
+                          fontFamily: ShopTheme.fontFamily,
+                          color: ShopTheme.text,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       _sheetField(nameCtl, 'Recipient Name'),
                       const SizedBox(height: 12),
@@ -242,8 +260,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       _sheetField(cityCtl, 'City'),
                       const SizedBox(height: 12),
                       // Mode
-                      Text('Delivery Mode',
-                          style: ShopTheme.labelStyle),
+                      Text('Delivery Mode', style: ShopTheme.labelStyle),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -259,8 +276,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             selected: isSelected,
                             onSelected: (v) =>
                                 setSheet(() => mode = v ? m : mode),
-                            selectedColor:
-                                ShopTheme.violet.withValues(alpha: 0.25),
+                            selectedColor: ShopTheme.violet.withValues(
+                              alpha: 0.25,
+                            ),
                             labelStyle: TextStyle(
                               color: isSelected
                                   ? ShopTheme.mint
@@ -290,8 +308,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             selected: isSelected,
                             onSelected: (v) =>
                                 setSheet(() => zone = v ? z : zone),
-                            selectedColor:
-                                ShopTheme.violet.withValues(alpha: 0.25),
+                            selectedColor: ShopTheme.violet.withValues(
+                              alpha: 0.25,
+                            ),
                             labelStyle: TextStyle(
                               color: isSelected
                                   ? ShopTheme.mint
@@ -327,16 +346,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             icon: const Icon(Icons.remove_circle_outline),
                             color: ShopTheme.violet,
                           ),
-                          Text('$quantity',
-                              style: TextStyle(
-                                fontFamily: ShopTheme.fontFamily,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: ShopTheme.text,
-                              )),
+                          Text(
+                            '$quantity',
+                            style: TextStyle(
+                              fontFamily: ShopTheme.fontFamily,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ShopTheme.text,
+                            ),
+                          ),
                           IconButton(
-                            onPressed: () =>
-                                setSheet(() => quantity++),
+                            onPressed: () => setSheet(() => quantity++),
                             icon: const Icon(Icons.add_circle_outline),
                             color: ShopTheme.violet,
                           ),
@@ -366,11 +386,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               quantity: quantity,
                             );
                           },
-                          child: const Text('Save Changes',
-                              style: TextStyle(
-                                fontFamily: ShopTheme.fontFamily,
-                                fontWeight: FontWeight.bold,
-                              )),
+                          child: const Text(
+                            'Save Changes',
+                            style: TextStyle(
+                              fontFamily: ShopTheme.fontFamily,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -551,10 +573,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       body: SafeArea(
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: ShopTheme.mint))
+                child: CircularProgressIndicator(color: ShopTheme.mint),
+              )
             : _detail == null
-                ? _buildNotFound()
-                : _buildContent(),
+            ? _buildNotFound()
+            : _buildContent(),
       ),
     );
   }
@@ -564,7 +587,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: ShopTheme.secondaryText),
+          const Icon(
+            Icons.error_outline,
+            size: 48,
+            color: ShopTheme.secondaryText,
+          ),
           const SizedBox(height: 16),
           Text('Order not found', style: ShopTheme.bodyStyle),
           const SizedBox(height: 16),
@@ -587,7 +614,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         // Header
         Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: ShopTheme.screenPadding, vertical: 12),
+            horizontal: ShopTheme.screenPadding,
+            vertical: 12,
+          ),
           child: Row(
             children: [
               IconButton(
@@ -665,13 +694,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   (String, Color) _statusConfig(String status) {
     switch (status) {
-      case Order.statusPending: return ('Pending', ShopTheme.secondaryText);
-      case Order.statusPreparing: return ('Preparing', ShopTheme.violet);
-      case Order.statusShipped: return ('Shipped', ShopTheme.violet);
-      case Order.statusOutForDelivery: return ('Out for Delivery', ShopTheme.mint);
-      case Order.statusDelivered: return ('Delivered', ShopTheme.mint);
-      case Order.statusCancelled: return ('Cancelled', ShopTheme.error);
-      default: return (status, ShopTheme.secondaryText);
+      case Order.statusPending:
+        return ('Pending', ShopTheme.secondaryText);
+      case Order.statusPreparing:
+        return ('Preparing', ShopTheme.violet);
+      case Order.statusShipped:
+        return ('Shipped', ShopTheme.violet);
+      case Order.statusOutForDelivery:
+        return ('Out for Delivery', ShopTheme.mint);
+      case Order.statusDelivered:
+        return ('Delivered', ShopTheme.mint);
+      case Order.statusCancelled:
+        return ('Cancelled', ShopTheme.error);
+      default:
+        return (status, ShopTheme.secondaryText);
     }
   }
 
@@ -833,9 +869,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   foregroundColor: ShopTheme.violet,
-                  side: BorderSide(color: ShopTheme.violet.withValues(alpha: 0.5)),
+                  side: BorderSide(
+                    color: ShopTheme.violet.withValues(alpha: 0.5),
+                  ),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: _showEditSheet,
                 child: const Row(
@@ -843,11 +882,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Icon(Icons.edit_outlined, size: 20),
                     SizedBox(width: 8),
-                    Text('Edit Details',
-                        style: TextStyle(
-                          fontFamily: ShopTheme.fontFamily,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      'Edit Details',
+                      style: TextStyle(
+                        fontFamily: ShopTheme.fontFamily,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -863,7 +904,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   foregroundColor: ShopTheme.error,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: _cancelOrder,
                 child: const Row(
@@ -871,11 +913,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Icon(Icons.cancel_outlined, size: 20),
                     SizedBox(width: 8),
-                    Text('Cancel Order',
-                        style: TextStyle(
-                          fontFamily: ShopTheme.fontFamily,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      'Cancel Order',
+                      style: TextStyle(
+                        fontFamily: ShopTheme.fontFamily,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -892,7 +936,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   foregroundColor: ShopTheme.error,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: _deleteOrder,
                 child: const Row(
@@ -900,11 +945,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: [
                     Icon(Icons.delete_outline, size: 20),
                     SizedBox(width: 8),
-                    Text('Delete from History',
-                        style: TextStyle(
-                          fontFamily: ShopTheme.fontFamily,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      'Delete from History',
+                      style: TextStyle(
+                        fontFamily: ShopTheme.fontFamily,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -921,7 +968,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 backgroundColor: ShopTheme.violet,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onPressed: _advanceStatus,
               child: Row(

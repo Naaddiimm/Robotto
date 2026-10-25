@@ -35,7 +35,8 @@ class RegistrationService {
     final taken = await _repo.getConfirmedCount(eventId);
     if (taken >= event.capacity) {
       return ServiceResult.failure(
-          'Cet événement est complet (${event.capacity} places).');
+        'Cet événement est complet (${event.capacity} places).',
+      );
     }
 
     // 4. Si annulation précédente, réinscrire
@@ -46,7 +47,10 @@ class RegistrationService {
 
     try {
       final id = await _repo.register(
-          eventId: eventId, userId: userId, teamId: teamId);
+        eventId: eventId,
+        userId: userId,
+        teamId: teamId,
+      );
       return ServiceResult.success(id);
     } catch (e) {
       return ServiceResult.failure('Erreur inscription : $e');
@@ -63,8 +67,7 @@ class RegistrationService {
   Future<List<EventRegistration>> getParticipants(int eventId) =>
       _repo.getEventParticipants(eventId);
 
-  Future<EventRegistration?> getMyRegistration(
-          int eventId, int userId) =>
+  Future<EventRegistration?> getMyRegistration(int eventId, int userId) =>
       _repo.getRegistration(eventId, userId);
 
   Future<int> getAvailableSpots(EventModel event) async {

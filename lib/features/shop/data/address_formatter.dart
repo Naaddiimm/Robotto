@@ -33,18 +33,30 @@ class AddressFormatter {
 
     // Grand Tunis governorates (French and Arabic)
     const grandTunisNames = {
-      'tunis', 'tunis governorate', 'tunis province',
-      'ariana', 'l\'ariana', 'la mannouba',
-      'ben arous', 'benarous',
-      'manouba', 'mannouba', 'la manouba',
-      'تونس', 'أريانة', 'بن عروس', 'منوبة',
+      'tunis',
+      'tunis governorate',
+      'tunis province',
+      'ariana',
+      'l\'ariana',
+      'la mannouba',
+      'ben arous',
+      'benarous',
+      'manouba',
+      'mannouba',
+      'la manouba',
+      'تونس',
+      'أريانة',
+      'بن عروس',
+      'منوبة',
     };
 
     if (grandTunisNames.contains(g)) return 'grand_tunis';
 
     // Also check if the governorate contains one of these names
-    if (g.contains('tunis') || g.contains('ariana') ||
-        g.contains('ben arous') || g.contains('manouba')) {
+    if (g.contains('tunis') ||
+        g.contains('ariana') ||
+        g.contains('ben arous') ||
+        g.contains('manouba')) {
       return 'grand_tunis';
     }
 

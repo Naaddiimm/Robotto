@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../data/models/product.dart';
 import '../data/repositories/product_repository.dart';
 import '../widgets/shop_theme.dart';
@@ -99,7 +101,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
             return SafeArea(
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: 24, right: 24, top: 24,
+                  left: 24,
+                  right: 24,
+                  top: 24,
                   bottom: MediaQuery.of(context).viewInsets.bottom + 24,
                 ),
                 child: SingleChildScrollView(
@@ -119,8 +123,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       const SizedBox(height: 24),
 
                       // Price range
-                      Text('Price Range (TND)',
-                          style: ShopTheme.labelStyle),
+                      Text('Price Range (TND)', style: ShopTheme.labelStyle),
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -128,11 +131,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             child: TextField(
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                      decimal: true),
+                                    decimal: true,
+                                  ),
                               decoration: InputDecoration(
                                 hintText: 'Min',
                                 hintStyle: TextStyle(
-                                    color: ShopTheme.secondaryText),
+                                  color: ShopTheme.secondaryText,
+                                ),
                                 filled: true,
                                 fillColor: ShopTheme.surface,
                                 border: OutlineInputBorder(
@@ -141,15 +146,18 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 ),
                               ),
                               style: TextStyle(
-                                  color: ShopTheme.text,
-                                  fontFamily: ShopTheme.fontFamily),
+                                color: ShopTheme.text,
+                                fontFamily: ShopTheme.fontFamily,
+                              ),
                               controller: TextEditingController(
-                                  text: minPrice == 0
-                                      ? ''
-                                      : minPrice.toStringAsFixed(0)),
+                                text: minPrice == 0
+                                    ? ''
+                                    : minPrice.toStringAsFixed(0),
+                              ),
                               onChanged: (v) {
                                 final parsed = double.tryParse(
-                                    v.replaceAll(',', '.'));
+                                  v.replaceAll(',', '.'),
+                                );
                                 if (parsed != null) {
                                   setSheetState(() => minPrice = parsed);
                                 } else if (v.isEmpty) {
@@ -163,11 +171,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             child: TextField(
                               keyboardType:
                                   const TextInputType.numberWithOptions(
-                                      decimal: true),
+                                    decimal: true,
+                                  ),
                               decoration: InputDecoration(
                                 hintText: 'Max',
                                 hintStyle: TextStyle(
-                                    color: ShopTheme.secondaryText),
+                                  color: ShopTheme.secondaryText,
+                                ),
                                 filled: true,
                                 fillColor: ShopTheme.surface,
                                 border: OutlineInputBorder(
@@ -176,15 +186,18 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 ),
                               ),
                               style: TextStyle(
-                                  color: ShopTheme.text,
-                                  fontFamily: ShopTheme.fontFamily),
+                                color: ShopTheme.text,
+                                fontFamily: ShopTheme.fontFamily,
+                              ),
                               controller: TextEditingController(
-                                  text: maxPrice == 100000
-                                      ? ''
-                                      : maxPrice.toStringAsFixed(0)),
+                                text: maxPrice == 100000
+                                    ? ''
+                                    : maxPrice.toStringAsFixed(0),
+                              ),
                               onChanged: (v) {
                                 final parsed = double.tryParse(
-                                    v.replaceAll(',', '.'));
+                                  v.replaceAll(',', '.'),
+                                );
                                 if (parsed != null) {
                                   setSheetState(() => maxPrice = parsed);
                                 } else if (v.isEmpty) {
@@ -203,8 +216,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       TextField(
                         decoration: InputDecoration(
                           hintText: 'Filter by brand',
-                          hintStyle:
-                              TextStyle(color: ShopTheme.secondaryText),
+                          hintStyle: TextStyle(color: ShopTheme.secondaryText),
                           filled: true,
                           fillColor: ShopTheme.surface,
                           border: OutlineInputBorder(
@@ -213,11 +225,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           ),
                         ),
                         style: TextStyle(
-                            color: ShopTheme.text,
-                            fontFamily: ShopTheme.fontFamily),
+                          color: ShopTheme.text,
+                          fontFamily: ShopTheme.fontFamily,
+                        ),
                         controller: TextEditingController(text: brand),
-                        onChanged: (v) =>
-                            setSheetState(() => brand = v),
+                        onChanged: (v) => setSheetState(() => brand = v),
                       ),
                       const SizedBox(height: 20),
 
@@ -232,11 +244,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             label: Text(lvl),
                             selected: isSelected,
                             onSelected: (selected) {
-                              setSheetState(() =>
-                                  level = selected ? lvl : null);
+                              setSheetState(
+                                () => level = selected ? lvl : null,
+                              );
                             },
-                            selectedColor:
-                                ShopTheme.violet.withValues(alpha: 0.25),
+                            selectedColor: ShopTheme.violet.withValues(
+                              alpha: 0.25,
+                            ),
                             labelStyle: TextStyle(
                               color: isSelected
                                   ? ShopTheme.mint
@@ -264,8 +278,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           ),
                         ),
                         value: inStock,
-                        onChanged: (v) =>
-                            setSheetState(() => inStock = v),
+                        onChanged: (v) => setSheetState(() => inStock = v),
                         activeThumbColor: ShopTheme.violet,
                       ),
                       const SizedBox(height: 24),
@@ -308,8 +321,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               onPressed: () {
                                 setState(() {
                                   _minPrice = minPrice == 0 ? null : minPrice;
-                                  _maxPrice =
-                                      maxPrice == 100000 ? null : maxPrice;
+                                  _maxPrice = maxPrice == 100000
+                                      ? null
+                                      : maxPrice;
                                   _brandFilter = brand;
                                   _inStockOnly = inStock;
                                   _levelFilter = level;
@@ -401,8 +415,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             ),
                           ),
                           if (isSelected)
-                            const Icon(Icons.check_circle,
-                                color: ShopTheme.mint),
+                            const Icon(
+                              Icons.check_circle,
+                              color: ShopTheme.mint,
+                            ),
                         ],
                       ),
                     ),
@@ -427,7 +443,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
         // Search bar
         Padding(
           padding: const EdgeInsets.fromLTRB(
-            ShopTheme.screenPadding, 8, ShopTheme.screenPadding, 8,
+            ShopTheme.screenPadding,
+            8,
+            ShopTheme.screenPadding,
+            8,
           ),
           child: TextField(
             controller: _searchController,
@@ -440,21 +459,30 @@ class _CatalogScreenState extends State<CatalogScreen> {
             decoration: InputDecoration(
               hintText: 'Search products...',
               hintStyle: TextStyle(color: ShopTheme.secondaryText),
-              prefixIcon:
-                  Icon(Icons.search, color: ShopTheme.secondaryText, size: 20),
+              prefixIcon: Icon(
+                Icons.search,
+                color: ShopTheme.secondaryText,
+                size: 20,
+              ),
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Filter
                   IconButton(
-                    icon: Icon(Icons.filter_list_outlined,
-                        color: ShopTheme.secondaryText, size: 20),
+                    icon: Icon(
+                      Icons.filter_list_outlined,
+                      color: ShopTheme.secondaryText,
+                      size: 20,
+                    ),
                     onPressed: _showFilterSheet,
                   ),
                   // Sort
                   IconButton(
-                    icon: Icon(Icons.sort_outlined,
-                        color: ShopTheme.secondaryText, size: 20),
+                    icon: Icon(
+                      Icons.sort_outlined,
+                      color: ShopTheme.secondaryText,
+                      size: 20,
+                    ),
                     onPressed: _showSortSheet,
                   ),
                 ],
@@ -481,41 +509,41 @@ class _CatalogScreenState extends State<CatalogScreen> {
         Expanded(
           child: _isLoading
               ? const Center(
-                  child: CircularProgressIndicator(color: ShopTheme.mint))
+                  child: CircularProgressIndicator(color: ShopTheme.mint),
+                )
               : _products.isEmpty
-                  ? _buildEmptyState()
-                  : GridView.builder(
-                      padding: const EdgeInsets.fromLTRB(
-                        ShopTheme.screenPadding,
-                        4,
-                        ShopTheme.screenPadding,
-                        ShopTheme.bottomNavPadding,
-                      ),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.72,
-                      ),
-                      itemCount: _products.length,
-                      itemBuilder: (context, index) {
-                        final item = _products[index];
-                        return ProductCard(
-                          item: item,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetailScreen(
-                                  productId: item.product.id!,
-                                ),
-                              ),
-                            );
-                          },
+              ? _buildEmptyState()
+              : GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(
+                    ShopTheme.screenPadding,
+                    4,
+                    ShopTheme.screenPadding,
+                    ShopTheme.bottomNavPadding,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.72,
+                  ),
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final item = _products[index];
+                    return ProductCard(
+                      item: item,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailScreen(
+                              productId: item.product.id!,
+                            ),
+                          ),
                         );
                       },
-                    ),
+                    );
+                  },
+                ),
         ),
       ],
     );

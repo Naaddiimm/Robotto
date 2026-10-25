@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import '../data/models/product.dart';
 
 /// Static validation functions for product fields.
@@ -26,8 +27,10 @@ class ProductValidators {
   static String? validateDescription(String? value) {
     final trimmed = value?.trim() ?? '';
     if (trimmed.isEmpty) return 'Description is required';
-    if (trimmed.length < 10) return 'Description must be at least 10 characters';
-    if (trimmed.length > 500) return 'Description must be at most 500 characters';
+    if (trimmed.length < 10)
+      return 'Description must be at least 10 characters';
+    if (trimmed.length > 500)
+      return 'Description must be at most 500 characters';
     return null;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/event_model.dart';
 import 'event_theme.dart';
 
@@ -22,8 +23,8 @@ class EventCard extends StatelessWidget {
     final startDate = DateTime.tryParse(event.startDate);
     final dateLabel = startDate != null
         ? '${startDate.day.toString().padLeft(2, '0')}/'
-          '${startDate.month.toString().padLeft(2, '0')}/'
-          '${startDate.year}'
+              '${startDate.month.toString().padLeft(2, '0')}/'
+              '${startDate.year}'
         : event.startDate;
 
     return GestureDetector(
@@ -54,12 +55,16 @@ class EventCard extends StatelessWidget {
                   Row(
                     children: [
                       _Badge(
-                        label: event.isCompetition ? 'Compétition' : 'Événement',
+                        label: event.isCompetition
+                            ? 'Compétition'
+                            : 'Événement',
                         color: EventTheme.typeColor(event.type),
                       ),
                       const SizedBox(width: 6),
                       _Badge(
-                        label: EventModel.statusLabels[event.status] ?? event.status,
+                        label:
+                            EventModel.statusLabels[event.status] ??
+                            event.status,
                         color: EventTheme.statusColor(event.status),
                       ),
                       const Spacer(),
@@ -105,8 +110,7 @@ class EventCard extends StatelessWidget {
                         icon: _modeIcon(event.mode),
                         label: EventModel.modeLabels[event.mode] ?? event.mode,
                       ),
-                      if (event.location != null &&
-                          event.location!.isNotEmpty)
+                      if (event.location != null && event.location!.isNotEmpty)
                         _MetaChip(
                           icon: Icons.location_on_outlined,
                           label: event.location!,
@@ -138,9 +142,12 @@ class EventCard extends StatelessWidget {
 
   IconData _modeIcon(String mode) {
     switch (mode) {
-      case 'enligne':   return Icons.videocam_outlined;
-      case 'hybride':   return Icons.merge_type;
-      default:          return Icons.location_city_outlined;
+      case 'enligne':
+        return Icons.videocam_outlined;
+      case 'hybride':
+        return Icons.merge_type;
+      default:
+        return Icons.location_city_outlined;
     }
   }
 }
@@ -184,10 +191,7 @@ class _MetaChip extends StatelessWidget {
       children: [
         Icon(icon, size: 13, color: EventTheme.textSoft),
         const SizedBox(width: 4),
-        Text(
-          label,
-          style: EventTheme.labelStyle.copyWith(fontSize: 12),
-        ),
+        Text(label, style: EventTheme.labelStyle.copyWith(fontSize: 12)),
       ],
     );
   }
@@ -198,11 +202,12 @@ class _IconBtn extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final String tooltip;
-  const _IconBtn(
-      {required this.icon,
-      required this.color,
-      required this.onTap,
-      required this.tooltip});
+  const _IconBtn({
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    required this.tooltip,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../../../core/data/repositories/user_repository.dart';
 import '../../../core/data/models/user.dart';
@@ -35,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final AuthService _authService = AuthService();
   final UserRepository _userRepository = UserRepository();
-  
+
   User? _currentUser;
   bool _isLoadingUser = true;
 
@@ -52,27 +54,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserProfile() async {
     try {
-      final userId = await _authService.getCurrentUserId();
-      if (userId != null) {
-        final user = await _userRepository.getUserById(userId);
-        if (mounted && user != null) {
-          setState(() {
-            _currentUser = user;
-            if (user.profileImagePath != null) {
-              final file = File(user.profileImagePath!);
-              if (file.existsSync()) {
-                _profileImage = file;
-              }
+      final user = await _authService.getCurrentUser();
+      if (mounted) {
+        setState(() {
+          _currentUser = user;
+          if (user?.profileImagePath != null) {
+            final file = File(user!.profileImagePath!);
+            if (file.existsSync()) {
+              _profileImage = file;
             }
-            _isLoadingUser = false;
-          });
-        }
-      } else {
-        if (mounted) {
-          setState(() {
-            _isLoadingUser = false;
-          });
-        }
+          }
+          _isLoadingUser = false;
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -91,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _submitReview() async {
     if (_rating == 0) return;
-    
+
     setState(() {
       _isSubmittingReview = true;
     });
@@ -115,7 +108,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       icon: const Icon(Icons.check_circle, color: bgColor, size: 24),
       messageText: const Text(
         'Review submitted successfully',
-        style: TextStyle(fontFamily: 'Plus Jakarta Sans', color: bgColor, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontFamily: 'Plus Jakarta Sans',
+          color: bgColor,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       duration: const Duration(seconds: 3),
     ).show(context);
@@ -126,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final XFile? pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null && _currentUser != null) {
         final newPath = pickedFile.path;
-        
+
         // Save to DB
         final updatedUser = _currentUser!.copyWith(profileImagePath: newPath);
         await _userRepository.updateUser(updatedUser);
@@ -140,7 +137,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to pick image: $e', style: const TextStyle(fontFamily: 'Plus Jakarta Sans')),
+            content: Text(
+              'Failed to pick image: $e',
+              style: const TextStyle(fontFamily: 'Plus Jakarta Sans'),
+            ),
             backgroundColor: errorColor,
             behavior: SnackBarBehavior.floating,
           ),
@@ -160,7 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 24.0,
+              horizontal: 16.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -200,7 +203,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildPhotoOption({required IconData icon, required String text, required VoidCallback onTap, bool isCancel = false}) {
+  Widget _buildPhotoOption({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+    bool isCancel = false,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -209,7 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         decoration: BoxDecoration(
           color: isCancel ? Colors.transparent : surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isCancel ? surfaceHigh : Colors.transparent),
+          border: Border.all(
+            color: isCancel ? surfaceHigh : Colors.transparent,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (result != null && result == true) {
       // Reload profile
       await _loadUserProfile();
-      
+
       // Show Flushbar
       if (!mounted) return;
       Flushbar(
@@ -261,7 +271,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         icon: const Icon(Icons.check_circle, color: bgColor, size: 24),
         messageText: const Text(
           'Personal information updated',
-          style: TextStyle(fontFamily: 'Plus Jakarta Sans', color: bgColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
+            color: bgColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         duration: const Duration(seconds: 3),
       ).show(context);
@@ -273,7 +287,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProfileSecurityScreen(userId: _currentUser!.id!)),
+      MaterialPageRoute(
+        builder: (context) => ProfileSecurityScreen(userId: _currentUser!.id!),
+      ),
     );
 
     if (result == true) {
@@ -286,7 +302,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         icon: const Icon(Icons.shield_outlined, color: bgColor, size: 24),
         messageText: const Text(
           'Password updated successfully',
-          style: TextStyle(fontFamily: 'Plus Jakarta Sans', color: bgColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
+            color: bgColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         duration: const Duration(seconds: 3),
       ).show(context);
@@ -368,13 +388,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await _userRepository.deleteUser(_currentUser!.id!);
                 // Clear session
                 await _authService.logout();
-                
+
                 if (!navigatorContext.mounted) return;
-                
+
                 // Redirect to Welcome Screen
                 Navigator.pushAndRemoveUntil(
                   navigatorContext,
-                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const WelcomeScreen(),
+                  ),
                   (route) => false,
                 );
               }
@@ -408,11 +430,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final lastName = _currentUser?.lastName ?? "User";
     final experience = _currentUser?.experienceLevel ?? "Not specified";
     String roleSubtitle = "Robotics Enthusiast";
-    
+
     // Customize subtitle if we have experience level from DB
     if (experience != "Not specified") {
       // Capitalize first letter
-      roleSubtitle = "${experience[0].toUpperCase()}${experience.substring(1)} Builder";
+      roleSubtitle =
+          "${experience[0].toUpperCase()}${experience.substring(1)} Builder";
     }
 
     return Container(
@@ -461,8 +484,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_outlined,
-                            color: Colors.white, size: 24),
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                         onPressed: () {},
                       ),
                       Positioned(
@@ -486,7 +512,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 156), // Pad bottom for floating nav bar
+                padding: const EdgeInsets.fromLTRB(
+                  24,
+                  16,
+                  24,
+                  156,
+                ), // Pad bottom for floating nav bar
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -512,11 +543,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: primaryMint.withValues(alpha: 0.1),
                                   blurRadius: 20,
                                   spreadRadius: 2,
-                                )
+                                ),
                               ],
                             ),
                             child: _profileImage == null
-                                ? const Icon(Icons.person_outline, size: 60, color: secondaryText)
+                                ? const Icon(
+                                    Icons.person_outline,
+                                    size: 60,
+                                    color: secondaryText,
+                                  )
                                 : null,
                           ),
                           Positioned(
@@ -531,7 +566,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   shape: BoxShape.circle,
                                   border: Border.all(color: bgColor, width: 3),
                                 ),
-                                child: const Icon(Icons.camera_alt, color: bgColor, size: 16),
+                                child: const Icon(
+                                  Icons.camera_alt,
+                                  color: bgColor,
+                                  size: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -660,10 +699,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           behavior: HitTestBehavior.opaque,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0,
+                            ),
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 200),
-                              transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+                              transitionBuilder: (child, animation) =>
+                                  ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  ),
                               child: Icon(
                                 isSelected ? Icons.star : Icons.star_border,
                                 key: ValueKey<bool>(isSelected),
@@ -689,7 +734,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       decoration: InputDecoration(
                         hintText: "Tell us what you think about ROBOTTO...",
-                        hintStyle: const TextStyle(color: secondaryText, fontSize: 14),
+                        hintStyle: const TextStyle(
+                          color: secondaryText,
+                          fontSize: 14,
+                        ),
                         filled: true,
                         fillColor: surface,
                         contentPadding: const EdgeInsets.all(16.0),
@@ -703,9 +751,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(color: primaryMint, width: 1.5),
+                          borderSide: const BorderSide(
+                            color: primaryMint,
+                            width: 1.5,
+                          ),
                         ),
-                        counterStyle: const TextStyle(color: secondaryText, fontSize: 12),
+                        counterStyle: const TextStyle(
+                          color: secondaryText,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -724,7 +778,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        onPressed: (_rating > 0 && !_isSubmittingReview) ? _submitReview : null,
+                        onPressed: (_rating > 0 && !_isSubmittingReview)
+                            ? _submitReview
+                            : null,
                         child: _isSubmittingReview
                             ? const SizedBox(
                                 width: 24,
@@ -753,7 +809,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: errorColor,
-                          side: BorderSide(color: errorColor.withValues(alpha: 0.5), width: 1.5),
+                          side: BorderSide(
+                            color: errorColor.withValues(alpha: 0.5),
+                            width: 1.5,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),

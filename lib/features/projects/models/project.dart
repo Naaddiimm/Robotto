@@ -14,12 +14,7 @@ class ProjectMember {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'role': role,
-      'avatarUrl': avatarUrl,
-    };
+    return {'id': id, 'name': name, 'role': role, 'avatarUrl': avatarUrl};
   }
 
   factory ProjectMember.fromMap(Map<String, dynamic> map) {
@@ -237,8 +232,8 @@ class Project {
     required this.milestones,
     List<ProjectFile>? files,
     List<VoiceNote>? voiceNotes,
-  })  : files = files ?? [],
-        voiceNotes = voiceNotes ?? [];
+  }) : files = files ?? [],
+       voiceNotes = voiceNotes ?? [];
 
   double get progressPercentage {
     if (tasks.isEmpty) return 0.0;
@@ -250,8 +245,7 @@ class Project {
 
   int get pendingTasksCount => tasks.where((t) => !t.isCompleted).length;
 
-  int get reachedMilestonesCount =>
-      milestones.where((m) => m.isReached).length;
+  int get reachedMilestonesCount => milestones.where((m) => m.isReached).length;
 
   Map<String, dynamic> toMap() {
     return {
@@ -289,23 +283,28 @@ class Project {
       dueDate: map['dueDate'] ?? '30 nov. 2025',
       imagePath: map['imagePath'],
       isJoined: map['isJoined'] ?? false,
-      members: (map['members'] as List<dynamic>?)
+      members:
+          (map['members'] as List<dynamic>?)
               ?.map((m) => ProjectMember.fromMap(m as Map<String, dynamic>))
               .toList() ??
           [],
-      tasks: (map['tasks'] as List<dynamic>?)
+      tasks:
+          (map['tasks'] as List<dynamic>?)
               ?.map((t) => ProjectTask.fromMap(t as Map<String, dynamic>))
               .toList() ??
           [],
-      milestones: (map['milestones'] as List<dynamic>?)
+      milestones:
+          (map['milestones'] as List<dynamic>?)
               ?.map((m) => ProjectMilestone.fromMap(m as Map<String, dynamic>))
               .toList() ??
           [],
-      files: (map['files'] as List<dynamic>?)
+      files:
+          (map['files'] as List<dynamic>?)
               ?.map((f) => ProjectFile.fromMap(f as Map<String, dynamic>))
               .toList() ??
           [],
-      voiceNotes: (map['voiceNotes'] as List<dynamic>?)
+      voiceNotes:
+          (map['voiceNotes'] as List<dynamic>?)
               ?.map((v) => VoiceNote.fromMap(v as Map<String, dynamic>))
               .toList() ??
           [],

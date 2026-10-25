@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // Learning data models
 // ---------------------------------------------------------------------------
 
@@ -78,17 +78,17 @@ class CoursModel {
     String? videoId,
     List<LessonModel>? lessons,
   }) => CoursModel(
-        id: id,
-        title: title ?? this.title,
-        module: module ?? this.module,
-        description: description ?? this.description,
-        level: level ?? this.level,
-        duration: duration ?? this.duration,
-        rating: rating,
-        content: content ?? this.content,
-        videoId: videoId ?? this.videoId,
-        lessons: lessons ?? this.lessons,
-      );
+    id: id,
+    title: title ?? this.title,
+    module: module ?? this.module,
+    description: description ?? this.description,
+    level: level ?? this.level,
+    duration: duration ?? this.duration,
+    rating: rating,
+    content: content ?? this.content,
+    videoId: videoId ?? this.videoId,
+    lessons: lessons ?? this.lessons,
+  );
 }
 
 class FormationModel {
@@ -128,17 +128,17 @@ class FormationModel {
     String? videoId,
     List<ModuleModel>? modules,
   }) => FormationModel(
-        id: id,
-        title: title ?? this.title,
-        subtitle: subtitle ?? this.subtitle,
-        instructor: instructor,
-        level: level ?? this.level,
-        duration: duration ?? this.duration,
-        rating: rating,
-        enrolled: enrolled,
-        videoId: videoId ?? this.videoId,
-        modules: modules ?? this.modules,
-      );
+    id: id,
+    title: title ?? this.title,
+    subtitle: subtitle ?? this.subtitle,
+    instructor: instructor,
+    level: level ?? this.level,
+    duration: duration ?? this.duration,
+    rating: rating,
+    enrolled: enrolled,
+    videoId: videoId ?? this.videoId,
+    modules: modules ?? this.modules,
+  );
 }
 
 // ── Sample data ───────────────────────────────────────────────────────────────
@@ -172,12 +172,23 @@ final kSampleCours = <CoursModel>[
         "}\n"
         "```",
     lessons: const [
-      LessonModel(id: 11, title: 'Leçon 3 · Brancher un capteur',
-          duration: '12 min', state: LessonState.done),
-      LessonModel(id: 12, title: 'Leçon 4 · Lire un capteur',
-          duration: '9 min', state: LessonState.active),
-      LessonModel(id: 13, title: 'Leçon 5 · Afficher les valeurs',
-          duration: '11 min'),
+      LessonModel(
+        id: 11,
+        title: 'Leçon 3 · Brancher un capteur',
+        duration: '12 min',
+        state: LessonState.done,
+      ),
+      LessonModel(
+        id: 12,
+        title: 'Leçon 4 · Lire un capteur',
+        duration: '9 min',
+        state: LessonState.active,
+      ),
+      LessonModel(
+        id: 13,
+        title: 'Leçon 5 · Afficher les valeurs',
+        duration: '11 min',
+      ),
       LessonModel(id: 14, title: 'Leçon 6 · Mini-projet', duration: '20 min'),
       LessonModel(id: 15, title: 'Quiz du module', duration: '5 questions'),
     ],
@@ -222,10 +233,18 @@ final kSampleCours = <CoursModel>[
         "print(addition(3, 7))  # 10\n"
         "```",
     lessons: const [
-      LessonModel(id: 21, title: 'Leçon 1 · Variables & types',
-          duration: '14 min', state: LessonState.done),
-      LessonModel(id: 22, title: 'Leçon 2 · Conditions',
-          duration: '10 min', state: LessonState.done),
+      LessonModel(
+        id: 21,
+        title: 'Leçon 1 · Variables & types',
+        duration: '14 min',
+        state: LessonState.done,
+      ),
+      LessonModel(
+        id: 22,
+        title: 'Leçon 2 · Conditions',
+        duration: '10 min',
+        state: LessonState.done,
+      ),
       LessonModel(id: 23, title: 'Leçon 3 · Boucles', duration: '12 min'),
       LessonModel(id: 24, title: 'Leçon 4 · Fonctions', duration: '16 min'),
     ],
@@ -269,8 +288,11 @@ final kSampleCours = <CoursModel>[
         "}\n"
         "```",
     lessons: const [
-      LessonModel(id: 31, title: 'Leçon 7 · Contrôler un moteur',
-          duration: '14 min'),
+      LessonModel(
+        id: 31,
+        title: 'Leçon 7 · Contrôler un moteur',
+        duration: '14 min',
+      ),
       LessonModel(id: 32, title: 'Leçon 8 · Servomoteur', duration: '11 min'),
       LessonModel(id: 33, title: 'Leçon 9 · Projet final', duration: '30 min'),
     ],
@@ -289,35 +311,80 @@ final kSampleFormations = <FormationModel>[
     enrolled: 1240,
     videoId: 'gyMwXuJrbJQ',
     modules: const [
-      ModuleModel(title: 'Module 1 · Introduction', lessons: [
-        LessonModel(id: 101, title: 'Leçon 1 · Présentation Arduino',
-            duration: '8 min', state: LessonState.done,
-            videoId: 'gyMwXuJrbJQ'),
-        LessonModel(id: 102, title: 'Leçon 2 · Installer l\'IDE',
-            duration: '10 min', state: LessonState.done,
-            videoId: 'gyMwXuJrbJQ'),
-      ]),
-      ModuleModel(title: 'Module 2 · Capteurs', lessons: [
-        LessonModel(id: 201, title: 'Leçon 3 · Brancher un capteur',
-            duration: '12 min', state: LessonState.done,
-            videoId: 'gyMwXuJrbJQ'),
-        LessonModel(id: 202, title: 'Leçon 4 · Lire un capteur',
-            duration: '9 min', state: LessonState.active,
-            videoId: 'gyMwXuJrbJQ'),
-        LessonModel(id: 203, title: 'Leçon 5 · Afficher les valeurs',
-            duration: '11 min'),
-        LessonModel(id: 204, title: 'Leçon 6 · Mini-projet',
-            duration: '20 min'),
-        LessonModel(id: 205, title: 'Quiz du module', duration: '5 questions'),
-      ]),
-      ModuleModel(title: 'Module 3 · Actionneurs', lessons: [
-        LessonModel(id: 301, title: 'Leçon 7 · Contrôler un moteur',
-            duration: '14 min', videoId: 'BLrHTHUjPuw'),
-        LessonModel(id: 302, title: 'Leçon 8 · Servomoteur',
-            duration: '11 min'),
-        LessonModel(id: 303, title: 'Leçon 9 · Projet final',
-            duration: '30 min'),
-      ]),
+      ModuleModel(
+        title: 'Module 1 · Introduction',
+        lessons: [
+          LessonModel(
+            id: 101,
+            title: 'Leçon 1 · Présentation Arduino',
+            duration: '8 min',
+            state: LessonState.done,
+            videoId: 'gyMwXuJrbJQ',
+          ),
+          LessonModel(
+            id: 102,
+            title: 'Leçon 2 · Installer l\'IDE',
+            duration: '10 min',
+            state: LessonState.done,
+            videoId: 'gyMwXuJrbJQ',
+          ),
+        ],
+      ),
+      ModuleModel(
+        title: 'Module 2 · Capteurs',
+        lessons: [
+          LessonModel(
+            id: 201,
+            title: 'Leçon 3 · Brancher un capteur',
+            duration: '12 min',
+            state: LessonState.done,
+            videoId: 'gyMwXuJrbJQ',
+          ),
+          LessonModel(
+            id: 202,
+            title: 'Leçon 4 · Lire un capteur',
+            duration: '9 min',
+            state: LessonState.active,
+            videoId: 'gyMwXuJrbJQ',
+          ),
+          LessonModel(
+            id: 203,
+            title: 'Leçon 5 · Afficher les valeurs',
+            duration: '11 min',
+          ),
+          LessonModel(
+            id: 204,
+            title: 'Leçon 6 · Mini-projet',
+            duration: '20 min',
+          ),
+          LessonModel(
+            id: 205,
+            title: 'Quiz du module',
+            duration: '5 questions',
+          ),
+        ],
+      ),
+      ModuleModel(
+        title: 'Module 3 · Actionneurs',
+        lessons: [
+          LessonModel(
+            id: 301,
+            title: 'Leçon 7 · Contrôler un moteur',
+            duration: '14 min',
+            videoId: 'BLrHTHUjPuw',
+          ),
+          LessonModel(
+            id: 302,
+            title: 'Leçon 8 · Servomoteur',
+            duration: '11 min',
+          ),
+          LessonModel(
+            id: 303,
+            title: 'Leçon 9 · Projet final',
+            duration: '30 min',
+          ),
+        ],
+      ),
     ],
   ),
   FormationModel(
@@ -331,20 +398,40 @@ final kSampleFormations = <FormationModel>[
     enrolled: 870,
     videoId: '_uQrJ0TkZlc',
     modules: const [
-      ModuleModel(title: 'Module 1 · Python avancé', lessons: [
-        LessonModel(id: 401, title: 'Leçon 1 · Classes & objets',
-            duration: '15 min', state: LessonState.done,
-            videoId: '_uQrJ0TkZlc'),
-        LessonModel(id: 402, title: 'Leçon 2 · Générateurs',
-            duration: '12 min', state: LessonState.active),
-        LessonModel(id: 403, title: 'Leçon 3 · Décorateurs',
-            duration: '10 min'),
-      ]),
-      ModuleModel(title: 'Module 2 · NumPy & Pandas', lessons: [
-        LessonModel(id: 501, title: 'Leçon 4 · Arrays', duration: '14 min'),
-        LessonModel(id: 502, title: 'Leçon 5 · DataFrames',
-            duration: '18 min'),
-      ]),
+      ModuleModel(
+        title: 'Module 1 · Python avancé',
+        lessons: [
+          LessonModel(
+            id: 401,
+            title: 'Leçon 1 · Classes & objets',
+            duration: '15 min',
+            state: LessonState.done,
+            videoId: '_uQrJ0TkZlc',
+          ),
+          LessonModel(
+            id: 402,
+            title: 'Leçon 2 · Générateurs',
+            duration: '12 min',
+            state: LessonState.active,
+          ),
+          LessonModel(
+            id: 403,
+            title: 'Leçon 3 · Décorateurs',
+            duration: '10 min',
+          ),
+        ],
+      ),
+      ModuleModel(
+        title: 'Module 2 · NumPy & Pandas',
+        lessons: [
+          LessonModel(id: 501, title: 'Leçon 4 · Arrays', duration: '14 min'),
+          LessonModel(
+            id: 502,
+            title: 'Leçon 5 · DataFrames',
+            duration: '18 min',
+          ),
+        ],
+      ),
     ],
   ),
 ];

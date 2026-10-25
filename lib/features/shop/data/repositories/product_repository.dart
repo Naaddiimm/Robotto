@@ -205,8 +205,7 @@ class ProductRepository {
       whereArgs.add(level);
     }
 
-    final whereClause =
-        whereParts.isEmpty ? null : whereParts.join(' AND ');
+    final whereClause = whereParts.isEmpty ? null : whereParts.join(' AND ');
     final orderBy = _sortToOrderBy(sort);
 
     final maps = await db.query(
@@ -234,7 +233,9 @@ class ProductRepository {
     final whereArgs = <dynamic>[];
 
     if (search != null && search.trim().isNotEmpty) {
-      whereParts.add('(p.name LIKE ? OR p.brand LIKE ? OR p.description LIKE ?)');
+      whereParts.add(
+        '(p.name LIKE ? OR p.brand LIKE ? OR p.description LIKE ?)',
+      );
       whereArgs.addAll(['%$search%', '%$search%', '%$search%']);
     }
     if (category != null && category.isNotEmpty) {
@@ -261,9 +262,11 @@ class ProductRepository {
       whereArgs.add(level);
     }
 
-    final whereClause =
-        whereParts.isEmpty ? '' : 'WHERE ${whereParts.join(' AND ')}';
-    final orderBy = _sortToOrderBy(sort).replaceAll('created_at', 'p.created_at')
+    final whereClause = whereParts.isEmpty
+        ? ''
+        : 'WHERE ${whereParts.join(' AND ')}';
+    final orderBy = _sortToOrderBy(sort)
+        .replaceAll('created_at', 'p.created_at')
         .replaceAll('price', 'p.price')
         .replaceAll('name', 'p.name');
 
@@ -288,7 +291,8 @@ class ProductRepository {
   /// Returns products by seller with their cover image path.
   Future<List<ProductWithCover>> getBySellerWithCover(int sellerId) async {
     final db = await _dbProvider.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT p.*,
              (SELECT pi.path FROM product_images pi
               WHERE pi.product_id = p.id
@@ -296,7 +300,9 @@ class ProductRepository {
       FROM products p
       WHERE p.seller_id = ?
       ORDER BY p.created_at DESC
-    ''', [sellerId]);
+    ''',
+      [sellerId],
+    );
 
     return maps.map((m) {
       return ProductWithCover(

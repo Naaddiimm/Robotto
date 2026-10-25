@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../learning_theme.dart';
 import '../data/favourites_repository.dart';
 
@@ -48,14 +49,18 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      width: 44, height: 44,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: LearningTheme.surface,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: LearningTheme.border),
                       ),
-                      child: const Icon(Icons.chevron_left,
-                          color: Colors.white, size: 28),
+                      child: const Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -64,24 +69,31 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                     children: [
                       Text('Mes leçons', style: LearningTheme.captionStyle),
                       SizedBox(height: 2),
-                      Text('Favoris',
-                          style: TextStyle(
-                              fontFamily: LearningTheme.font,
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700)),
+                      Text(
+                        'Favoris',
+                        style: TextStyle(
+                          fontFamily: LearningTheme.font,
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
                   const Spacer(),
                   Container(
-                    width: 36, height: 36,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
                       color: LearningTheme.surface,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: LearningTheme.border),
                     ),
-                    child: const Icon(Icons.star_rounded,
-                        color: LearningTheme.star, size: 20),
+                    child: const Icon(
+                      Icons.star_rounded,
+                      color: LearningTheme.star,
+                      size: 20,
+                    ),
                   ),
                 ],
               ),
@@ -95,20 +107,24 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                   alignment: Alignment.centerLeft,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: LearningTheme.mint.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: LearningTheme.mint.withValues(alpha: 0.3)),
+                        color: LearningTheme.mint.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Text(
                       '${_favourites.length} leçon${_favourites.length > 1 ? 's' : ''} sauvegardée${_favourites.length > 1 ? 's' : ''}',
                       style: const TextStyle(
-                          fontFamily: LearningTheme.font,
-                          color: LearningTheme.mint,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600),
+                        fontFamily: LearningTheme.font,
+                        color: LearningTheme.mint,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -137,35 +153,42 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
   }
 
   static Widget _emptyState() => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72, height: 72,
-              decoration: BoxDecoration(
-                color: LearningTheme.surface,
-                shape: BoxShape.circle,
-                border: Border.all(color: LearningTheme.border),
-              ),
-              child: const Icon(Icons.star_outline_rounded,
-                  color: LearningTheme.textSecond, size: 36),
-            ),
-            const SizedBox(height: 20),
-            const Text('Aucun favori pour l\'instant',
-                style: TextStyle(
-                    fontFamily: LearningTheme.font,
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700)),
-            const SizedBox(height: 8),
-            const Text(
-              'Appuyez sur ★ dans une leçon\npour la sauvegarder ici.',
-              textAlign: TextAlign.center,
-              style: LearningTheme.bodyStyle,
-            ),
-          ],
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 72,
+          height: 72,
+          decoration: BoxDecoration(
+            color: LearningTheme.surface,
+            shape: BoxShape.circle,
+            border: Border.all(color: LearningTheme.border),
+          ),
+          child: const Icon(
+            Icons.star_outline_rounded,
+            color: LearningTheme.textSecond,
+            size: 36,
+          ),
         ),
-      );
+        const SizedBox(height: 20),
+        const Text(
+          'Aucun favori pour l\'instant',
+          style: TextStyle(
+            fontFamily: LearningTheme.font,
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Appuyez sur ★ dans une leçon\npour la sauvegarder ici.',
+          textAlign: TextAlign.center,
+          style: LearningTheme.bodyStyle,
+        ),
+      ],
+    ),
+  );
 }
 
 // ── Card ──────────────────────────────────────────────────────────────────────
@@ -185,35 +208,48 @@ class _FavouriteCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 40, height: 40,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 color: LearningTheme.star.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.star_rounded,
-                  color: LearningTheme.star, size: 22),
+              child: const Icon(
+                Icons.star_rounded,
+                color: LearningTheme.star,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(lesson.title,
-                      style: const TextStyle(
-                          fontFamily: LearningTheme.font,
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                  Text(
+                    lesson.title,
+                    style: const TextStyle(
+                      fontFamily: LearningTheme.font,
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.folder_outlined,
-                          color: LearningTheme.textSecond, size: 13),
+                      const Icon(
+                        Icons.folder_outlined,
+                        color: LearningTheme.textSecond,
+                        size: 13,
+                      ),
                       const SizedBox(width: 4),
                       Text(lesson.module, style: LearningTheme.captionStyle),
                       const SizedBox(width: 12),
-                      const Icon(Icons.access_time_rounded,
-                          color: LearningTheme.textSecond, size: 13),
+                      const Icon(
+                        Icons.access_time_rounded,
+                        color: LearningTheme.textSecond,
+                        size: 13,
+                      ),
                       const SizedBox(width: 4),
                       Text(lesson.duration, style: LearningTheme.captionStyle),
                     ],
@@ -224,13 +260,17 @@ class _FavouriteCard extends StatelessWidget {
             GestureDetector(
               onTap: onRemove,
               child: Container(
-                width: 34, height: 34,
+                width: 34,
+                height: 34,
                 decoration: BoxDecoration(
                   color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.star_rounded,
-                    color: LearningTheme.star, size: 18),
+                child: const Icon(
+                  Icons.star_rounded,
+                  color: LearningTheme.star,
+                  size: 18,
+                ),
               ),
             ),
           ],

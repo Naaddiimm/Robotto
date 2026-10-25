@@ -39,11 +39,7 @@ class Delivery {
   static const String modeRelayPoint = 'relay_point';
   static const String modeStorePickup = 'store_pickup';
 
-  static const List<String> modes = [
-    modeHome,
-    modeRelayPoint,
-    modeStorePickup,
-  ];
+  static const List<String> modes = [modeHome, modeRelayPoint, modeStorePickup];
 
   // ---------------------------------------------------------------------------
   // Status constants (mirrors Order.statuses)

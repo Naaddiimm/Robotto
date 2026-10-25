@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+
 import 'event_database.dart';
 import '../models/competition_detail.dart';
 import '../models/event_model.dart';
@@ -98,14 +99,20 @@ class CompetitionRepository {
 
   Future<int> deleteResult(int id) async {
     final db = await _db.database;
-    return await db.delete('competition_results',
-        where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'competition_results',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<void> deleteAllResults(int eventId) async {
     final db = await _db.database;
-    await db.delete('competition_results',
-        where: 'event_id = ?', whereArgs: [eventId]);
+    await db.delete(
+      'competition_results',
+      where: 'event_id = ?',
+      whereArgs: [eventId],
+    );
   }
 
   /// Publie les résultats d'une compétition.

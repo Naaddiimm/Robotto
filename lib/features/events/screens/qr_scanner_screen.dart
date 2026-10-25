@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../services/checkin_service.dart';
 import '../widgets/event_theme.dart';
 
@@ -158,12 +159,14 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     String message;
     switch (error.errorCode) {
       case MobileScannerErrorCode.permissionDenied:
-        message = 'Permission caméra refusée.\n\n'
+        message =
+            'Permission caméra refusée.\n\n'
             'Allez dans Paramètres → Applications → Robotto → '
             'Autorisations → Caméra pour l\'activer.';
         break;
       default:
-        message = 'Impossible d\'accéder à la caméra.\n${error.errorDetails?.message ?? ''}';
+        message =
+            'Impossible d\'accéder à la caméra.\n${error.errorDetails?.message ?? ''}';
     }
     return Center(
       child: Padding(
@@ -171,8 +174,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.no_photography_outlined,
-                size: 64, color: EventTheme.error),
+            const Icon(
+              Icons.no_photography_outlined,
+              size: 64,
+              color: EventTheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               message,
@@ -185,12 +191,15 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 foregroundColor: EventTheme.mint,
                 side: const BorderSide(color: EventTheme.mint),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Retour',
-                  style: TextStyle(fontFamily: EventTheme.fontFamily)),
+              label: const Text(
+                'Retour',
+                style: TextStyle(fontFamily: EventTheme.fontFamily),
+              ),
             ),
           ],
         ),
@@ -282,15 +291,17 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               foregroundColor: EventTheme.bg,
               minimumSize: const Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             onPressed: _reset,
             icon: const Icon(Icons.qr_code_scanner),
             label: const Text(
               'Scanner un autre billet',
               style: TextStyle(
-                  fontFamily: EventTheme.fontFamily,
-                  fontWeight: FontWeight.bold),
+                fontFamily: EventTheme.fontFamily,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -302,7 +313,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               side: const BorderSide(color: EventTheme.surfaceHigh),
               minimumSize: const Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             onPressed: () => Navigator.pop(context),
             child: const Text(
@@ -331,68 +343,76 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
 class _ScanOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      const double size = 250;
-      final double cx = (constraints.maxWidth - size) / 2;
-      final double cy = (constraints.maxHeight - size) / 2 - 40;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double size = 250;
+        final double cx = (constraints.maxWidth - size) / 2;
+        final double cy = (constraints.maxHeight - size) / 2 - 40;
 
-      return Stack(
-        children: [
-          // Fond sombre autour du viseur
-          ColorFiltered(
-            colorFilter: const ColorFilter.mode(
-                Colors.black54, BlendMode.srcOut),
-            child: Stack(
-              children: [
-                Container(color: Colors.transparent),
-                Positioned(
-                  left: cx, top: cy,
-                  child: Container(
-                    width: size, height: size,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(12),
+        return Stack(
+          children: [
+            // Fond sombre autour du viseur
+            ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black54,
+                BlendMode.srcOut,
+              ),
+              child: Stack(
+                children: [
+                  Container(color: Colors.transparent),
+                  Positioned(
+                    left: cx,
+                    top: cy,
+                    child: Container(
+                      width: size,
+                      height: size,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // Coins du viseur
-          Positioned(
-            left: cx, top: cy,
-            child: _Corner(Alignment.topLeft),
-          ),
-          Positioned(
-            left: cx + size - 28, top: cy,
-            child: _Corner(Alignment.topRight),
-          ),
-          Positioned(
-            left: cx, top: cy + size - 28,
-            child: _Corner(Alignment.bottomLeft),
-          ),
-          Positioned(
-            left: cx + size - 28, top: cy + size - 28,
-            child: _Corner(Alignment.bottomRight),
-          ),
-
-          // Instruction
-          Positioned(
-            left: 0, right: 0, top: cy + size + 20,
-            child: const Text(
-              'Placez le QR code dans le cadre',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: EventTheme.fontFamily,
-                color: Colors.white,
-                fontSize: 14,
+                ],
               ),
             ),
-          ),
-        ],
-      );
-    });
+
+            // Coins du viseur
+            Positioned(left: cx, top: cy, child: _Corner(Alignment.topLeft)),
+            Positioned(
+              left: cx + size - 28,
+              top: cy,
+              child: _Corner(Alignment.topRight),
+            ),
+            Positioned(
+              left: cx,
+              top: cy + size - 28,
+              child: _Corner(Alignment.bottomLeft),
+            ),
+            Positioned(
+              left: cx + size - 28,
+              top: cy + size - 28,
+              child: _Corner(Alignment.bottomRight),
+            ),
+
+            // Instruction
+            Positioned(
+              left: 0,
+              right: 0,
+              top: cy + size + 20,
+              child: const Text(
+                'Placez le QR code dans le cadre',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: EventTheme.fontFamily,
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -403,16 +423,15 @@ class _Corner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double length = 28;
-    final bool isLeft = alignment == Alignment.topLeft ||
-        alignment == Alignment.bottomLeft;
-    final bool isTop = alignment == Alignment.topLeft ||
-        alignment == Alignment.topRight;
+    final bool isLeft =
+        alignment == Alignment.topLeft || alignment == Alignment.bottomLeft;
+    final bool isTop =
+        alignment == Alignment.topLeft || alignment == Alignment.topRight;
 
     return SizedBox(
-      width: length, height: length,
-      child: CustomPaint(
-        painter: _CornerPainter(isLeft, isTop),
-      ),
+      width: length,
+      height: length,
+      child: CustomPaint(painter: _CornerPainter(isLeft, isTop)),
     );
   }
 }
@@ -448,24 +467,32 @@ class _CornerPainter extends CustomPainter {
 class _ResultRow extends StatelessWidget {
   final IconData icon;
   final String label, value;
-  const _ResultRow(
-      {required this.icon, required this.label, required this.value});
+  const _ResultRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16, color: EventTheme.mint),
-          const SizedBox(width: 8),
-          Text('$label : ',
-              style:
-                  EventTheme.labelStyle.copyWith(color: EventTheme.textSoft)),
-          Expanded(
-              child: Text(value,
-                  style: const TextStyle(
-                      fontFamily: EventTheme.fontFamily,
-                      fontSize: 13,
-                      color: EventTheme.text))),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Icon(icon, size: 16, color: EventTheme.mint),
+      const SizedBox(width: 8),
+      Text(
+        '$label : ',
+        style: EventTheme.labelStyle.copyWith(color: EventTheme.textSoft),
+      ),
+      Expanded(
+        child: Text(
+          value,
+          style: const TextStyle(
+            fontFamily: EventTheme.fontFamily,
+            fontSize: 13,
+            color: EventTheme.text,
+          ),
+        ),
+      ),
+    ],
+  );
 }

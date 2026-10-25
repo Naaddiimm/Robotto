@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import '../utils/audio_helper.dart';
 
 class CategoryItem {
@@ -21,11 +24,7 @@ class CategoryCard extends StatefulWidget {
   final CategoryItem item;
   final VoidCallback? onTap;
 
-  const CategoryCard({
-    super.key,
-    required this.item,
-    this.onTap,
-  });
+  const CategoryCard({super.key, required this.item, this.onTap});
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
@@ -43,9 +42,10 @@ class _CategoryCardState extends State<CategoryCard>
       vsync: this,
       duration: const Duration(milliseconds: 120),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.93).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.93,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -83,10 +83,7 @@ class _CategoryCardState extends State<CategoryCard>
           decoration: BoxDecoration(
             color: AppTheme.surface.withValues(alpha: 0.85),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFF1E2942),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFF1E2942), width: 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.25),
@@ -112,18 +109,16 @@ class _CategoryCardState extends State<CategoryCard>
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: widget.item.iconGradient.first.withValues(alpha: 0.35),
+                      color: widget.item.iconGradient.first.withValues(
+                        alpha: 0.35,
+                      ),
                       blurRadius: 8,
                       spreadRadius: 1,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Icon(
-                  widget.item.icon,
-                  color: Colors.white,
-                  size: 22,
-                ),
+                child: Icon(widget.item.icon, color: Colors.white, size: 22),
               ),
               const SizedBox(height: 8),
 

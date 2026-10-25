@@ -3,11 +3,11 @@ import '../models/event_registration.dart';
 
 /// Résultat d'une tentative de validation de présence par QR code.
 enum CheckInStatus {
-  success,         // Présence enregistrée avec succès
-  alreadyCheckedIn,// Billet déjà utilisé
-  notConfirmed,    // Inscription annulée ou en liste d'attente
-  invalidTicket,   // Code QR inconnu dans la base
-  wrongEvent,      // Le billet appartient à un autre événement
+  success, // Présence enregistrée avec succès
+  alreadyCheckedIn, // Billet déjà utilisé
+  notConfirmed, // Inscription annulée ou en liste d'attente
+  invalidTicket, // Code QR inconnu dans la base
+  wrongEvent, // Le billet appartient à un autre événement
 }
 
 class CheckInResult {
@@ -61,20 +61,23 @@ class CheckInService {
 
     // 2. Vérification de l'événement si précisé
     if (expectedEventId != null && reg.eventId != expectedEventId) {
-      return CheckInResult(
-          status: CheckInStatus.wrongEvent, registration: reg);
+      return CheckInResult(status: CheckInStatus.wrongEvent, registration: reg);
     }
 
     // 3. L'inscription doit être confirmée
     if (reg.status != 'confirmed') {
       return CheckInResult(
-          status: CheckInStatus.notConfirmed, registration: reg);
+        status: CheckInStatus.notConfirmed,
+        registration: reg,
+      );
     }
 
     // 4. Billet déjà scanné ?
     if (reg.isCheckedIn) {
       return CheckInResult(
-          status: CheckInStatus.alreadyCheckedIn, registration: reg);
+        status: CheckInStatus.alreadyCheckedIn,
+        registration: reg,
+      );
     }
 
     // 5. Enregistrement atomique de la présence
@@ -82,12 +85,16 @@ class CheckInService {
     if (!success) {
       // Rare : deux scans simultanés — le second perd la course
       return CheckInResult(
-          status: CheckInStatus.alreadyCheckedIn, registration: reg);
+        status: CheckInStatus.alreadyCheckedIn,
+        registration: reg,
+      );
     }
 
     // Recharger pour avoir checked_in_at à jour
     final updated = await _repo.getByTicketCode(ticketCode.trim());
     return CheckInResult(
-        status: CheckInStatus.success, registration: updated ?? reg);
+      status: CheckInStatus.success,
+      registration: updated ?? reg,
+    );
   }
 }

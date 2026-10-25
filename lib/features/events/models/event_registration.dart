@@ -39,16 +39,16 @@ class EventRegistration {
   };
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'event_id': eventId,
-        'user_id': userId,
-        'status': status,
-        'team_id': teamId,
-        'registered_at': registeredAt,
-        'cancelled_at': cancelledAt,
-        'checked_in_at': checkedInAt,
-        'ticket_code': ticketCode,
-      };
+    'id': id,
+    'event_id': eventId,
+    'user_id': userId,
+    'status': status,
+    'team_id': teamId,
+    'registered_at': registeredAt,
+    'cancelled_at': cancelledAt,
+    'checked_in_at': checkedInAt,
+    'ticket_code': ticketCode,
+  };
 
   factory EventRegistration.fromMap(Map<String, dynamic> map) =>
       EventRegistration(

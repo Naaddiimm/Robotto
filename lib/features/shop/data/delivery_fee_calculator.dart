@@ -47,7 +47,11 @@ class DeliveryFeeCalculator {
   /// - [zone] must be one of [Delivery.zones].
   /// - [totalWeightKg] is the combined weight of all items in the order.
   /// - [deliveryMode] store_pickup returns 0 regardless of zone or weight.
-  static double calculate(String zone, double totalWeightKg, String deliveryMode) {
+  static double calculate(
+    String zone,
+    double totalWeightKg,
+    String deliveryMode,
+  ) {
     if (deliveryMode == Delivery.modeStorePickup) return 0;
 
     final fee = _zoneFees[zone];

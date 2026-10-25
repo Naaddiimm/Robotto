@@ -22,7 +22,9 @@ class ShopDatabase {
   Future<Database> get database async {
     if (_testDatabase != null) return _testDatabase!;
     if (kIsWeb) {
-      throw UnsupportedError('ShopDatabase is not available on web. Use a web-compatible backend instead.');
+      throw UnsupportedError(
+        'ShopDatabase is not available on web. Use a web-compatible backend instead.',
+      );
     }
     if (_database != null) return _database!;
     _database = await _initDB('robotto_shop.db');
@@ -146,9 +148,7 @@ class ShopDatabase {
     await db.execute(
       'CREATE INDEX idx_products_category ON products (category)',
     );
-    await db.execute(
-      'CREATE INDEX idx_orders_buyer_id ON orders (buyer_id)',
-    );
+    await db.execute('CREATE INDEX idx_orders_buyer_id ON orders (buyer_id)');
     await db.execute(
       'CREATE INDEX idx_order_items_seller_id ON order_items (seller_id)',
     );

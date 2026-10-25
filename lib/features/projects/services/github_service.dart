@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../models/github_repo.dart';
 
 /// Lightweight wrapper around the GitHub REST API v3.
@@ -29,9 +31,9 @@ class GithubService {
       '$_base/search/repositories?q=$q&sort=$sort&order=desc&per_page=$perPage&page=$page',
     );
 
-    final response = await http.get(uri, headers: _headers).timeout(
-      const Duration(seconds: 10),
-    );
+    final response = await http
+        .get(uri, headers: _headers)
+        .timeout(const Duration(seconds: 10));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -43,7 +45,8 @@ class GithubService {
       throw GithubRateLimitException();
     } else {
       throw GithubApiException(
-          'Erreur ${response.statusCode}: ${response.reasonPhrase}');
+        'Erreur ${response.statusCode}: ${response.reasonPhrase}',
+      );
     }
   }
 

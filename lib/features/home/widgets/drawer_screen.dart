@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../../user/screens/signin_screen.dart';
 import '../../../core/services/auth_service.dart';
@@ -14,7 +16,6 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-
   // Cybernetic Orbit Colors
   static const Color bgColor = AppTheme.bg;
   static const Color surface = AppTheme.surface;
@@ -25,7 +26,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   final AuthService _authService = AuthService();
   final UserRepository _userRepository = UserRepository();
-  
+
   User? _currentUser;
   File? _profileImage;
 
@@ -37,20 +38,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   Future<void> _loadUserData() async {
     try {
-      final userId = await _authService.getCurrentUserId();
-      if (userId != null) {
-        final user = await _userRepository.getUserById(userId);
-        if (mounted && user != null) {
-          setState(() {
-            _currentUser = user;
-            if (user.profileImagePath != null) {
-              final file = File(user.profileImagePath!);
-              if (file.existsSync()) {
-                _profileImage = file;
-              }
+      final user = await _authService.getCurrentUser();
+      if (mounted && user != null) {
+        setState(() {
+          _currentUser = user;
+          if (user.profileImagePath != null) {
+            final file = File(user.profileImagePath!);
+            if (file.existsSync()) {
+              _profileImage = file;
             }
-          });
-        }
+          }
+        });
       }
     } catch (e) {
       debugPrint("Error loading user in drawer: $e");
@@ -112,7 +110,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             onPressed: () async {
               // Store the context for Navigator since the dialog context will be destroyed
               final navigatorContext = context;
-              
+
               // Close the dialog
               Navigator.pop(context);
 
@@ -142,8 +140,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String displayName = _currentUser != null 
-        ? "${_currentUser!.firstName} ${_currentUser!.lastName}".trim() 
+    final String displayName = _currentUser != null
+        ? "${_currentUser!.firstName} ${_currentUser!.lastName}".trim()
         : "Loading...";
     final String displayEmail = _currentUser?.email ?? "";
 
@@ -208,14 +206,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ],
               ),
             ),
-            
+
             const Divider(color: surface, thickness: 1.5, height: 1),
-            
+
             // Spacer to push Logout button to the bottom
             const Spacer(),
 
             const Divider(color: surface, thickness: 1.5, height: 1),
-            
+
             // Logout Action
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -223,7 +221,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 onTap: () => _handleLogout(context),
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 20,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     color: errorColor.withValues(alpha: 0.1),

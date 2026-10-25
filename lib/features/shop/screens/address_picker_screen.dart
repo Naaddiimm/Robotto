@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../data/location_service.dart';
 import '../widgets/shop_theme.dart';
 
@@ -89,11 +90,14 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
   }
 
   void _useAddress() {
-    Navigator.pop(context, PickedAddress(
-      address: _address ?? '',
-      city: _city,
-      governorate: _governorate,
-    ));
+    Navigator.pop(
+      context,
+      PickedAddress(
+        address: _address ?? '',
+        city: _city,
+        governorate: _governorate,
+      ),
+    );
   }
 
   void _recenter() {
@@ -112,11 +116,13 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
                   children: [
                     CircularProgressIndicator(color: ShopTheme.mint),
                     SizedBox(height: 16),
-                    Text('Finding your location...',
-                        style: TextStyle(
-                          fontFamily: ShopTheme.fontFamily,
-                          color: ShopTheme.secondaryText,
-                        )),
+                    Text(
+                      'Finding your location...',
+                      style: TextStyle(
+                        fontFamily: ShopTheme.fontFamily,
+                        color: ShopTheme.secondaryText,
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -144,7 +150,10 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
                       heroTag: 'back',
                       backgroundColor: ShopTheme.surfaceHigh,
                       onPressed: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back, color: ShopTheme.text),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: ShopTheme.text,
+                      ),
                     ),
                   ),
                   // My location button
@@ -155,7 +164,10 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
                       heroTag: 'myloc',
                       backgroundColor: ShopTheme.surfaceHigh,
                       onPressed: _recenter,
-                      child: const Icon(Icons.my_location, color: ShopTheme.mint),
+                      child: const Icon(
+                        Icons.my_location,
+                        color: ShopTheme.mint,
+                      ),
                     ),
                   ),
                   // Bottom card
@@ -203,8 +215,11 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
             else ...[
               Row(
                 children: [
-                  const Icon(Icons.location_on_outlined,
-                      color: ShopTheme.mint, size: 20),
+                  const Icon(
+                    Icons.location_on_outlined,
+                    color: ShopTheme.mint,
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -237,12 +252,14 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel',
-                          style: TextStyle(
-                            fontFamily: ShopTheme.fontFamily,
-                            color: ShopTheme.secondaryText,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontFamily: ShopTheme.fontFamily,
+                          color: ShopTheme.secondaryText,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -258,12 +275,14 @@ class _AddressPickerScreenState extends State<AddressPickerScreen> {
                       onPressed: _address != null && _address!.isNotEmpty
                           ? _useAddress
                           : null,
-                      child: const Text('Use this address',
-                          style: TextStyle(
-                            fontFamily: ShopTheme.fontFamily,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          )),
+                      child: const Text(
+                        'Use this address',
+                        style: TextStyle(
+                          fontFamily: ShopTheme.fontFamily,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
                   ),
                 ],

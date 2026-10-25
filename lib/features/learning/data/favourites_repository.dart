@@ -6,6 +6,7 @@
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
+
 import '../../../core/data/database_helper.dart';
 
 class FavouriteLesson {
@@ -22,18 +23,18 @@ class FavouriteLesson {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'duration': duration,
-        'module': module,
-      };
+    'id': id,
+    'title': title,
+    'duration': duration,
+    'module': module,
+  };
 
   factory FavouriteLesson.fromMap(Map<String, dynamic> m) => FavouriteLesson(
-        id: m['id'] as int,
-        title: m['title'] as String,
-        duration: m['duration'] as String,
-        module: m['module'] as String,
-      );
+    id: m['id'] as int,
+    title: m['title'] as String,
+    duration: m['duration'] as String,
+    module: m['module'] as String,
+  );
 }
 
 class FavouritesRepository {
@@ -97,8 +98,14 @@ class FavouritesRepository {
     if (isFavourite(id)) {
       await _remove(id);
     } else {
-      await _add(FavouriteLesson(
-          id: id, title: title, duration: duration, module: module));
+      await _add(
+        FavouriteLesson(
+          id: id,
+          title: title,
+          duration: duration,
+          module: module,
+        ),
+      );
     }
   }
 

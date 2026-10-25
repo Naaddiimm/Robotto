@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'profile_setup_screen.dart';
 import '../../../core/data/repositories/user_repository.dart';
+import '../../../core/data/models/user.dart';
 import '../../../core/theme/app_theme.dart';
 
 class InterestOption {
@@ -22,8 +24,13 @@ class InterestCategory {
 
 class InterestsScreen extends StatefulWidget {
   final int userId;
+  final User? user;
 
-  const InterestsScreen({super.key, required this.userId});
+  const InterestsScreen({
+    super.key,
+    required this.userId,
+    this.user,
+  });
 
   @override
   State<InterestsScreen> createState() => _InterestsScreenState();
@@ -46,56 +53,144 @@ class _InterestsScreenState extends State<InterestsScreen> {
   final Set<String> _selectedInterests = {};
 
   final List<InterestCategory> _categories = [
-    InterestCategory(
-      "Robotics & Automation",
-      Icons.smart_toy_outlined,
-      [
-        InterestOption("combat_robotics", "Combat Robotics", "BattleBots & Arenas", Icons.sports_mma_outlined),
-        InterestOption("mobile_robotics", "Mobile Robotics", "Rovers & AGVs", Icons.toys_outlined),
-        InterestOption("humanoid_robots", "Humanoid Robots", "Bipedal Kinematics", Icons.accessibility_new_outlined),
-        InterestOption("industrial_automation", "Industrial Automation", "SCARA & 6-Axis", Icons.precision_manufacturing_outlined),
-      ],
-    ),
+    InterestCategory("Robotics & Automation", Icons.smart_toy_outlined, [
+      InterestOption(
+        "combat_robotics",
+        "Combat Robotics",
+        "BattleBots & Arenas",
+        Icons.sports_mma_outlined,
+      ),
+      InterestOption(
+        "mobile_robotics",
+        "Mobile Robotics",
+        "Rovers & AGVs",
+        Icons.toys_outlined,
+      ),
+      InterestOption(
+        "humanoid_robots",
+        "Humanoid Robots",
+        "Bipedal Kinematics",
+        Icons.accessibility_new_outlined,
+      ),
+      InterestOption(
+        "industrial_automation",
+        "Industrial Automation",
+        "SCARA & 6-Axis",
+        Icons.precision_manufacturing_outlined,
+      ),
+    ]),
     InterestCategory(
       "Electronics & Embedded Systems",
       Icons.developer_board_outlined,
       [
-        InterestOption("arduino_esp32", "Arduino & ESP32", "IoT & Dev Boards", Icons.memory_outlined),
-        InterestOption("sensors_actuators", "Sensors & Actuators", "IMU, LiDAR & BLDC", Icons.sensors_outlined),
-        InterestOption("embedded_systems", "Embedded Systems", "Firmware & Real-Time", Icons.developer_board),
-        InterestOption("pcb_design", "PCB Design", "Circuits & Board Layout", Icons.schema_outlined),
+        InterestOption(
+          "arduino_esp32",
+          "Arduino & ESP32",
+          "IoT & Dev Boards",
+          Icons.memory_outlined,
+        ),
+        InterestOption(
+          "sensors_actuators",
+          "Sensors & Actuators",
+          "IMU, LiDAR & BLDC",
+          Icons.sensors_outlined,
+        ),
+        InterestOption(
+          "embedded_systems",
+          "Embedded Systems",
+          "Firmware & Real-Time",
+          Icons.developer_board,
+        ),
+        InterestOption(
+          "pcb_design",
+          "PCB Design",
+          "Circuits & Board Layout",
+          Icons.schema_outlined,
+        ),
       ],
     ),
-    InterestCategory(
-      "Programming & AI",
-      Icons.psychology_outlined,
-      [
-        InterestOption("ai", "Artificial Intelligence", "Intelligent Systems", Icons.psychology),
-        InterestOption("computer_vision", "Computer Vision", "Image Processing", Icons.visibility_outlined),
-        InterestOption("machine_learning", "Machine Learning", "Data-Driven Models", Icons.model_training_outlined),
-        InterestOption("ros", "ROS / ROS 2", "Robot Operating System", Icons.computer_outlined),
-      ],
-    ),
+    InterestCategory("Programming & AI", Icons.psychology_outlined, [
+      InterestOption(
+        "ai",
+        "Artificial Intelligence",
+        "Intelligent Systems",
+        Icons.psychology,
+      ),
+      InterestOption(
+        "computer_vision",
+        "Computer Vision",
+        "Image Processing",
+        Icons.visibility_outlined,
+      ),
+      InterestOption(
+        "machine_learning",
+        "Machine Learning",
+        "Data-Driven Models",
+        Icons.model_training_outlined,
+      ),
+      InterestOption(
+        "ros",
+        "ROS / ROS 2",
+        "Robot Operating System",
+        Icons.computer_outlined,
+      ),
+    ]),
     InterestCategory(
       "Mechanical Design & Fabrication",
       Icons.architecture_outlined,
       [
-        InterestOption("3d_printing", "3D Printing", "Rapid Prototyping", Icons.print_outlined),
-        InterestOption("cad_modeling", "CAD & 3D Modeling", "Digital Design", Icons.architecture),
-        InterestOption("cnc_machining", "CNC Machining", "Precision Manufacturing", Icons.build_circle_outlined),
-        InterestOption("mechanical_design", "Mechanical Design", "Gears & Mechanisms", Icons.settings_outlined),
+        InterestOption(
+          "3d_printing",
+          "3D Printing",
+          "Rapid Prototyping",
+          Icons.print_outlined,
+        ),
+        InterestOption(
+          "cad_modeling",
+          "CAD & 3D Modeling",
+          "Digital Design",
+          Icons.architecture,
+        ),
+        InterestOption(
+          "cnc_machining",
+          "CNC Machining",
+          "Precision Manufacturing",
+          Icons.build_circle_outlined,
+        ),
+        InterestOption(
+          "mechanical_design",
+          "Mechanical Design",
+          "Gears & Mechanisms",
+          Icons.settings_outlined,
+        ),
       ],
     ),
-    InterestCategory(
-      "Community & Activities",
-      Icons.people_outline,
-      [
-        InterestOption("competitions", "Competitions", "Challenges & Tournaments", Icons.emoji_events_outlined),
-        InterestOption("collaborative_projects", "Collaborative Projects", "Build Together", Icons.group_work_outlined),
-        InterestOption("courses", "Courses & Tutorials", "Learn New Skills", Icons.school_outlined),
-        InterestOption("marketplace", "Components Market", "Discover & Trade Parts", Icons.store_outlined),
-      ],
-    ),
+    InterestCategory("Community & Activities", Icons.people_outline, [
+      InterestOption(
+        "competitions",
+        "Competitions",
+        "Challenges & Tournaments",
+        Icons.emoji_events_outlined,
+      ),
+      InterestOption(
+        "collaborative_projects",
+        "Collaborative Projects",
+        "Build Together",
+        Icons.group_work_outlined,
+      ),
+      InterestOption(
+        "courses",
+        "Courses & Tutorials",
+        "Learn New Skills",
+        Icons.school_outlined,
+      ),
+      InterestOption(
+        "marketplace",
+        "Components Market",
+        "Discover & Trade Parts",
+        Icons.store_outlined,
+      ),
+    ]),
   ];
 
   void _toggleInterest(String id) {
@@ -118,7 +213,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
       try {
         await _userRepo.replaceUserInterests(widget.userId, _selectedInterests);
-        
+
         if (!mounted) return;
         Navigator.push(
           context,
@@ -126,6 +221,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
             builder: (context) => ProfileSetupScreen(
               userId: widget.userId,
               selectedInterests: _selectedInterests,
+              user: widget.user,
             ),
           ),
         );
@@ -150,7 +246,10 @@ class _InterestsScreenState extends State<InterestsScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -188,7 +287,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
                           color: primaryMint,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.person, color: bgColor, size: 14),
+                        child: const Icon(
+                          Icons.person,
+                          color: bgColor,
+                          size: 14,
+                        ),
                       ),
                     ],
                   ),
@@ -211,7 +314,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                       BoxShadow(
                         color: primaryMint.withValues(alpha: 0.5),
                         blurRadius: 8,
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -221,13 +324,19 @@ class _InterestsScreenState extends State<InterestsScreen> {
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 24.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Intro
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: surfaceHigh,
                         borderRadius: BorderRadius.circular(16),
@@ -245,7 +354,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                 BoxShadow(
                                   color: primaryMint.withValues(alpha: 0.5),
                                   blurRadius: 6,
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -297,18 +406,27 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     // Helper Message Pill
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
-                        color: _hasEnoughInterests ? primaryMint.withValues(alpha: 0.1) : surfaceLow,
+                        color: _hasEnoughInterests
+                            ? primaryMint.withValues(alpha: 0.1)
+                            : surfaceLow,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: _hasEnoughInterests ? primaryMint.withValues(alpha: 0.3) : Colors.transparent,
+                          color: _hasEnoughInterests
+                              ? primaryMint.withValues(alpha: 0.3)
+                              : Colors.transparent,
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
-                            _hasEnoughInterests ? Icons.check_circle : Icons.bolt,
+                            _hasEnoughInterests
+                                ? Icons.check_circle
+                                : Icons.bolt,
                             color: primaryMint,
                             size: 20,
                           ),
@@ -325,18 +443,29 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                     ? [
                                         TextSpan(text: "You've selected "),
                                         TextSpan(
-                                          text: "${_selectedInterests.length} interests",
-                                          style: const TextStyle(fontWeight: FontWeight.bold, color: primaryMint),
+                                          text:
+                                              "${_selectedInterests.length} interests",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryMint,
+                                          ),
                                         ),
-                                        const TextSpan(text: ". Ready to proceed!"),
+                                        const TextSpan(
+                                          text: ". Ready to proceed!",
+                                        ),
                                       ]
                                     : const [
                                         TextSpan(text: "Select at least "),
                                         TextSpan(
                                           text: "3 interests",
-                                          style: TextStyle(fontWeight: FontWeight.bold, color: primaryMint),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryMint,
+                                          ),
                                         ),
-                                        TextSpan(text: " to unlock your personal workspace."),
+                                        TextSpan(
+                                          text: " to unlock your personal workspace.",
+                                        ),
                                       ],
                               ),
                             ),
@@ -351,7 +480,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _categories.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 32),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 32),
                       itemBuilder: (context, index) {
                         final category = _categories[index];
                         return Column(
@@ -365,7 +495,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                     color: surfaceHighest,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Icon(category.icon, color: primaryMint, size: 18),
+                                  child: Icon(
+                                    category.icon,
+                                    color: primaryMint,
+                                    size: 18,
+                                  ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -385,16 +519,19 @@ class _InterestsScreenState extends State<InterestsScreen> {
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 1.35,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 1.35,
+                                    crossAxisSpacing: 12,
+                                    mainAxisSpacing: 12,
+                                  ),
                               itemCount: category.options.length,
                               itemBuilder: (context, optionIndex) {
                                 final option = category.options[optionIndex];
-                                final isSelected = _selectedInterests.contains(option.id);
+                                final isSelected = _selectedInterests.contains(
+                                  option.id,
+                                );
 
                                 return GestureDetector(
                                   onTap: () => _toggleInterest(option.id),
@@ -402,29 +539,39 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                     duration: const Duration(milliseconds: 200),
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: isSelected ? surfaceHighest : surface,
+                                      color: isSelected
+                                          ? surfaceHighest
+                                          : surface,
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: isSelected ? primaryMint : Colors.transparent,
+                                        color: isSelected
+                                            ? primaryMint
+                                            : Colors.transparent,
                                         width: 1.5,
                                       ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               padding: const EdgeInsets.all(8),
                                               decoration: BoxDecoration(
                                                 color: surfaceHighest,
-                                                borderRadius: BorderRadius.circular(10),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
                                               child: Icon(
                                                 option.icon,
-                                                color: isSelected ? primaryMint : secondaryText,
+                                                color: isSelected
+                                                    ? primaryMint
+                                                    : secondaryText,
                                                 size: 20,
                                               ),
                                             ),
@@ -454,7 +601,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                           ],
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               option.title,
@@ -494,7 +642,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                 ),
               ),
             ),
-            
+
             // Bottom Action Area
             Container(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
@@ -505,7 +653,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 10,
                     offset: const Offset(0, -4),
-                  )
+                  ),
                 ],
               ),
               child: Column(
@@ -530,7 +678,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                 color: primaryMint.withValues(alpha: 0.3),
                                 blurRadius: 15,
                                 offset: const Offset(0, 5),
-                              )
+                              ),
                             ]
                           : null,
                     ),
@@ -543,33 +691,42 @@ class _InterestsScreenState extends State<InterestsScreen> {
                           borderRadius: BorderRadius.circular(26),
                         ),
                       ),
-                      onPressed: (_hasEnoughInterests && !_isSaving) ? _handleContinue : null,
+                      onPressed: (_hasEnoughInterests && !_isSaving)
+                          ? _handleContinue
+                          : null,
                       child: _isSaving
                           ? const SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(color: bgColor, strokeWidth: 2.5),
+                              child: CircularProgressIndicator(
+                                color: bgColor,
+                                strokeWidth: 2.5,
+                              ),
                             )
                           : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Continue',
-                            style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              color: _hasEnoughInterests ? bgColor : secondaryText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Continue',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    color: _hasEnoughInterests
+                                        ? bgColor
+                                        : secondaryText,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: _hasEnoughInterests
+                                      ? bgColor
+                                      : secondaryText,
+                                  size: 20,
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(
-                            Icons.arrow_forward, 
-                            color: _hasEnoughInterests ? bgColor : secondaryText, 
-                            size: 20
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ],

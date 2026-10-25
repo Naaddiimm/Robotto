@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+
 import 'event_database.dart';
 import '../models/event_team.dart';
 
@@ -29,29 +30,40 @@ class TeamRepository {
 
   Future<List<EventTeam>> getTeamsForEvent(int eventId) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT t.*, COUNT(m.id) as member_count
       FROM event_teams t
       LEFT JOIN event_team_members m ON m.team_id = t.id
       WHERE t.event_id = ?
       GROUP BY t.id
       ORDER BY t.created_at ASC
-    ''', [eventId]);
+    ''',
+      [eventId],
+    );
     return maps.map(EventTeam.fromMap).toList();
   }
 
   Future<EventTeam?> getTeamById(int id) async {
     final db = await _db.database;
-    final maps = await db.query('event_teams',
-        where: 'id = ?', whereArgs: [id], limit: 1);
+    final maps = await db.query(
+      'event_teams',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     if (maps.isEmpty) return null;
     return EventTeam.fromMap(maps.first);
   }
 
   Future<int> updateTeamName(int id, String newName) async {
     final db = await _db.database;
-    return await db.update('event_teams', {'name': newName},
-        where: 'id = ?', whereArgs: [id]);
+    return await db.update(
+      'event_teams',
+      {'name': newName},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<int> deleteTeam(int id) async {
@@ -87,16 +99,12 @@ class TeamRepository {
 
   Future<int> addMember(int teamId, int userId) async {
     final db = await _db.database;
-    return await db.insert(
-      'event_team_members',
-      {
-        'team_id': teamId,
-        'user_id': userId,
-        'role': 'member',
-        'joined_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
+    return await db.insert('event_team_members', {
+      'team_id': teamId,
+      'user_id': userId,
+      'role': 'member',
+      'joined_at': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
   Future<int> removeMember(int teamId, int userId) async {
@@ -111,7 +119,8 @@ class TeamRepository {
   /// Retourne l'équipe d'un utilisateur pour un événement donné, ou null.
   Future<EventTeam?> getUserTeamForEvent(int eventId, int userId) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT t.*, COUNT(m2.id) as member_count
       FROM event_teams t
       JOIN event_team_members m ON m.team_id = t.id AND m.user_id = ?
@@ -119,7 +128,9 @@ class TeamRepository {
       WHERE t.event_id = ?
       GROUP BY t.id
       LIMIT 1
-    ''', [userId, eventId]);
+    ''',
+      [userId, eventId],
+    );
     if (maps.isEmpty) return null;
     return EventTeam.fromMap(maps.first);
   }

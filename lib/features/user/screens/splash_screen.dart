@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+
 import '../../../core/theme/app_theme.dart';
 import 'welcome_screen.dart';
 
@@ -32,19 +33,21 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     _controller = VideoPlayerController.asset(_videoAsset)
-      ..initialize().then((_) {
-        if (!mounted) return;
-        setState(() {});        // Trigger rebuild to show video
-        _controller.setLooping(false);
-        _controller.setVolume(1.0);
-        _controller.play();
+      ..initialize()
+          .then((_) {
+            if (!mounted) return;
+            setState(() {}); // Trigger rebuild to show video
+            _controller.setLooping(false);
+            _controller.setVolume(1.0);
+            _controller.play();
 
-        // Navigate when video finishes
-        _controller.addListener(_onVideoProgress);
-      }).catchError((error) {
-        debugPrint('[SplashScreen] Video init error: $error');
-        _navigateToWelcome();   // Fallback: skip splash on error
-      });
+            // Navigate when video finishes
+            _controller.addListener(_onVideoProgress);
+          })
+          .catchError((error) {
+            debugPrint('[SplashScreen] Video init error: $error');
+            _navigateToWelcome(); // Fallback: skip splash on error
+          });
   }
 
   void _onVideoProgress() {
@@ -54,7 +57,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final dur = _controller.value.duration;
 
     // Navigate when playback reaches the end
-    if (dur.inMilliseconds > 0 && pos >= dur - const Duration(milliseconds: 200)) {
+    if (dur.inMilliseconds > 0 &&
+        pos >= dur - const Duration(milliseconds: 200)) {
       _navigateToWelcome();
     }
   }
@@ -124,7 +128,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   duration: const Duration(milliseconds: 300),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 7),
+                      horizontal: 14,
+                      vertical: 7,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(20),

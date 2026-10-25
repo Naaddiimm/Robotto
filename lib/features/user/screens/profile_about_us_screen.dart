@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_theme.dart';
 
 class ProfileAboutUsScreen extends StatelessWidget {
@@ -21,7 +22,10 @@ class ProfileAboutUsScreen extends StatelessWidget {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -41,7 +45,7 @@ class ProfileAboutUsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(32.0),
@@ -61,21 +65,24 @@ class ProfileAboutUsScreen extends StatelessWidget {
                             color: primaryMint.withValues(alpha: 0.15),
                             blurRadius: 40,
                             spreadRadius: 5,
-                          )
+                          ),
                         ],
                       ),
                       child: Center(
                         child: Image.asset(
                           'assets/images/logo.png',
                           height: 80,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
-                            Icons.smart_toy, color: primaryMint, size: 48,
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.smart_toy,
+                                color: primaryMint,
+                                size: 48,
+                              ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     const Text(
                       "ROBOTTO",
                       style: TextStyle(
@@ -88,7 +95,10 @@ class ProfileAboutUsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: surfaceHigh,
                         borderRadius: BorderRadius.circular(12),

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+
 import '../../home/screens/home_screen.dart';
 import '../../../core/data/repositories/user_repository.dart';
+import '../../../core/data/models/user.dart';
 import '../../../core/theme/app_theme.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final int userId;
   final Set<String> selectedInterests;
+  final User? user;
 
-  const ProfileSetupScreen({super.key, required this.userId, required this.selectedInterests});
+  const ProfileSetupScreen({
+    super.key,
+    required this.userId,
+    required this.selectedInterests,
+    this.user,
+  });
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
@@ -27,7 +35,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   String? _selectedExperience;
   final Set<String> _selectedGoals = {};
-  
+
   final UserRepository _userRepo = UserRepository();
   bool _isSaving = false;
 
@@ -87,85 +95,96 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       });
 
       try {
-        await _userRepo.updateExperienceLevel(widget.userId, _selectedExperience!);
+        await _userRepo.updateExperienceLevel(
+          widget.userId,
+          _selectedExperience!,
+        );
         await _userRepo.replaceUserLearningGoals(widget.userId, _selectedGoals);
 
+        // Verify that the updated user record exists and is retrievable
+        final updatedUser = await _userRepo.getUserById(widget.userId);
+        if (updatedUser == null) {
+          throw Exception('Failed to retrieve updated user profile.');
+        }
+
         if (!mounted) return;
-        
+
         // Prototype completion action
         showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          backgroundColor: surfaceLow,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: const BorderSide(color: surface, width: 1),
-          ),
-          title: const Column(
-            children: [
-              Icon(Icons.check_circle_outline, color: primaryMint, size: 48),
-              SizedBox(height: 16),
-              Text(
-                "Profile Completed!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  color: mainText,
-                  fontWeight: FontWeight.bold,
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: surfaceLow,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: const BorderSide(color: surface, width: 1),
+            ),
+            title: const Column(
+              children: [
+                Icon(Icons.check_circle_outline, color: primaryMint, size: 48),
+                SizedBox(height: 16),
+                Text(
+                  "Profile Completed!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Plus Jakarta Sans',
+                    color: mainText,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            content: const Text(
+              "Your workspace is being generated based on your profile and interests.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                color: secondaryText,
+              ),
+            ),
+            actions: [
+              Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [primaryMint, primaryContainer],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  child: const Text(
+                    'Enter Workspace',
+                    style: TextStyle(
+                      fontFamily: 'Plus Jakarta Sans',
+                      color: bgColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          content: const Text(
-            "Your workspace is being generated based on your profile and interests.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
-              color: secondaryText,
-            ),
-          ),
-          actions: [
-            Container(
-              width: double.infinity,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [primaryMint, primaryContainer],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    (route) => false,
-                  );
-                },
-                child: const Text(
-                  'Enter Workspace',
-                  style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    color: bgColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+        );
       } catch (e) {
         debugPrint("Error completing profile: $e");
       } finally {
@@ -187,7 +206,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -206,9 +228,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       child: Image.asset(
                         'assets/images/logo.png',
                         width: 24,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          Icons.smart_toy, color: primaryMint, size: 16,
-                        ),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.smart_toy,
+                              color: primaryMint,
+                              size: 16,
+                            ),
                       ),
                     ),
                   ),
@@ -238,7 +263,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
             // Progress Info Row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 8.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -299,7 +327,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     BoxShadow(
                       color: primaryMint.withValues(alpha: 0.5),
                       blurRadius: 8,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -308,13 +336,19 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 24.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: surfaceHigh,
                         borderRadius: BorderRadius.circular(16),
@@ -323,7 +357,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.badge_outlined, color: primaryMint, size: 14),
+                          Icon(
+                            Icons.badge_outlined,
+                            color: primaryMint,
+                            size: 14,
+                          ),
                           SizedBox(width: 6),
                           Text(
                             "YOUR ROBOTICS PROFILE",
@@ -339,7 +377,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Headings
                     RichText(
                       text: const TextSpan(
@@ -386,7 +424,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               color: surfaceHighest,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.psychology, color: primaryMint, size: 24),
+                            child: const Icon(
+                              Icons.psychology,
+                              color: primaryMint,
+                              size: 24,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           const Expanded(
@@ -439,16 +481,18 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1.15,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 1.15,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                       itemCount: _experienceLevels.length,
                       itemBuilder: (context, index) {
                         final experience = _experienceLevels[index];
-                        final isSelected = _selectedExperience == experience["id"];
+                        final isSelected =
+                            _selectedExperience == experience["id"];
 
                         return GestureDetector(
                           onTap: () {
@@ -463,7 +507,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               color: isSelected ? surfaceHighest : surface,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isSelected ? primaryMint : Colors.transparent,
+                                color: isSelected
+                                    ? primaryMint
+                                    : Colors.transparent,
                                 width: 1.5,
                               ),
                             ),
@@ -479,7 +525,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   ),
                                   child: Icon(
                                     experience["icon"],
-                                    color: isSelected ? primaryMint : secondaryText,
+                                    color: isSelected
+                                        ? primaryMint
+                                        : secondaryText,
                                     size: 20,
                                   ),
                                 ),
@@ -542,12 +590,17 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           onTap: () => _toggleGoal(goal),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             decoration: BoxDecoration(
                               color: isSelected ? surfaceHighest : surface,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: isSelected ? primaryMint : Colors.transparent,
+                                color: isSelected
+                                    ? primaryMint
+                                    : Colors.transparent,
                                 width: 1.5,
                               ),
                             ),
@@ -558,7 +611,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isSelected ? primaryMint : surfaceHighest,
+                                    color: isSelected
+                                        ? primaryMint
+                                        : surfaceHighest,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -568,7 +623,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   style: TextStyle(
                                     fontFamily: 'Plus Jakarta Sans',
                                     fontSize: 13,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.w500,
                                     color: isSelected ? primaryMint : mainText,
                                   ),
                                 ),
@@ -583,7 +640,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 ),
               ),
             ),
-            
+
             // Bottom Action Area
             Container(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
@@ -594,7 +651,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 10,
                     offset: const Offset(0, -4),
-                  )
+                  ),
                 ],
               ),
               child: Column(
@@ -619,7 +676,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                 color: primaryMint.withValues(alpha: 0.3),
                                 blurRadius: 15,
                                 offset: const Offset(0, 5),
-                              )
+                              ),
                             ]
                           : null,
                     ),
@@ -632,33 +689,40 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           borderRadius: BorderRadius.circular(26),
                         ),
                       ),
-                      onPressed: (_isFormValid && !_isSaving) ? _handleCompleteProfile : null,
+                      onPressed: (_isFormValid && !_isSaving)
+                          ? _handleCompleteProfile
+                          : null,
                       child: _isSaving
                           ? const SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(color: bgColor, strokeWidth: 2.5),
+                              child: CircularProgressIndicator(
+                                color: bgColor,
+                                strokeWidth: 2.5,
+                              ),
                             )
                           : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Complete Profile',
-                            style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              color: _isFormValid ? bgColor : secondaryText,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Complete Profile',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    color: _isFormValid
+                                        ? bgColor
+                                        : secondaryText,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: _isFormValid ? bgColor : secondaryText,
+                                  size: 20,
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(
-                            Icons.arrow_forward, 
-                            color: _isFormValid ? bgColor : secondaryText, 
-                            size: 20
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -679,7 +743,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

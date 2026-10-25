@@ -16,14 +16,16 @@ class PositionResult {
   final bool success;
   final String? error;
   PositionResult({this.lat, this.lng, this.success = true, this.error});
-  PositionResult.failure(this.error)
-      : lat = null,
-        lng = null,
-        success = false;
+  PositionResult.failure(this.error) : lat = null, lng = null, success = false;
 }
 
 /// Permission status after a request.
-enum LocationPermissionResult { granted, denied, deniedForever, serviceDisabled }
+enum LocationPermissionResult {
+  granted,
+  denied,
+  deniedForever,
+  serviceDisabled,
+}
 
 /// Abstract interface so tests can inject a fake.
 abstract class LocationService {

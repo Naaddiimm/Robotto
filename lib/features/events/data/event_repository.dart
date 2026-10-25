@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+
 import 'event_database.dart';
 import '../models/event_model.dart';
 
@@ -15,8 +16,11 @@ class EventRepository {
   Future<int> createEvent(EventModel event) async {
     final db = await _db.database;
     final map = event.toMap()..remove('id');
-    return await db.insert('events', map,
-        conflictAlgorithm: ConflictAlgorithm.fail);
+    return await db.insert(
+      'events',
+      map,
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
   }
 
   // -------------------------------------------------------------------------
@@ -45,8 +49,12 @@ class EventRepository {
   /// Retourne un événement par son ID, ou null s'il n'existe pas.
   Future<EventModel?> getEventById(int id) async {
     final db = await _db.database;
-    final maps =
-        await db.query('events', where: 'id = ?', whereArgs: [id], limit: 1);
+    final maps = await db.query(
+      'events',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
     if (maps.isEmpty) return null;
     return EventModel.fromMap(maps.first);
   }

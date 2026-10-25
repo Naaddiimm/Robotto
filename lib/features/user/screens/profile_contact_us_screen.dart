@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_theme.dart';
 
 class ProfileContactUsScreen extends StatefulWidget {
@@ -54,13 +55,19 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
               SizedBox(width: 8),
               Text(
                 'Message sent successfully',
-                style: TextStyle(fontFamily: 'Plus Jakarta Sans', color: bgColor, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  color: bgColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
           backgroundColor: primaryMint,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pop(context);
@@ -76,7 +83,10 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -96,7 +106,7 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
                 ],
               ),
             ),
-            
+
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
@@ -131,17 +141,24 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
                         label: "Subject",
                         hintText: "What is this about?",
                         icon: Icons.title,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'Please enter a subject' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'Please enter a subject'
+                            : null,
                       ),
                       const SizedBox(height: 20),
-                      
+
                       _buildTextField(
                         controller: _messageController,
                         label: "Message",
-                        hintText: "Describe your issue or feedback in detail...",
+                        hintText:
+                            "Describe your issue or feedback in detail...",
                         icon: Icons.message_outlined,
                         maxLines: 6,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'Please enter a message' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'Please enter a message'
+                            : null,
                       ),
                       const SizedBox(height: 40),
 
@@ -222,7 +239,7 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(color: secondaryText, fontSize: 14),
-            prefixIcon: maxLines == 1 
+            prefixIcon: maxLines == 1
                 ? Icon(icon, color: secondaryText, size: 20)
                 : Padding(
                     padding: const EdgeInsets.only(bottom: 100.0),
@@ -230,7 +247,10 @@ class _ProfileContactUsScreenState extends State<ProfileContactUsScreen> {
                   ),
             filled: true,
             fillColor: surface,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16.0,
+              horizontal: 16.0,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../data/models/product.dart';
 import 'shop_theme.dart';
 
@@ -21,7 +22,9 @@ class CategoryChips extends StatelessWidget {
       height: 40,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: ShopTheme.screenPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: ShopTheme.screenPadding,
+        ),
         itemCount: chips.length,
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {

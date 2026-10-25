@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/repositories/product_repository.dart';
 import '../widgets/shop_theme.dart';
@@ -130,8 +132,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.mint,
-        icon: const Icon(Icons.check_circle,
-            color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.check_circle,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: const Text(
           'Product deleted successfully',
           style: TextStyle(
@@ -150,8 +155,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.error,
-        icon: const Icon(Icons.error_outline,
-            color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.error_outline,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: Text(
           e.toString().replaceAll('Exception: ', ''),
           style: const TextStyle(
@@ -175,8 +183,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
       margin: const EdgeInsets.all(16),
       borderRadius: BorderRadius.circular(12),
       backgroundColor: ShopTheme.mint,
-      icon: const Icon(Icons.check_circle,
-          color: ShopTheme.background, size: 24),
+      icon: const Icon(
+        Icons.check_circle,
+        color: ShopTheme.background,
+        size: 24,
+      ),
       messageText: Text(
         message,
         style: const TextStyle(
@@ -219,21 +230,22 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: ShopTheme.mint))
+              child: CircularProgressIndicator(color: ShopTheme.mint),
+            )
           : _products.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(
-                    ShopTheme.screenPadding,
-                    8,
-                    ShopTheme.screenPadding,
-                    ShopTheme.bottomNavPadding,
-                  ),
-                  itemCount: _products.length,
-                  itemBuilder: (context, index) {
-                    return _buildProductItem(_products[index]);
-                  },
-                ),
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(
+                ShopTheme.screenPadding,
+                8,
+                ShopTheme.screenPadding,
+                ShopTheme.bottomNavPadding,
+              ),
+              itemCount: _products.length,
+              itemBuilder: (context, index) {
+                return _buildProductItem(_products[index]);
+              },
+            ),
     );
   }
 
@@ -281,8 +293,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ProductDetailScreen(productId: product.id!),
+              builder: (context) => ProductDetailScreen(productId: product.id!),
             ),
           );
           if (!mounted) return;
@@ -300,17 +311,19 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, _) => Container(
                         color: ShopTheme.surfaceHigh,
-                        child: Icon(Icons.image_outlined,
-                            color:
-                                ShopTheme.secondaryText.withValues(alpha: 0.4)),
+                        child: Icon(
+                          Icons.image_outlined,
+                          color: ShopTheme.secondaryText.withValues(alpha: 0.4),
+                        ),
                       ),
                       cacheWidth: 160,
                     )
                   : Container(
                       color: ShopTheme.surfaceHigh,
-                      child: Icon(Icons.image_outlined,
-                          color: ShopTheme.secondaryText
-                              .withValues(alpha: 0.4)),
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: ShopTheme.secondaryText.withValues(alpha: 0.4),
+                      ),
                     ),
             ),
             const SizedBox(width: 12),
@@ -361,18 +374,19 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
             ),
             // Actions
             IconButton(
-              icon: const Icon(Icons.edit_outlined,
-                  color: ShopTheme.violet, size: 22),
+              icon: const Icon(
+                Icons.edit_outlined,
+                color: ShopTheme.violet,
+                size: 22,
+              ),
               onPressed: () async {
                 final images = await _repo.getImages(product.id!);
                 if (!mounted) return;
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductFormScreen(
-                      product: product,
-                      images: images,
-                    ),
+                    builder: (context) =>
+                        ProductFormScreen(product: product, images: images),
                   ),
                 );
                 if (!mounted) return;
@@ -383,8 +397,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.delete_outline,
-                  color: ShopTheme.error, size: 22),
+              icon: const Icon(
+                Icons.delete_outline,
+                color: ShopTheme.error,
+                size: 22,
+              ),
               onPressed: () =>
                   _confirmDelete(product.id!, product.sellerId, product.name),
             ),

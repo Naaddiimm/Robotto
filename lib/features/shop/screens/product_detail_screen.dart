@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:open_filex/open_filex.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/repositories/product_repository.dart';
 import '../data/repositories/cart_repository.dart';
@@ -99,8 +101,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 errorBuilder: (context, error, _) => Center(
                                   child: Icon(
                                     Icons.broken_image_outlined,
-                                    color: ShopTheme.secondaryText
-                                        .withValues(alpha: 0.5),
+                                    color: ShopTheme.secondaryText.withValues(
+                                      alpha: 0.5,
+                                    ),
                                     size: 48,
                                   ),
                                 ),
@@ -109,8 +112,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             : Center(
                                 child: Icon(
                                   Icons.image_outlined,
-                                  color: ShopTheme.secondaryText
-                                      .withValues(alpha: 0.5),
+                                  color: ShopTheme.secondaryText.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   size: 48,
                                 ),
                               );
@@ -175,7 +179,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const SizedBox(height: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12),
@@ -221,10 +227,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Name + price
-          Text(
-            p.name,
-            style: ShopTheme.headingStyle,
-          ),
+          Text(p.name, style: ShopTheme.headingStyle),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -257,10 +260,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           const SizedBox(height: ShopTheme.itemSpacing),
           Text('Description', style: ShopTheme.labelStyle),
           const SizedBox(height: 8),
-          Text(
-            p.description,
-            style: ShopTheme.bodyStyle,
-          ),
+          Text(p.description, style: ShopTheme.bodyStyle),
 
           // Manual tile
           if (p.manualPath != null && p.manualName != null) ...[
@@ -286,17 +286,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: [
           SizedBox(
             width: 100,
-            child: Text(
-              label,
-              style: ShopTheme.captionStyle,
-            ),
+            child: Text(label, style: ShopTheme.captionStyle),
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: ShopTheme.bodyMainStyle,
-            ),
-          ),
+          Expanded(child: Text(value, style: ShopTheme.bodyMainStyle)),
         ],
       ),
     );
@@ -332,9 +324,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         decoration: BoxDecoration(
           color: ShopTheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: ShopTheme.violet.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: ShopTheme.violet.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
@@ -348,10 +338,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'User Manual (PDF)',
-                    style: ShopTheme.labelStyle,
-                  ),
+                  Text('User Manual (PDF)', style: ShopTheme.labelStyle),
                   const SizedBox(height: 2),
                   Text(
                     name,
@@ -383,7 +370,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           margin: const EdgeInsets.all(16),
           borderRadius: BorderRadius.circular(12),
           backgroundColor: ShopTheme.error,
-          icon: const Icon(Icons.error_outline, color: ShopTheme.background, size: 24),
+          icon: const Icon(
+            Icons.error_outline,
+            color: ShopTheme.background,
+            size: 24,
+          ),
           messageText: Text(
             'Cannot open PDF: ${result.message}',
             style: const TextStyle(
@@ -402,7 +393,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.error,
-        icon: const Icon(Icons.error_outline, color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.error_outline,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: Text(
           'No PDF viewer installed: $e',
           style: const TextStyle(
@@ -462,7 +457,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: ShopTheme.violet,
                 side: BorderSide(
-                    color: ShopTheme.violet.withValues(alpha: 0.5)),
+                  color: ShopTheme.violet.withValues(alpha: 0.5),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -503,10 +499,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductFormScreen(
-                      product: _product,
-                      images: _images,
-                    ),
+                    builder: (context) =>
+                        ProductFormScreen(product: _product, images: _images),
                   ),
                 );
                 if (!mounted) return;
@@ -709,7 +703,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.mint,
-        icon: const Icon(Icons.check_circle, color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.check_circle,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: const Text(
           'Product deleted successfully',
           style: TextStyle(
@@ -729,7 +727,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.error,
-        icon: const Icon(Icons.error_outline, color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.error_outline,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: Text(
           e.toString().replaceAll('Exception: ', ''),
           style: const TextStyle(
@@ -752,33 +754,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       backgroundColor: ShopTheme.background,
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: ShopTheme.mint))
+          ? const Center(
+              child: CircularProgressIndicator(color: ShopTheme.mint),
+            )
           : _product == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline,
-                          size: 48, color: ShopTheme.secondaryText),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Product not found',
-                        style: ShopTheme.bodyStyle,
-                      ),
-                      const SizedBox(height: 16),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Go back'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: ShopTheme.secondaryText,
                   ),
-                )
-              : Column(
-                  children: [
-                    _buildGallery(),
-                    Expanded(child: _buildContent()),
-                  ],
-                ),
+                  const SizedBox(height: 16),
+                  Text('Product not found', style: ShopTheme.bodyStyle),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Go back'),
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              children: [
+                _buildGallery(),
+                Expanded(child: _buildContent()),
+              ],
+            ),
     );
   }
 }

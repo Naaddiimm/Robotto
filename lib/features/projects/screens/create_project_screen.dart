@@ -1,9 +1,13 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../models/project.dart';
 import '../../../core/widgets/background_waves.dart';
@@ -135,20 +139,28 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
               ),
               const SizedBox(height: 20),
               ListTile(
-                leading: const Icon(Icons.photo_library_rounded,
-                    color: AppTheme.accent),
-                title: Text('Galerie de photos',
-                    style: GoogleFonts.poppins(color: Colors.white)),
+                leading: const Icon(
+                  Icons.photo_library_rounded,
+                  color: AppTheme.accent,
+                ),
+                title: Text(
+                  'Galerie de photos',
+                  style: GoogleFonts.poppins(color: Colors.white),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.gallery);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.camera_alt_rounded,
-                    color: AppTheme.accent),
-                title: Text('Prendre une photo',
-                    style: GoogleFonts.poppins(color: Colors.white)),
+                leading: const Icon(
+                  Icons.camera_alt_rounded,
+                  color: AppTheme.accent,
+                ),
+                title: Text(
+                  'Prendre une photo',
+                  style: GoogleFonts.poppins(color: Colors.white),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.camera);
@@ -228,8 +240,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
 
       final finalCategory = _selectedCategory == 'Autre'
           ? (_customCategoryController.text.trim().isEmpty
-              ? 'Autre'
-              : _customCategoryController.text.trim())
+                ? 'Autre'
+                : _customCategoryController.text.trim())
           : _selectedCategory;
 
       if (_isEditMode) {
@@ -258,14 +270,19 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                 Expanded(
                   child: Text(
                     'Projet "${existing.title}" mis à jour avec succès !',
-                    style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
             ),
             backgroundColor: AppTheme.surface,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
 
@@ -319,7 +336,9 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
           ),
           backgroundColor: AppTheme.surface,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
 
@@ -335,7 +354,10 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
         backgroundColor: AppTheme.bg,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () {
             AudioHelper.playClickSound();
             Navigator.pop(context);
@@ -354,9 +376,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(
-              painter: BackgroundWavesPainter(),
-            ),
+            child: CustomPaint(painter: BackgroundWavesPainter()),
           ),
           SafeArea(
             child: SingleChildScrollView(
@@ -466,8 +486,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                     _buildTextField(
                       controller: _descriptionController,
                       label: 'Description du projet',
-                      hint:
-                          'Expliquez en quelques lignes le concept de votre robot...',
+                      hint: 'Expliquez en quelques lignes le concept de votre robot...',
                       icon: Icons.description_outlined,
                       maxLines: 3,
                       maxLength: 500,
@@ -479,8 +498,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                     _buildTextField(
                       controller: _objectivesController,
                       label: 'Objectifs principaux',
-                      hint:
-                          'ex: Résoudre un parcours en moins de 30s, intégration caméra...',
+                      hint: 'ex: Résoudre un parcours en moins de 30s, intégration caméra...',
                       icon: Icons.flag_outlined,
                       maxLines: 2,
                       maxLength: 300,
@@ -506,9 +524,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           selectedColor: AppTheme.accent,
                           backgroundColor: AppTheme.surface,
                           labelStyle: GoogleFonts.poppins(
-                            color: isSelected
-                                ? AppTheme.bg
-                                : Colors.white70,
+                            color: isSelected ? AppTheme.bg : Colors.white70,
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.w500,
@@ -649,8 +665,8 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                             _selectedVisibility == 'Privé'
                                 ? Icons.lock_outline_rounded
                                 : _selectedVisibility == 'Équipe'
-                                    ? Icons.group_outlined
-                                    : Icons.public_rounded,
+                                ? Icons.group_outlined
+                                : Icons.public_rounded,
                             color: AppTheme.accent,
                             size: 20,
                           ),
@@ -684,8 +700,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           borderRadius: BorderRadius.circular(30),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.accent
-                                  .withValues(alpha: 0.35),
+                              color: AppTheme.accent.withValues(alpha: 0.35),
                               blurRadius: 16,
                               offset: const Offset(0, 4),
                             ),
@@ -758,12 +773,16 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.poppins(
-                color: AppTheme.textDisabled, fontSize: 13),
+              color: AppTheme.textDisabled,
+              fontSize: 13,
+            ),
             prefixIcon: Icon(icon, color: AppTheme.accent, size: 20),
             filled: true,
             fillColor: AppTheme.surface,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             counterStyle: GoogleFonts.poppins(
               fontSize: 10,
               color: AppTheme.textDisabled,

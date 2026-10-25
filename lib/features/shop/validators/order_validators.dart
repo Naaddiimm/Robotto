@@ -19,7 +19,8 @@ class OrderValidators {
     final parsed = int.tryParse(trimmed);
     if (parsed == null) return 'Quantity must be a whole number';
     if (parsed < 1) return 'Quantity must be at least 1';
-    if (parsed > currentStock) return 'Quantity cannot exceed available stock ($currentStock)';
+    if (parsed > currentStock)
+      return 'Quantity cannot exceed available stock ($currentStock)';
 
     return null;
   }

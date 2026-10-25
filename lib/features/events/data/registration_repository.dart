@@ -1,5 +1,7 @@
 import 'dart:math';
+
 import 'package:sqflite/sqflite.dart';
+
 import 'event_database.dart';
 import '../models/event_registration.dart';
 
@@ -20,18 +22,14 @@ class RegistrationRepository {
   }) async {
     final db = await _db.database;
     final ticketCode = _generateTicketCode(eventId, userId);
-    return await db.insert(
-      'event_registrations',
-      {
-        'event_id': eventId,
-        'user_id': userId,
-        'status': 'confirmed',
-        'team_id': teamId,
-        'ticket_code': ticketCode,
-        'registered_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
+    return await db.insert('event_registrations', {
+      'event_id': eventId,
+      'user_id': userId,
+      'status': 'confirmed',
+      'team_id': teamId,
+      'ticket_code': ticketCode,
+      'registered_at': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.fail);
   }
 
   // -------------------------------------------------------------------------
@@ -39,16 +37,18 @@ class RegistrationRepository {
   // -------------------------------------------------------------------------
 
   /// Retourne l'inscription d'un utilisateur pour un événement, ou null.
-  Future<EventRegistration?> getRegistration(
-      int eventId, int userId) async {
+  Future<EventRegistration?> getRegistration(int eventId, int userId) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT r.*, e.title, e.type, e.start_date
       FROM event_registrations r
       JOIN events e ON e.id = r.event_id
       WHERE r.event_id = ? AND r.user_id = ?
       LIMIT 1
-    ''', [eventId, userId]);
+    ''',
+      [eventId, userId],
+    );
     if (maps.isEmpty) return null;
     return EventRegistration.fromMap(maps.first);
   }
@@ -56,13 +56,16 @@ class RegistrationRepository {
   /// Retourne toutes les inscriptions d'un utilisateur.
   Future<List<EventRegistration>> getUserRegistrations(int userId) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT r.*, e.title, e.type, e.start_date
       FROM event_registrations r
       JOIN events e ON e.id = r.event_id
       WHERE r.user_id = ?
       ORDER BY r.registered_at DESC
-    ''', [userId]);
+    ''',
+      [userId],
+    );
     return maps.map(EventRegistration.fromMap).toList();
   }
 
@@ -96,13 +99,16 @@ class RegistrationRepository {
   /// Retourne null si le code n'existe pas.
   Future<EventRegistration?> getByTicketCode(String ticketCode) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT r.*, e.title, e.type, e.start_date
       FROM event_registrations r
       JOIN events e ON e.id = r.event_id
       WHERE r.ticket_code = ?
       LIMIT 1
-    ''', [ticketCode]);
+    ''',
+      [ticketCode],
+    );
     if (maps.isEmpty) return null;
     return EventRegistration.fromMap(maps.first);
   }
@@ -133,10 +139,7 @@ class RegistrationRepository {
     final db = await _db.database;
     return await db.update(
       'event_registrations',
-      {
-        'status': 'cancelled',
-        'cancelled_at': DateTime.now().toIso8601String(),
-      },
+      {'status': 'cancelled', 'cancelled_at': DateTime.now().toIso8601String()},
       where: 'event_id = ? AND user_id = ?',
       whereArgs: [eventId, userId],
     );

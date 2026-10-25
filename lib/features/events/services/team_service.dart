@@ -32,7 +32,8 @@ class TeamService {
     } catch (e) {
       if (e.toString().contains('UNIQUE')) {
         return ServiceResult.failure(
-            'Une équipe avec ce nom existe déjà pour cette compétition.');
+          'Une équipe avec ce nom existe déjà pour cette compétition.',
+        );
       }
       return ServiceResult.failure('Erreur création équipe : $e');
     }
@@ -68,7 +69,8 @@ class TeamService {
 
   Future<ServiceResult<void>> addMember(int teamId, int userId) async {
     final already = await _repo.isMember(teamId, userId);
-    if (already) return ServiceResult.failure('Cet utilisateur est déjà membre.');
+    if (already)
+      return ServiceResult.failure('Cet utilisateur est déjà membre.');
     try {
       await _repo.addMember(teamId, userId);
       return ServiceResult.success(null);

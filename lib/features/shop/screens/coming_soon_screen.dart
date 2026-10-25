@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/shop_theme.dart';
 
 /// Placeholder screen shown for shop sections that are not yet implemented.
@@ -6,10 +7,7 @@ import '../widgets/shop_theme.dart';
 class ComingSoonScreen extends StatelessWidget {
   final String title;
 
-  const ComingSoonScreen({
-    super.key,
-    required this.title,
-  });
+  const ComingSoonScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +38,7 @@ class ComingSoonScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text(
-                  title,
-                  style: ShopTheme.headingStyle,
-                ),
+                Text(title, style: ShopTheme.headingStyle),
                 const SizedBox(height: 12),
                 Text(
                   'This section is coming soon. We are working hard to bring it to you.',

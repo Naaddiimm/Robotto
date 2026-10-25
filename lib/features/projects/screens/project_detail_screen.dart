@@ -1,9 +1,13 @@
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import '../models/project.dart';
 import '../../../core/widgets/background_waves.dart';
 import '../../../core/widgets/animated_button.dart';
@@ -40,10 +44,7 @@ class KanbanItem {
 class ProjectDetailScreen extends StatefulWidget {
   final Project project;
 
-  const ProjectDetailScreen({
-    super.key,
-    required this.project,
-  });
+  const ProjectDetailScreen({super.key, required this.project});
 
   @override
   State<ProjectDetailScreen> createState() => _ProjectDetailScreenState();
@@ -71,36 +72,40 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       if (task.priority == 'Moyenne priorité') pColor = Colors.amber;
       if (task.priority == 'Basse priorité') pColor = Colors.tealAccent;
 
-      _kanbanTasks.add(KanbanItem(
-        id: task.id,
-        title: task.title,
-        priority: task.priority,
-        priorityColor: pColor,
-        date: task.dueDate,
-        status: task.status,
-        assignee: task.assigneeName,
-        meetingInfo: task.meetingInfo,
-        usefulLinks: task.usefulLinks,
-        attachedFileName: task.attachedFileName,
-      ));
+      _kanbanTasks.add(
+        KanbanItem(
+          id: task.id,
+          title: task.title,
+          priority: task.priority,
+          priorityColor: pColor,
+          date: task.dueDate,
+          status: task.status,
+          assignee: task.assigneeName,
+          meetingInfo: task.meetingInfo,
+          usefulLinks: task.usefulLinks,
+          attachedFileName: task.attachedFileName,
+        ),
+      );
     }
   }
 
   void _syncProjectTasks() {
     widget.project.tasks.clear();
     for (final item in _kanbanTasks) {
-      widget.project.tasks.add(ProjectTask(
-        id: item.id,
-        title: item.title,
-        isCompleted: item.status == 'done',
-        dueDate: item.date,
-        assigneeName: item.assignee,
-        priority: item.priority,
-        status: item.status,
-        meetingInfo: item.meetingInfo,
-        usefulLinks: item.usefulLinks,
-        attachedFileName: item.attachedFileName,
-      ));
+      widget.project.tasks.add(
+        ProjectTask(
+          id: item.id,
+          title: item.title,
+          isCompleted: item.status == 'done',
+          dueDate: item.date,
+          assigneeName: item.assignee,
+          priority: item.priority,
+          status: item.status,
+          meetingInfo: item.meetingInfo,
+          usefulLinks: item.usefulLinks,
+          attachedFileName: item.attachedFileName,
+        ),
+      );
     }
   }
 
@@ -131,268 +136,325 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return StatefulBuilder(builder: (context, setModalState) {
-          return Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [
-                        const Icon(Icons.task_alt_rounded,
-                            color: AppTheme.accent, size: 22),
-                        const SizedBox(width: 8),
-                        Text('Détails de la tâche',
-                            style: GoogleFonts.poppins(
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.task_alt_rounded,
+                              color: AppTheme.accent,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Détails de la tâche',
+                              style: GoogleFonts.poppins(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                      ]),
-                      IconButton(
-                        icon: const Icon(Icons.close_rounded,
-                            color: AppTheme.textSoft),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: AppTheme.textSoft,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-                  // Task Title
-                  TextField(
-                    controller: titleCtrl,
-                    style: GoogleFonts.poppins(
+                    // Task Title
+                    TextField(
+                      controller: titleCtrl,
+                      style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      labelText: 'Titre de la tâche',
-                      labelStyle: GoogleFonts.poppins(
-                          color: AppTheme.accent),
-                      filled: true,
-                      fillColor: AppTheme.bg,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: Color(0xFF1E2942)),
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-
-                  _buildModalTextField(
-                    controller: assigneeCtrl,
-                    label: '👤 Assigner à',
-                    hint: 'ex: Alex Rivera',
-                    icon: Icons.person_outline_rounded,
-                  ),
-                  const SizedBox(height: 14),
-
-                  Text('🚨 Priorité',
-                      style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppTheme.textSoft)),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      'Haute priorité',
-                      'Moyenne priorité',
-                      'Basse priorité'
-                    ].map((prio) {
-                      final isSel = selectedPriority == prio;
-                      Color pColor = Colors.pinkAccent;
-                      if (prio == 'Moyenne priorité') pColor = Colors.amber;
-                      if (prio == 'Basse priorité') pColor = Colors.tealAccent;
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          child: ChoiceChip(
-                            label: Center(
-                              child: Text(prio.split(' ')[0],
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: isSel
-                                          ? AppTheme.bg
-                                          : Colors.white70)),
-                            ),
-                            selected: isSel,
-                            selectedColor: pColor,
-                            backgroundColor: AppTheme.bg,
-                            onSelected: (_) {
-                              AudioHelper.playClickSound();
-                              setModalState(() => selectedPriority = prio);
-                            },
+                      decoration: InputDecoration(
+                        labelText: 'Titre de la tâche',
+                        labelStyle: GoogleFonts.poppins(color: AppTheme.accent),
+                        filled: true,
+                        fillColor: AppTheme.bg,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E2942),
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 14),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
 
-                  _buildModalTextField(
-                    controller: dateCtrl,
-                    label: '📅 Date limite',
-                    hint: 'ex: 25 oct. 2025',
-                    icon: Icons.calendar_today_rounded,
-                  ),
-                  const SizedBox(height: 14),
+                    _buildModalTextField(
+                      controller: assigneeCtrl,
+                      label: '👤 Assigner à',
+                      hint: 'ex: Alex Rivera',
+                      icon: Icons.person_outline_rounded,
+                    ),
+                    const SizedBox(height: 14),
 
-                  _buildModalTextField(
-                    controller: meetingCtrl,
-                    label: '📹 Date de réunion / Meet',
-                    hint: 'ex: Google Meet • Lundi 15:00',
-                    icon: Icons.video_camera_front_rounded,
-                  ),
-                  const SizedBox(height: 14),
-
-                  _buildModalTextField(
-                    controller: linksCtrl,
-                    label: '🔗 Liens utiles',
-                    hint: 'ex: https://github.com/robotto/repo',
-                    icon: Icons.link_rounded,
-                  ),
-                  const SizedBox(height: 14),
-
-                  // File attachment
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('📎 Fichier / Pièce jointe',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppTheme.textSoft)),
-                          GestureDetector(
-                            onTap: () async {
-                              AudioHelper.playClickSound();
-                              try {
-                                final result =
-                                    await FilePicker.platform.pickFiles();
-                                if (result != null &&
-                                    result.files.isNotEmpty) {
-                                  AudioHelper.playSuccessSound();
-                                  fileCtrl.text = result.files.single.name;
-                                  setModalState(() {});
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Fichier "${result.files.single.name}" sélectionné !'),
-                                      backgroundColor:
-                                          AppTheme.accent,
-                                    ));
-                                  }
-                                }
-                              } catch (_) {}
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: AppTheme.accent,
-                                borderRadius: BorderRadius.circular(12),
+                    Text(
+                      '🚨 Priorité',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textSoft,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children:
+                          [
+                            'Haute priorité',
+                            'Moyenne priorité',
+                            'Basse priorité',
+                          ].map((prio) {
+                            final isSel = selectedPriority == prio;
+                            Color pColor = Colors.pinkAccent;
+                            if (prio == 'Moyenne priorité')
+                              pColor = Colors.amber;
+                            if (prio == 'Basse priorité')
+                              pColor = Colors.tealAccent;
+                            return Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                ),
+                                child: ChoiceChip(
+                                  label: Center(
+                                    child: Text(
+                                      prio.split(' ')[0],
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSel
+                                            ? AppTheme.bg
+                                            : Colors.white70,
+                                      ),
+                                    ),
+                                  ),
+                                  selected: isSel,
+                                  selectedColor: pColor,
+                                  backgroundColor: AppTheme.bg,
+                                  onSelected: (_) {
+                                    AudioHelper.playClickSound();
+                                    setModalState(
+                                      () => selectedPriority = prio,
+                                    );
+                                  },
+                                ),
                               ),
-                              child: Row(children: [
-                                const Icon(Icons.upload_file_rounded,
-                                    size: 14, color: AppTheme.bg),
-                                const SizedBox(width: 4),
-                                Text('Téléverser',
-                                    style: GoogleFonts.poppins(
+                            );
+                          }).toList(),
+                    ),
+                    const SizedBox(height: 14),
+
+                    _buildModalTextField(
+                      controller: dateCtrl,
+                      label: '📅 Date limite',
+                      hint: 'ex: 25 oct. 2025',
+                      icon: Icons.calendar_today_rounded,
+                    ),
+                    const SizedBox(height: 14),
+
+                    _buildModalTextField(
+                      controller: meetingCtrl,
+                      label: '📹 Date de réunion / Meet',
+                      hint: 'ex: Google Meet • Lundi 15:00',
+                      icon: Icons.video_camera_front_rounded,
+                    ),
+                    const SizedBox(height: 14),
+
+                    _buildModalTextField(
+                      controller: linksCtrl,
+                      label: '🔗 Liens utiles',
+                      hint: 'ex: https://github.com/robotto/repo',
+                      icon: Icons.link_rounded,
+                    ),
+                    const SizedBox(height: 14),
+
+                    // File attachment
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '📎 Fichier / Pièce jointe',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: AppTheme.textSoft,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                AudioHelper.playClickSound();
+                                try {
+                                  final result = await FilePicker.platform
+                                      .pickFiles();
+                                  if (result != null &&
+                                      result.files.isNotEmpty) {
+                                    AudioHelper.playSuccessSound();
+                                    fileCtrl.text = result.files.single.name;
+                                    setModalState(() {});
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Fichier "${result.files.single.name}" sélectionné !',
+                                          ),
+                                          backgroundColor: AppTheme.accent,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                } catch (_) {}
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.accent,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.upload_file_rounded,
+                                      size: 14,
+                                      color: AppTheme.bg,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Téléverser',
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
-                                        color: AppTheme.bg)),
-                              ]),
+                                        color: AppTheme.bg,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        TextField(
+                          controller: fileCtrl,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'ex: chassis_3d_v2.stl',
+                            hintStyle: GoogleFonts.poppins(
+                              color: AppTheme.textDisabled,
+                              fontSize: 12,
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.attach_file_rounded,
+                              color: AppTheme.accent,
+                              size: 18,
+                            ),
+                            filled: true,
+                            fillColor: AppTheme.bg,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Color(0xFF1E2942),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: fileCtrl,
-                        style: GoogleFonts.poppins(
-                            color: Colors.white, fontSize: 13),
-                        decoration: InputDecoration(
-                          hintText: 'ex: chassis_3d_v2.stl',
-                          hintStyle: GoogleFonts.poppins(
-                              color: AppTheme.textDisabled, fontSize: 12),
-                          prefixIcon: const Icon(Icons.attach_file_rounded,
-                              color: AppTheme.accent, size: 18),
-                          filled: true,
-                          fillColor: AppTheme.bg,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 12),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Color(0xFF1E2942)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 22),
+
+                    AnimatedButton(
+                      isPrimary: true,
+                      onPressed: () {
+                        AudioHelper.playSuccessSound();
+                        setState(() {
+                          item.title = titleCtrl.text.trim();
+                          item.assignee = assigneeCtrl.text.trim();
+                          item.priority = selectedPriority;
+                          item.priorityColor =
+                              selectedPriority == 'Haute priorité'
+                              ? Colors.pinkAccent
+                              : selectedPriority == 'Moyenne priorité'
+                              ? Colors.amber
+                              : Colors.tealAccent;
+                          item.date = dateCtrl.text.trim();
+                          item.meetingInfo = meetingCtrl.text.trim();
+                          item.usefulLinks = linksCtrl.text.trim();
+                          item.attachedFileName = fileCtrl.text.trim();
+                          _syncProjectTasks();
+                        });
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Tâche mise à jour avec succès !'),
+                            backgroundColor: AppTheme.accent,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppTheme.accent,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Enregistrer les modifications',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.bg,
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 22),
-
-                  AnimatedButton(
-                    isPrimary: true,
-                    onPressed: () {
-                      AudioHelper.playSuccessSound();
-                      setState(() {
-                        item.title = titleCtrl.text.trim();
-                        item.assignee = assigneeCtrl.text.trim();
-                        item.priority = selectedPriority;
-                        item.priorityColor =
-                            selectedPriority == 'Haute priorité'
-                                ? Colors.pinkAccent
-                                : selectedPriority == 'Moyenne priorité'
-                                    ? Colors.amber
-                                    : Colors.tealAccent;
-                        item.date = dateCtrl.text.trim();
-                        item.meetingInfo = meetingCtrl.text.trim();
-                        item.usefulLinks = linksCtrl.text.trim();
-                        item.attachedFileName = fileCtrl.text.trim();
-                        _syncProjectTasks();
-                      });
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Tâche mise à jour avec succès !'),
-                        backgroundColor: AppTheme.accent,
-                      ));
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: AppTheme.accent,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Center(
-                        child: Text('Enregistrer les modifications',
-                            style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.bg)),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        });
+            );
+          },
+        );
       },
     );
   }
@@ -406,11 +468,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.textSoft)),
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppTheme.textSoft,
+          ),
+        ),
         const SizedBox(height: 5),
         TextField(
           controller: controller,
@@ -418,13 +483,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.poppins(
-                color: AppTheme.textDisabled, fontSize: 12),
-            prefixIcon:
-                Icon(icon, color: AppTheme.accent, size: 18),
+              color: AppTheme.textDisabled,
+              fontSize: 12,
+            ),
+            prefixIcon: Icon(icon, color: AppTheme.accent, size: 18),
             filled: true,
             fillColor: AppTheme.bg,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFF1E2942)),
@@ -457,34 +525,38 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Ajouter une tâche',
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
+              Text(
+                'Ajouter une tâche',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
               const SizedBox(height: 16),
               TextField(
                 controller: _newTaskTitleController,
                 autofocus: true,
-                style:
-                    GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
                 decoration: InputDecoration(
                   hintText: 'Titre de la tâche...',
-                  hintStyle:
-                      GoogleFonts.poppins(color: AppTheme.textDisabled),
-                  prefixIcon: const Icon(Icons.task_alt_rounded,
-                      color: AppTheme.accent),
+                  hintStyle: GoogleFonts.poppins(color: AppTheme.textDisabled),
+                  prefixIcon: const Icon(
+                    Icons.task_alt_rounded,
+                    color: AppTheme.accent,
+                  ),
                   filled: true,
                   fillColor: AppTheme.bg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Color(0xFF1E2942)),
+                    borderSide: const BorderSide(color: Color(0xFF1E2942)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                        color: AppTheme.accent, width: 1.5),
+                      color: AppTheme.accent,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -496,14 +568,16 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   if (title.isNotEmpty) {
                     AudioHelper.playSuccessSound();
                     setState(() {
-                      _kanbanTasks.add(KanbanItem(
-                        id: 'k_${DateTime.now().millisecondsSinceEpoch}',
-                        title: title,
-                        priority: 'Haute priorité',
-                        priorityColor: Colors.pinkAccent,
-                        date: 'Aujourd\'hui',
-                        status: 'todo',
-                      ));
+                      _kanbanTasks.add(
+                        KanbanItem(
+                          id: 'k_${DateTime.now().millisecondsSinceEpoch}',
+                          title: title,
+                          priority: 'Haute priorité',
+                          priorityColor: Colors.pinkAccent,
+                          date: 'Aujourd\'hui',
+                          status: 'todo',
+                        ),
+                      );
                       _syncProjectTasks();
                     });
                     _newTaskTitleController.clear();
@@ -518,11 +592,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
-                    child: Text('Ajouter la Tâche',
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.bg)),
+                    child: Text(
+                      'Ajouter la Tâche',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.bg,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -545,25 +622,35 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     final label = newStatus == 'todo'
         ? 'À faire'
         : newStatus == 'doing'
-            ? 'En cours'
-            : 'Terminées';
+        ? 'En cours'
+        : 'Terminées';
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Row(children: [
-          const Icon(Icons.swap_horiz_rounded, color: AppTheme.accent),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text('Tâche "${item.title}" déplacée vers "$label"',
-                style: GoogleFonts.poppins(
-                    color: Colors.white, fontSize: 12.5)),
+      ..showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.swap_horiz_rounded, color: AppTheme.accent),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Tâche "${item.title}" déplacée vers "$label"',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 12.5,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ]),
-        duration: const Duration(seconds: 2),
-        backgroundColor: AppTheme.surface,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ));
+          duration: const Duration(seconds: 2),
+          backgroundColor: AppTheme.surface,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
   }
 
   // ─── DELETE TASK ──────────────────────────────────────────────────────────────
@@ -577,17 +664,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: AppTheme.surfaceHigh),
         ),
-        title: Text('Supprimer la tâche ?',
-            style: GoogleFonts.poppins(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-        content: Text('La tâche "${item.title}" sera définitivement supprimée.',
-            style: GoogleFonts.poppins(
-                color: AppTheme.textSoft, fontSize: 13)),
+        title: Text(
+          'Supprimer la tâche ?',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'La tâche "${item.title}" sera définitivement supprimée.',
+          style: GoogleFonts.poppins(color: AppTheme.textSoft, fontSize: 13),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Annuler',
-                style: GoogleFonts.poppins(color: AppTheme.textDisabled)),
+            child: Text(
+              'Annuler',
+              style: GoogleFonts.poppins(color: AppTheme.textDisabled),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -596,16 +690,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 _kanbanTasks.removeWhere((t) => t.id == item.id);
                 _syncProjectTasks();
               });
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Tâche supprimée'),
-                backgroundColor: Colors.redAccent,
-                behavior: SnackBarBehavior.floating,
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tâche supprimée'),
+                  backgroundColor: Colors.redAccent,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-            child: Text('Supprimer',
-                style: GoogleFonts.poppins(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Supprimer',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -638,16 +738,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                const Icon(Icons.person_add_rounded,
-                    color: AppTheme.accent, size: 22),
-                const SizedBox(width: 8),
-                Text('Inviter un membre',
+              Row(
+                children: [
+                  const Icon(
+                    Icons.person_add_rounded,
+                    color: AppTheme.accent,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Inviter un membre',
                     style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-              ]),
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               _buildModalTextField(
                 controller: nameCtrl,
@@ -671,21 +779,28 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   if (name.isNotEmpty && role.isNotEmpty) {
                     AudioHelper.playSuccessSound();
                     setState(() {
-                      widget.project.members.add(ProjectMember(
-                        id: 'mem_${DateTime.now().millisecondsSinceEpoch}',
-                        name: name,
-                        role: role,
-                      ));
+                      widget.project.members.add(
+                        ProjectMember(
+                          id: 'mem_${DateTime.now().millisecondsSinceEpoch}',
+                          name: name,
+                          role: role,
+                        ),
+                      );
                     });
                     Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('$name a rejoint l\'équipe !',
-                          style: GoogleFonts.poppins(color: Colors.white)),
-                      backgroundColor: AppTheme.surface,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '$name a rejoint l\'équipe !',
+                          style: GoogleFonts.poppins(color: Colors.white),
+                        ),
+                        backgroundColor: AppTheme.surface,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
                   }
                 },
                 child: Container(
@@ -696,11 +811,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
-                    child: Text('Inviter',
-                        style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.bg)),
+                    child: Text(
+                      'Inviter',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.bg,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -728,11 +846,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Changer le statut du projet',
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
+              Text(
+                'Changer le statut du projet',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
               const SizedBox(height: 16),
               ...['En cours', 'En pause', 'Terminé'].map((s) {
                 final isActive = widget.project.status == s;
@@ -741,15 +862,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     isActive
                         ? Icons.radio_button_checked_rounded
                         : Icons.radio_button_unchecked_rounded,
-                    color: isActive
-                        ? AppTheme.accent
-                        : AppTheme.textDisabled,
+                    color: isActive ? AppTheme.accent : AppTheme.textDisabled,
                   ),
-                  title: Text(s,
-                      style: GoogleFonts.poppins(
-                          color: isActive ? AppTheme.accent : Colors.white,
-                          fontWeight:
-                              isActive ? FontWeight.bold : FontWeight.normal)),
+                  title: Text(
+                    s,
+                    style: GoogleFonts.poppins(
+                      color: isActive ? AppTheme.accent : Colors.white,
+                      fontWeight: isActive
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(ctx);
                     setState(() => widget.project.status = s);
@@ -772,15 +895,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceHigh,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(children: [
-          const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-          const SizedBox(width: 10),
-          Text('Supprimer le projet',
+        title: Row(
+          children: [
+            const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            const SizedBox(width: 10),
+            Text(
+              'Supprimer le projet',
               style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-        ]),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         content: Text(
           'Êtes-vous sûr de vouloir supprimer "${widget.project.title}" ? Cette action est irréversible.',
           style: GoogleFonts.poppins(fontSize: 13, color: AppTheme.textSoft),
@@ -788,9 +916,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Annuler',
-                style: GoogleFonts.poppins(
-                    fontSize: 13, color: AppTheme.textSoft)),
+            child: Text(
+              'Annuler',
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: AppTheme.textSoft,
+              ),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -798,15 +930,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               foregroundColor: Colors.redAccent,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: () {
               Navigator.pop(ctx);
               Navigator.pop(context, 'deleted');
             },
-            child: Text('Supprimer',
-                style: GoogleFonts.poppins(
-                    fontSize: 13, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Supprimer',
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -823,8 +960,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         backgroundColor: AppTheme.bg,
         elevation: 0,
         leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () {
             AudioHelper.playClickSound();
             Navigator.pop(context);
@@ -833,7 +972,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         title: Text(
           widget.project.title,
           style: GoogleFonts.poppins(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -847,26 +989,44 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             itemBuilder: (ctx) => [
               PopupMenuItem(
                 value: 'status',
-                child: Row(children: [
-                  const Icon(Icons.swap_horiz_rounded,
-                      size: 18, color: AppTheme.accent),
-                  const SizedBox(width: 10),
-                  Text('Changer le statut',
-                      style:
-                          GoogleFonts.poppins(fontSize: 13, color: Colors.white)),
-                ]),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.swap_horiz_rounded,
+                      size: 18,
+                      color: AppTheme.accent,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Changer le statut',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const PopupMenuDivider(),
               PopupMenuItem(
                 value: 'delete',
-                child: Row(children: [
-                  const Icon(Icons.delete_outline_rounded,
-                      size: 18, color: Colors.redAccent),
-                  const SizedBox(width: 10),
-                  Text('Supprimer le projet',
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.delete_outline_rounded,
+                      size: 18,
+                      color: Colors.redAccent,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Supprimer le projet',
                       style: GoogleFonts.poppins(
-                          fontSize: 13, color: Colors.redAccent)),
-                ]),
+                        fontSize: 13,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -879,7 +1039,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       ),
       body: Stack(
         children: [
-          Positioned.fill(child: CustomPaint(painter: BackgroundWavesPainter())),
+          Positioned.fill(
+            child: CustomPaint(painter: BackgroundWavesPainter()),
+          ),
           SafeArea(
             child: Column(
               children: [
@@ -890,7 +1052,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   labelColor: AppTheme.accent,
                   unselectedLabelColor: AppTheme.textSoft,
                   labelStyle: GoogleFonts.poppins(
-                      fontSize: 12, fontWeight: FontWeight.bold),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                   unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
@@ -944,21 +1108,26 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   width: double.infinity,
                   height: 180,
                   color: AppTheme.surface,
-                  child: (widget.project.imagePath != null &&
+                  child:
+                      (widget.project.imagePath != null &&
                           widget.project.imagePath!.isNotEmpty)
                       ? (kIsWeb
-                          ? Image.network(widget.project.imagePath!,
-                              width: double.infinity,
-                              height: 180,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stack) =>
-                                  _buildHeroPlaceholder())
-                          : Image.file(File(widget.project.imagePath!),
-                              width: double.infinity,
-                              height: 180,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stack) =>
-                                  _buildHeroPlaceholder()))
+                            ? Image.network(
+                                widget.project.imagePath!,
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stack) =>
+                                    _buildHeroPlaceholder(),
+                              )
+                            : Image.file(
+                                File(widget.project.imagePath!),
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stack) =>
+                                    _buildHeroPlaceholder(),
+                              ))
                       : _buildHeroPlaceholder(),
                 ),
               ),
@@ -969,21 +1138,32 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   onTap: _showChangeStatusDialog,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: _statusColor(widget.project.status),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(widget.project.status,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.project.status,
                           style: GoogleFonts.poppins(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.bg)),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.edit_rounded,
-                          size: 12, color: AppTheme.bg),
-                    ]),
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.bg,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.edit_rounded,
+                          size: 12,
+                          color: AppTheme.bg,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -992,43 +1172,60 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           const SizedBox(height: 16),
 
           // Title & Category
-          Text(widget.project.title,
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          const SizedBox(height: 4),
-          Row(children: [
-            const Icon(Icons.smart_toy_outlined,
-                color: AppTheme.accent, size: 16),
-            const SizedBox(width: 6),
-            Text(widget.project.category,
-                style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    color: AppTheme.textSoft,
-                    fontWeight: FontWeight.w500)),
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2942),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(widget.project.level,
-                  style: GoogleFonts.poppins(
-                      fontSize: 10,
-                      color: AppTheme.accent,
-                      fontWeight: FontWeight.w600)),
+          Text(
+            widget.project.title,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-          ]),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(
+                Icons.smart_toy_outlined,
+                color: AppTheme.accent,
+                size: 16,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                widget.project.category,
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: AppTheme.textSoft,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E2942),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  widget.project.level,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    color: AppTheme.accent,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
 
           // Description
-          Text(widget.project.description,
-              style: GoogleFonts.poppins(
-                  fontSize: 12.5,
-                  color: AppTheme.text,
-                  height: 1.45)),
+          Text(
+            widget.project.description,
+            style: GoogleFonts.poppins(
+              fontSize: 12.5,
+              color: AppTheme.text,
+              height: 1.45,
+            ),
+          ),
           const SizedBox(height: 8),
 
           // Objectives
@@ -1038,48 +1235,70 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               color: const Color(0xFF0E1626),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                  color: AppTheme.accent.withValues(alpha: 0.25)),
+                color: AppTheme.accent.withValues(alpha: 0.25),
+              ),
             ),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Icon(Icons.flag_outlined,
-                  color: AppTheme.accent, size: 18),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.flag_outlined,
+                  color: AppTheme.accent,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Objectifs',
-                          style: GoogleFonts.poppins(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.accent)),
+                      Text(
+                        'Objectifs',
+                        style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.accent,
+                        ),
+                      ),
                       const SizedBox(height: 2),
-                      Text(widget.project.objectives,
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: AppTheme.text,
-                              height: 1.4)),
-                    ]),
-              ),
-            ]),
+                      Text(
+                        widget.project.objectives,
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: AppTheme.text,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
 
           // Progress
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Progression globale',
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Progression globale',
                 style: GoogleFonts.poppins(
-                    fontSize: 12, color: AppTheme.textSoft)),
-            Text(
-              progress > 0
-                  ? '${(progress * 100).toInt()}%'
-                  : '${widget.project.completedTasksCount}/${widget.project.tasks.length} tâches',
-              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: AppTheme.textSoft,
+                ),
+              ),
+              Text(
+                progress > 0
+                    ? '${(progress * 100).toInt()}%'
+                    : '${widget.project.completedTasksCount}/${widget.project.tasks.length} tâches',
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-          ]),
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -1087,8 +1306,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               value: progress,
               minHeight: 8,
               backgroundColor: const Color(0xFF1E293B),
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppTheme.accent),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.accent),
             ),
           ),
           const SizedBox(height: 20),
@@ -1105,41 +1323,49 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildInfoColumn(
-                    icon: Icons.groups_rounded,
-                    title: '${widget.project.members.length}',
-                    subtitle: 'membres'),
-                Container(
-                    width: 1, height: 30, color: const Color(0xFF1E2942)),
+                  icon: Icons.groups_rounded,
+                  title: '${widget.project.members.length}',
+                  subtitle: 'membres',
+                ),
+                Container(width: 1, height: 30, color: const Color(0xFF1E2942)),
                 _buildInfoColumn(
-                    icon: Icons.calendar_today_rounded,
-                    title: widget.project.dueDate,
-                    subtitle: 'Échéance'),
-                Container(
-                    width: 1, height: 30, color: const Color(0xFF1E2942)),
+                  icon: Icons.calendar_today_rounded,
+                  title: widget.project.dueDate,
+                  subtitle: 'Échéance',
+                ),
+                Container(width: 1, height: 30, color: const Color(0xFF1E2942)),
                 _buildInfoColumn(
-                    icon: Icons.public_rounded,
-                    title: widget.project.visibility,
-                    subtitle: 'Visibilité'),
+                  icon: Icons.public_rounded,
+                  title: widget.project.visibility,
+                  subtitle: 'Visibilité',
+                ),
               ],
             ),
           ),
           const SizedBox(height: 24),
 
           // Milestones / Prochaines étapes
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Jalons & Étapes',
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Jalons & Étapes',
                 style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            Text(
-              '${widget.project.reachedMilestonesCount}/${widget.project.milestones.isNotEmpty ? widget.project.milestones.length : 3} atteints',
-              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '${widget.project.reachedMilestonesCount}/${widget.project.milestones.isNotEmpty ? widget.project.milestones.length : 3} atteints',
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.accent),
-            ),
-          ]),
+                  color: AppTheme.accent,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
 
           // If milestones exist use them, otherwise show default steps
@@ -1159,17 +1385,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             })
           else ...[
             _buildMilestoneCard(
-                stepNumber: '1',
-                title: 'Conception mécanique',
-                subtitle: '15 oct. 2025 · 2 tâches'),
+              stepNumber: '1',
+              title: 'Conception mécanique',
+              subtitle: '15 oct. 2025 · 2 tâches',
+            ),
             _buildMilestoneCard(
-                stepNumber: '2',
-                title: 'Montage électronique',
-                subtitle: '25 oct. 2025 · 3 tâches'),
+              stepNumber: '2',
+              title: 'Montage électronique',
+              subtitle: '25 oct. 2025 · 3 tâches',
+            ),
             _buildMilestoneCard(
-                stepNumber: '3',
-                title: 'Programmation & tests',
-                subtitle: '10 nov. 2025 · 4 tâches'),
+              stepNumber: '3',
+              title: 'Programmation & tests',
+              subtitle: '10 nov. 2025 · 4 tâches',
+            ),
           ],
 
           const SizedBox(height: 80),
@@ -1212,10 +1441,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFF1E2942)),
             ),
-            child: Row(children: [
-              _buildTaskModeButton('Liste'),
-              _buildTaskModeButton('Kanban'),
-            ]),
+            child: Row(
+              children: [
+                _buildTaskModeButton('Liste'),
+                _buildTaskModeButton('Kanban'),
+              ],
+            ),
           ),
         ),
 
@@ -1321,38 +1552,49 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: entry.key == 'Terminées'
-                        ? AppTheme.accent
-                        : entry.key == 'En cours'
-                            ? Colors.amber
-                            : AppTheme.textDisabled,
-                    shape: BoxShape.circle,
+              child: Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: entry.key == 'Terminées'
+                          ? AppTheme.accent
+                          : entry.key == 'En cours'
+                          ? Colors.amber
+                          : AppTheme.textDisabled,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Text(entry.key,
+                  const SizedBox(width: 8),
+                  Text(
+                    entry.key,
                     style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 1),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2942),
-                    borderRadius: BorderRadius.circular(10),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                  child: Text('${entry.value.length}',
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E2942),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '${entry.value.length}',
                       style: GoogleFonts.poppins(
-                          fontSize: 10, color: Colors.white70)),
-                ),
-              ]),
+                        fontSize: 10,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             ...entry.value.map((item) => _buildListTaskTile(item)),
           ],
@@ -1394,8 +1636,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               ),
             ),
             child: item.status == 'done'
-                ? const Icon(Icons.check_rounded,
-                    size: 14, color: AppTheme.bg)
+                ? const Icon(Icons.check_rounded, size: 14, color: AppTheme.bg)
                 : null,
           ),
         ),
@@ -1403,9 +1644,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           item.title,
           style: GoogleFonts.poppins(
             fontSize: 13,
-            color: item.status == 'done'
-                ? AppTheme.textDisabled
-                : Colors.white,
+            color: item.status == 'done' ? AppTheme.textDisabled : Colors.white,
             decoration: item.status == 'done'
                 ? TextDecoration.lineThrough
                 : null,
@@ -1413,8 +1652,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         ),
         subtitle: Text(
           '${item.assignee} · ${item.date}',
-          style:
-              GoogleFonts.poppins(fontSize: 11, color: AppTheme.textDisabled),
+          style: GoogleFonts.poppins(
+            fontSize: 11,
+            color: AppTheme.textDisabled,
+          ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1428,12 +1669,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               child: Text(
                 item.priority.split(' ')[0],
                 style: GoogleFonts.poppins(
-                    fontSize: 9, color: item.priorityColor),
+                  fontSize: 9,
+                  color: item.priorityColor,
+                ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.more_vert_rounded,
-                  size: 18, color: AppTheme.textDisabled),
+              icon: const Icon(
+                Icons.more_vert_rounded,
+                size: 18,
+                color: AppTheme.textDisabled,
+              ),
               onPressed: () => _showTaskDetailsModal(item),
             ),
           ],
@@ -1458,14 +1704,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: Text(mode,
-                style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected
-                        ? AppTheme.bg
-                        : AppTheme.textSoft)),
+            child: Text(
+              mode,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                color: isSelected ? AppTheme.bg : AppTheme.textSoft,
+              ),
+            ),
           ),
         ),
       ),
@@ -1494,9 +1740,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 : AppTheme.surface.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isHovered
-                  ? AppTheme.accent
-                  : const Color(0xFF1E2942),
+              color: isHovered ? AppTheme.accent : const Color(0xFF1E2942),
               width: isHovered ? 2 : 1,
             ),
           ),
@@ -1504,7 +1748,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 6),
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.bg,
                   borderRadius: BorderRadius.circular(20),
@@ -1512,24 +1758,32 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title,
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: titleColor)),
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: titleColor,
+                      ),
+                    ),
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 1),
+                        horizontal: 6,
+                        vertical: 1,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1E2942),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text('$count',
-                          style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                      child: Text(
+                        '$count',
+                        style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -1577,19 +1831,28 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 if (item.status == 'done')
                   const Padding(
                     padding: EdgeInsets.only(right: 6),
-                    child: Icon(Icons.check_circle_rounded,
-                        size: 15, color: AppTheme.accent),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      size: 15,
+                      color: AppTheme.accent,
+                    ),
                   ),
                 Expanded(
-                  child: Text(item.title,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
+                  child: Text(
+                    item.title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert_rounded,
-                      size: 16, color: AppTheme.textSoft),
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    size: 16,
+                    color: AppTheme.textSoft,
+                  ),
                   color: AppTheme.surface,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -1605,38 +1868,57 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   itemBuilder: (_) => [
                     PopupMenuItem(
                       value: 'details',
-                      child: Text('⚙️ Voir / Modifier',
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: AppTheme.accent)),
+                      child: Text(
+                        '⚙️ Voir / Modifier',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: AppTheme.accent,
+                        ),
+                      ),
                     ),
                     if (item.status != 'todo')
                       PopupMenuItem(
                         value: 'todo',
-                        child: Text('→ À faire',
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, color: Colors.white)),
+                        child: Text(
+                          '→ À faire',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     if (item.status != 'doing')
                       PopupMenuItem(
                         value: 'doing',
-                        child: Text('→ En cours',
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, color: Colors.white)),
+                        child: Text(
+                          '→ En cours',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     if (item.status != 'done')
                       PopupMenuItem(
                         value: 'done',
-                        child: Text('→ Terminées',
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, color: Colors.white)),
+                        child: Text(
+                          '→ Terminées',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     const PopupMenuDivider(),
                     PopupMenuItem(
                       value: 'delete',
-                      child: Text('🗑️ Supprimer',
-                          style: GoogleFonts.poppins(
-                              fontSize: 12, color: Colors.redAccent)),
+                      child: Text(
+                        '🗑️ Supprimer',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Colors.redAccent,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -1645,46 +1927,60 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
             const SizedBox(height: 8),
             if (item.status != 'done') ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: item.priorityColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(item.priority,
-                    style: GoogleFonts.poppins(
-                        fontSize: 9.5,
-                        fontWeight: FontWeight.bold,
-                        color: item.priorityColor)),
+                child: Text(
+                  item.priority,
+                  style: GoogleFonts.poppins(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.bold,
+                    color: item.priorityColor,
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
             ],
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(children: [
-                  CircleAvatar(
-                    radius: 8,
-                    backgroundColor: AppTheme.accent,
-                    child: Text(
-                      item.assignee.isNotEmpty
-                          ? item.assignee[0].toUpperCase()
-                          : '?',
-                      style: GoogleFonts.poppins(
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 8,
+                      backgroundColor: AppTheme.accent,
+                      child: Text(
+                        item.assignee.isNotEmpty
+                            ? item.assignee[0].toUpperCase()
+                            : '?',
+                        style: GoogleFonts.poppins(
                           fontSize: 8,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.bg),
+                          color: AppTheme.bg,
+                        ),
+                      ),
                     ),
-                  ),
-                ]),
-                Row(children: [
-                  const Icon(Icons.calendar_today_rounded,
-                      size: 11, color: AppTheme.textSoft),
-                  const SizedBox(width: 3),
-                  Text(item.date,
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_today_rounded,
+                      size: 11,
+                      color: AppTheme.textSoft,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      item.date,
                       style: GoogleFonts.poppins(
-                          fontSize: 10, color: AppTheme.textSoft)),
-                ]),
+                        fontSize: 10,
+                        color: AppTheme.textSoft,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
@@ -1719,30 +2015,41 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               Text(
                 '${widget.project.members.length} membres',
                 style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               AnimatedButton(
                 isPrimary: true,
                 onPressed: _showInviteMemberDialog,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 7),
+                    horizontal: 14,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.accent,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(children: [
-                    const Icon(Icons.person_add_rounded,
-                        size: 14, color: AppTheme.bg),
-                    const SizedBox(width: 4),
-                    Text('Inviter',
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.person_add_rounded,
+                        size: 14,
+                        color: AppTheme.bg,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Inviter',
                         style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.bg)),
-                  ]),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.bg,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1763,55 +2070,73 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: const Color(0xFF1E2942)),
                 ),
-                child: Row(children: [
-                  CircleAvatar(
-                    backgroundColor:
-                        AppTheme.accent.withValues(alpha: 0.2),
-                    child: Text(
-                      m.name[0].toUpperCase(),
-                      style: GoogleFonts.poppins(
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: AppTheme.accent.withValues(alpha: 0.2),
+                      child: Text(
+                        m.name[0].toUpperCase(),
+                        style: GoogleFonts.poppins(
                           color: AppTheme.accent,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(m.name,
-                            style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        Text(m.role,
-                            style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: AppTheme.textSoft)),
-                      ],
-                    ),
-                  ),
-                  if (m.id != 'user_me')
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert_rounded,
-                          size: 18, color: AppTheme.textDisabled),
-                      color: AppTheme.surface,
-                      onSelected: (action) {
-                        if (action == 'remove') {
-                          setState(() => widget.project.members
-                              .removeWhere((mem) => mem.id == m.id));
-                        }
-                      },
-                      itemBuilder: (_) => [
-                        PopupMenuItem(
-                          value: 'remove',
-                          child: Text('Retirer du projet',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12, color: Colors.redAccent)),
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
+                      ),
                     ),
-                ]),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            m.name,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            m.role,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: AppTheme.textSoft,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (m.id != 'user_me')
+                      PopupMenuButton<String>(
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          size: 18,
+                          color: AppTheme.textDisabled,
+                        ),
+                        color: AppTheme.surface,
+                        onSelected: (action) {
+                          if (action == 'remove') {
+                            setState(
+                              () => widget.project.members.removeWhere(
+                                (mem) => mem.id == m.id,
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder: (_) => [
+                          PopupMenuItem(
+                            value: 'remove',
+                            child: Text(
+                              'Retirer du projet',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               );
             },
           ),
@@ -1833,9 +2158,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               Text(
                 '${widget.project.files.length} fichier(s) partagé(s)',
                 style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               GestureDetector(
                 onTap: () async {
@@ -1845,36 +2171,47 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                     if (result != null && result.files.isNotEmpty) {
                       AudioHelper.playSuccessSound();
                       setState(() {
-                        widget.project.files.add(ProjectFile(
-                          id:
-                              'f_${DateTime.now().millisecondsSinceEpoch}',
-                          name: result.files.single.name,
-                          type: _getFileType(result.files.single.name),
-                          uploadedBy: 'Vous',
-                          uploadedAt: _formatDate(DateTime.now()),
-                          path: result.files.single.path,
-                        ));
+                        widget.project.files.add(
+                          ProjectFile(
+                            id: 'f_${DateTime.now().millisecondsSinceEpoch}',
+                            name: result.files.single.name,
+                            type: _getFileType(result.files.single.name),
+                            uploadedBy: 'Vous',
+                            uploadedAt: _formatDate(DateTime.now()),
+                            path: result.files.single.path,
+                          ),
+                        );
                       });
                     }
                   } catch (_) {}
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 7),
+                    horizontal: 14,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.accent,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(children: [
-                    const Icon(Icons.upload_rounded,
-                        size: 14, color: AppTheme.bg),
-                    const SizedBox(width: 4),
-                    Text('Partager',
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.upload_rounded,
+                        size: 14,
+                        color: AppTheme.bg,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Partager',
                         style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.bg)),
-                  ]),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.bg,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1886,17 +2223,27 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.folder_open_rounded,
-                          size: 56, color: Color(0xFF1E2942)),
+                      const Icon(
+                        Icons.folder_open_rounded,
+                        size: 56,
+                        color: Color(0xFF1E2942),
+                      ),
                       const SizedBox(height: 12),
-                      Text('Aucun fichier partagé pour le moment',
-                          style: GoogleFonts.poppins(
-                              color: AppTheme.textSoft, fontSize: 13)),
+                      Text(
+                        'Aucun fichier partagé pour le moment',
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.textSoft,
+                          fontSize: 13,
+                        ),
+                      ),
                       const SizedBox(height: 6),
-                      Text('Appuyez sur "Partager" pour ajouter un fichier.',
-                          style: GoogleFonts.poppins(
-                              color: const Color(0xFF4B5563),
-                              fontSize: 11)),
+                      Text(
+                        'Appuyez sur "Partager" pour ajouter un fichier.',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF4B5563),
+                          fontSize: 11,
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -1914,48 +2261,63 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: const Color(0xFF1E2942)),
                       ),
-                      child: Row(children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: _fileTypeColor(f.type)
-                                .withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(10),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: _fileTypeColor(f.type)
+                                  .withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              _fileTypeIcon(f.type),
+                              color: _fileTypeColor(f.type),
+                              size: 22,
+                            ),
                           ),
-                          child: Icon(_fileTypeIcon(f.type),
-                              color: _fileTypeColor(f.type), size: 22),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(f.name,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  f.name,
                                   style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                  overflow: TextOverflow.ellipsis),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Par ${f.uploadedBy} · ${f.uploadedAt}',
-                                style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Par ${f.uploadedBy} · ${f.uploadedAt}',
+                                  style: GoogleFonts.poppins(
                                     fontSize: 11,
-                                    color: AppTheme.textDisabled),
-                              ),
-                            ],
+                                    color: AppTheme.textDisabled,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline_rounded,
-                              size: 18, color: AppTheme.textDisabled),
-                          onPressed: () {
-                            setState(() => widget.project.files
-                                .removeWhere((file) => file.id == f.id));
-                          },
-                        ),
-                      ]),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete_outline_rounded,
+                              size: 18,
+                              color: AppTheme.textDisabled,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => widget.project.files.removeWhere(
+                                  (file) => file.id == f.id,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -1972,8 +2334,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].contains(ext)) {
       return 'image';
     }
-    if (['dart', 'py', 'js', 'ts', 'cpp', 'c', 'h', 'ino', 'json', 'yaml']
-        .contains(ext)) {
+    if ([
+      'dart',
+      'py',
+      'js',
+      'ts',
+      'cpp',
+      'c',
+      'h',
+      'ino',
+      'json',
+      'yaml',
+    ].contains(ext)) {
       return 'code';
     }
     return 'other';
@@ -2007,8 +2379,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
 
   String _formatDate(DateTime dt) {
     const months = [
-      'jan.', 'fév.', 'mars', 'avr.', 'mai', 'juin',
-      'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'
+      'jan.',
+      'fév.',
+      'mars',
+      'avr.',
+      'mai',
+      'juin',
+      'juil.',
+      'août',
+      'sept.',
+      'oct.',
+      'nov.',
+      'déc.',
     ];
     return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
   }
@@ -2034,46 +2416,60 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                 : const Color(0xFF1E2942),
           ),
         ),
-        child: Row(children: [
-          CircleAvatar(
-            radius: 14,
-            backgroundColor: isReached
-                ? AppTheme.accent
-                : const Color(0xFF1E2942),
-            child: isReached
-                ? const Icon(Icons.check_rounded,
-                    size: 16, color: AppTheme.bg)
-                : Text(stepNumber,
-                    style: GoogleFonts.poppins(
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 14,
+              backgroundColor: isReached
+                  ? AppTheme.accent
+                  : const Color(0xFF1E2942),
+              child: isReached
+                  ? const Icon(
+                      Icons.check_rounded,
+                      size: 16,
+                      color: AppTheme.bg,
+                    )
+                  : Text(
+                      stepNumber,
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: isReached
-                            ? AppTheme.textDisabled
-                            : Colors.white,
-                        decoration: isReached
-                            ? TextDecoration.lineThrough
-                            : null)),
-                Text(subtitle,
-                    style: GoogleFonts.poppins(
-                        fontSize: 11, color: AppTheme.textSoft)),
-              ],
+                        color: Colors.white,
+                      ),
+                    ),
             ),
-          ),
-          if (onTap != null)
-            const Icon(Icons.touch_app_rounded,
-                size: 16, color: Color(0xFF4B5563)),
-        ]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: isReached ? AppTheme.textDisabled : Colors.white,
+                      decoration: isReached ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: AppTheme.textSoft,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (onTap != null)
+              const Icon(
+                Icons.touch_app_rounded,
+                size: 16,
+                color: Color(0xFF4B5563),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -2083,28 +2479,36 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     required String title,
     required String subtitle,
   }) {
-    return Column(children: [
-      Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, size: 16, color: AppTheme.accent),
-        const SizedBox(width: 4),
-        Text(title,
-            style: GoogleFonts.poppins(
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: AppTheme.accent),
+            const SizedBox(width: 4),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: Colors.white)),
-      ]),
-      Text(subtitle,
-          style: GoogleFonts.poppins(
-              fontSize: 10, color: AppTheme.textSoft)),
-    ]);
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        Text(
+          subtitle,
+          style: GoogleFonts.poppins(fontSize: 10, color: AppTheme.textSoft),
+        ),
+      ],
+    );
   }
 
   Widget _buildHeroPlaceholder() {
     return Container(
       color: const Color(0xFF0E1626),
       child: const Center(
-        child: Icon(Icons.smart_toy_rounded,
-            size: 64, color: AppTheme.accent),
+        child: Icon(Icons.smart_toy_rounded, size: 64, color: AppTheme.accent),
       ),
     );
   }

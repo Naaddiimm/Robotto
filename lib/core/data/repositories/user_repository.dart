@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+
 import '../database_helper.dart';
 import '../models/user.dart';
 import '../models/user_interest.dart';
@@ -82,12 +83,17 @@ class UserRepository {
   // ── Interests Operations ──────────────────────────────────────────────────
 
   Future<void> replaceUserInterests(
-      int userId, Set<String> interestNames) async {
+    int userId,
+    Set<String> interestNames,
+  ) async {
     final db = await _db();
     final now = DateTime.now().toIso8601String();
     await db.transaction((txn) async {
-      await txn.delete('user_interests',
-          where: 'user_id = ?', whereArgs: [userId]);
+      await txn.delete(
+        'user_interests',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
       for (final interest in interestNames) {
         await txn.insert('user_interests', {
           'user_id': userId,
@@ -111,12 +117,17 @@ class UserRepository {
   // ── Learning Goals Operations ─────────────────────────────────────────────
 
   Future<void> replaceUserLearningGoals(
-      int userId, Set<String> goalNames) async {
+    int userId,
+    Set<String> goalNames,
+  ) async {
     final db = await _db();
     final now = DateTime.now().toIso8601String();
     await db.transaction((txn) async {
-      await txn.delete('user_learning_goals',
-          where: 'user_id = ?', whereArgs: [userId]);
+      await txn.delete(
+        'user_learning_goals',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
       for (final goal in goalNames) {
         await txn.insert('user_learning_goals', {
           'user_id': userId,
@@ -140,30 +151,30 @@ class UserRepository {
   // ── Credentials Operations ────────────────────────────────────────────────
 
   Future<void> saveUserCredentials(
-      int userId, String passwordHash, String salt, String algo) async {
+    int userId,
+    String passwordHash,
+    String salt,
+    String algo,
+  ) async {
     final db = await _db();
-    await db.insert(
-      'user_credentials',
-      {
-        'user_id': userId,
-        'password_hash': passwordHash,
-        'salt': salt,
-        'algorithm': algo,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('user_credentials', {
+      'user_id': userId,
+      'password_hash': passwordHash,
+      'salt': salt,
+      'algorithm': algo,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> updateUserCredentials(
-      int userId, String passwordHash, String salt, String algo) async {
+    int userId,
+    String passwordHash,
+    String salt,
+    String algo,
+  ) async {
     final db = await _db();
     await db.update(
       'user_credentials',
-      {
-        'password_hash': passwordHash,
-        'salt': salt,
-        'algorithm': algo,
-      },
+      {'password_hash': passwordHash, 'salt': salt, 'algorithm': algo},
       where: 'user_id = ?',
       whereArgs: [userId],
     );

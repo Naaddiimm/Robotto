@@ -17,13 +17,13 @@ class CompetitionResult {
   });
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'event_id': eventId,
-        'rank': rank,
-        'participant': participant,
-        'score': score,
-        'notes': notes,
-      };
+    'id': id,
+    'event_id': eventId,
+    'rank': rank,
+    'participant': participant,
+    'score': score,
+    'notes': notes,
+  };
 
   factory CompetitionResult.fromMap(Map<String, dynamic> map) =>
       CompetitionResult(

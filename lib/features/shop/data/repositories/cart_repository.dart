@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import '../shop_database.dart';
 import '../models/cart_item.dart';
 
@@ -167,11 +168,7 @@ class CartRepository {
 
   Future<void> clear({required int userId}) async {
     final db = await _dbProvider.database;
-    await db.delete(
-      'cart_items',
-      where: 'user_id = ?',
-      whereArgs: [userId],
-    );
+    await db.delete('cart_items', where: 'user_id = ?', whereArgs: [userId]);
     await _refreshCount(userId);
   }
 

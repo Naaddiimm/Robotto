@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class RobotHeroWidget extends StatefulWidget {
@@ -24,17 +26,11 @@ class _RobotHeroWidgetState extends State<RobotHeroWidget>
     )..repeat(reverse: true);
 
     _floatingAnimation = Tween<double>(begin: -6.0, end: 6.0).animate(
-      CurvedAnimation(
-        parent: _floatingController,
-        curve: Curves.easeInOutSine,
-      ),
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOutSine),
     );
 
     _glowAnimation = Tween<double>(begin: 0.12, end: 0.28).animate(
-      CurvedAnimation(
-        parent: _floatingController,
-        curve: Curves.easeInOutSine,
-      ),
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOutSine),
     );
   }
 
@@ -64,10 +60,14 @@ class _RobotHeroWidgetState extends State<RobotHeroWidget>
                   height: 130,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.accent.withValues(alpha: _glowAnimation.value),
+                    color: AppTheme.accent.withValues(
+                      alpha: _glowAnimation.value,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.accent.withValues(alpha: _glowAnimation.value),
+                        color: AppTheme.accent.withValues(
+                          alpha: _glowAnimation.value,
+                        ),
                         blurRadius: 40,
                         spreadRadius: 10,
                       ),
@@ -129,9 +129,7 @@ class _RobotHeroWidgetState extends State<RobotHeroWidget>
                   offset: Offset(0, _floatingAnimation.value),
                   child: SizedBox(
                     width: 220,
-                    child: CustomPaint(
-                      painter: HeroRobotMascotPainter(),
-                    ),
+                    child: CustomPaint(painter: HeroRobotMascotPainter()),
                   ),
                 ),
               ),
@@ -154,7 +152,12 @@ class UnderlinePainter extends CustomPainter {
 
     final path = Path();
     path.moveTo(0, size.height * 0.5);
-    path.quadraticBezierTo(size.width * 0.5, size.height, size.width, size.height * 0.2);
+    path.quadraticBezierTo(
+      size.width * 0.5,
+      size.height,
+      size.width,
+      size.height * 0.2,
+    );
     canvas.drawPath(path, paint);
   }
 
@@ -182,16 +185,26 @@ class HeroRobotMascotPainter extends CustomPainter {
     canvas.drawPath(armPath, armPaint);
 
     // Robotic Joint circles
-    canvas.drawCircle(Offset(size.width * 0.25, size.height * 0.45), 6, Paint()..color = AppTheme.accent);
+    canvas.drawCircle(
+      Offset(size.width * 0.25, size.height * 0.45),
+      6,
+      Paint()..color = AppTheme.accent,
+    );
 
     // Robot Antenna Light
-    canvas.drawCircle(Offset(robotCenterX, robotCenterY - 60), 5, Paint()..color = AppTheme.accent);
+    canvas.drawCircle(
+      Offset(robotCenterX, robotCenterY - 60),
+      5,
+      Paint()..color = AppTheme.accent,
+    );
 
     // Antenna Wire
     canvas.drawLine(
       Offset(robotCenterX, robotCenterY - 55),
       Offset(robotCenterX, robotCenterY - 40),
-      Paint()..color = Colors.white..strokeWidth = 2.5,
+      Paint()
+        ..color = Colors.white
+        ..strokeWidth = 2.5,
     );
 
     // Robot Head (Round white helmet)
@@ -226,13 +239,23 @@ class HeroRobotMascotPainter extends CustomPainter {
     // Left Eye
     final leftEye = Path();
     leftEye.moveTo(robotCenterX - 16, robotCenterY - 20);
-    leftEye.quadraticBezierTo(robotCenterX - 11, robotCenterY - 28, robotCenterX - 6, robotCenterY - 20);
+    leftEye.quadraticBezierTo(
+      robotCenterX - 11,
+      robotCenterY - 28,
+      robotCenterX - 6,
+      robotCenterY - 20,
+    );
     canvas.drawPath(leftEye, eyePaint);
 
     // Right Eye
     final rightEye = Path();
     rightEye.moveTo(robotCenterX + 6, robotCenterY - 20);
-    rightEye.quadraticBezierTo(robotCenterX + 11, robotCenterY - 28, robotCenterX + 16, robotCenterY - 20);
+    rightEye.quadraticBezierTo(
+      robotCenterX + 11,
+      robotCenterY - 28,
+      robotCenterX + 16,
+      robotCenterY - 20,
+    );
     canvas.drawPath(rightEye, eyePaint);
 
     // Robot Body (White rounded capsule)
@@ -260,12 +283,20 @@ class HeroRobotMascotPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(robotCenterX - textPainter.width / 2, robotCenterY + 22));
+    textPainter.paint(
+      canvas,
+      Offset(robotCenterX - textPainter.width / 2, robotCenterY + 22),
+    );
 
     // Left Waving Arm/Hand
     final armLeftPath = Path();
     armLeftPath.moveTo(robotCenterX - 28, robotCenterY + 22);
-    armLeftPath.quadraticBezierTo(robotCenterX - 45, robotCenterY + 10, robotCenterX - 48, robotCenterY - 5);
+    armLeftPath.quadraticBezierTo(
+      robotCenterX - 45,
+      robotCenterY + 10,
+      robotCenterX - 48,
+      robotCenterY - 5,
+    );
     canvas.drawPath(
       armLeftPath,
       Paint()
@@ -276,10 +307,18 @@ class HeroRobotMascotPainter extends CustomPainter {
     );
 
     // Left Waving Hand Palm
-    canvas.drawCircle(Offset(robotCenterX - 48, robotCenterY - 5), 7, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      Offset(robotCenterX - 48, robotCenterY - 5),
+      7,
+      Paint()..color = Colors.white,
+    );
 
     // Right Arm
-    canvas.drawCircle(Offset(robotCenterX + 30, robotCenterY + 25), 6, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      Offset(robotCenterX + 30, robotCenterY + 25),
+      6,
+      Paint()..color = Colors.white,
+    );
   }
 
   @override

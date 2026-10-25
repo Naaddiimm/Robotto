@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 import '../models/event_registration.dart';
 import '../widgets/event_theme.dart';
 
@@ -19,7 +20,7 @@ class TicketScreen extends StatelessWidget {
         : null;
     final dateLabel = dt != null
         ? '${dt.day.toString().padLeft(2, '0')}/'
-            '${dt.month.toString().padLeft(2, '0')}/${dt.year}'
+              '${dt.month.toString().padLeft(2, '0')}/${dt.year}'
         : '';
 
     return Scaffold(
@@ -58,7 +59,8 @@ class TicketScreen extends StatelessWidget {
                       : EventTheme.mint,
                 ),
                 _Badge(
-                  label: EventRegistration.statusLabels[registration.status] ??
+                  label:
+                      EventRegistration.statusLabels[registration.status] ??
                       registration.status,
                   color: registration.status == 'confirmed'
                       ? EventTheme.success
@@ -66,7 +68,9 @@ class TicketScreen extends StatelessWidget {
                 ),
                 if (registration.isCheckedIn)
                   const _Badge(
-                      label: 'Présence validée ✓', color: EventTheme.mint),
+                    label: 'Présence validée ✓',
+                    color: EventTheme.mint,
+                  ),
               ],
             ),
             const SizedBox(height: 24),
@@ -97,19 +101,22 @@ class TicketScreen extends StatelessWidget {
 
             // Code textuel
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: EventTheme.surface,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: EventTheme.mint.withValues(alpha: 0.3)),
+                  color: EventTheme.mint.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.confirmation_number_outlined,
-                      size: 16, color: EventTheme.mint),
+                  const Icon(
+                    Icons.confirmation_number_outlined,
+                    size: 16,
+                    color: EventTheme.mint,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     ticketCode,
@@ -126,23 +133,28 @@ class TicketScreen extends StatelessWidget {
             const SizedBox(height: 28),
 
             // Infos de l'événement
-            _InfoCard(children: [
-              if (dateLabel.isNotEmpty)
-                _InfoRow(
+            _InfoCard(
+              children: [
+                if (dateLabel.isNotEmpty)
+                  _InfoRow(
                     icon: Icons.calendar_today_outlined,
                     label: 'Date',
-                    value: dateLabel),
-              _InfoRow(
+                    value: dateLabel,
+                  ),
+                _InfoRow(
                   icon: Icons.tag_outlined,
                   label: 'ID Inscription',
-                  value: '#${registration.id}'),
-              if (registration.isCheckedIn &&
-                  registration.checkedInAt != null)
-                _InfoRow(
+                  value: '#${registration.id}',
+                ),
+                if (registration.isCheckedIn &&
+                    registration.checkedInAt != null)
+                  _InfoRow(
                     icon: Icons.check_circle_outline,
                     label: 'Validé le',
-                    value: _fmtDateTime(registration.checkedInAt!)),
-            ]),
+                    value: _fmtDateTime(registration.checkedInAt!),
+                  ),
+              ],
+            ),
             const SizedBox(height: 20),
 
             // Note version locale
@@ -152,13 +164,17 @@ class TicketScreen extends StatelessWidget {
                 color: EventTheme.warning.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: EventTheme.warning.withValues(alpha: 0.3)),
+                  color: EventTheme.warning.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info_outline,
-                      size: 16, color: EventTheme.warning),
+                  const Icon(
+                    Icons.info_outline,
+                    size: 16,
+                    color: EventTheme.warning,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -166,7 +182,9 @@ class TicketScreen extends StatelessWidget {
                       'SQLite du téléphone de l\'organisateur. '
                       'Présentez ce QR code à l\'entrée de l\'événement.',
                       style: EventTheme.labelStyle.copyWith(
-                          color: EventTheme.warning, height: 1.5),
+                        color: EventTheme.warning,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                 ],
@@ -198,19 +216,22 @@ class _Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withValues(alpha: 0.4)),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                fontFamily: EventTheme.fontFamily,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: color)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.15),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: color.withValues(alpha: 0.4)),
+    ),
+    child: Text(
+      label,
+      style: TextStyle(
+        fontFamily: EventTheme.fontFamily,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: color,
+      ),
+    ),
+  );
 }
 
 class _InfoCard extends StatelessWidget {
@@ -219,41 +240,52 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: EventTheme.cardDecoration,
-        child: Column(
-            children: children
-                .expand((w) => [
-                      w,
-                      const Divider(color: EventTheme.surfaceHigh, height: 1)
-                    ])
-                .take(children.length * 2 - 1)
-                .toList()),
-      );
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    decoration: EventTheme.cardDecoration,
+    child: Column(
+      children: children
+          .expand(
+            (w) => [w, const Divider(color: EventTheme.surfaceHigh, height: 1)],
+          )
+          .take(children.length * 2 - 1)
+          .toList(),
+    ),
+  );
 }
 
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label, value;
-  const _InfoRow(
-      {required this.icon, required this.label, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(icon, size: 16, color: EventTheme.mint),
-          const SizedBox(width: 10),
-          Text('$label : ',
-              style:
-                  EventTheme.labelStyle.copyWith(color: EventTheme.textSoft)),
-          Expanded(
-              child: Text(value,
-                  style: const TextStyle(
-                      fontFamily: EventTheme.fontFamily,
-                      fontSize: 13,
-                      color: EventTheme.text))),
-        ]),
-      );
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 16, color: EventTheme.mint),
+        const SizedBox(width: 10),
+        Text(
+          '$label : ',
+          style: EventTheme.labelStyle.copyWith(color: EventTheme.textSoft),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontFamily: EventTheme.fontFamily,
+              fontSize: 13,
+              color: EventTheme.text,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

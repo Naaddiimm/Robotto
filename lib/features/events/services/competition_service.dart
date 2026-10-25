@@ -17,7 +17,9 @@ class CompetitionService {
   // -------------------------------------------------------------------------
 
   String? validateDetail(CompetitionDetail detail) {
-    if (!CompetitionDetail.participationTypes.contains(detail.participationType)) {
+    if (!CompetitionDetail.participationTypes.contains(
+      detail.participationType,
+    )) {
       return 'Type de participation invalide.';
     }
     if (detail.participationType != 'individual') {
@@ -39,7 +41,9 @@ class CompetitionService {
 
   /// Crée un événement de type 'competition' + ses détails en transaction.
   Future<ServiceResult<int>> createCompetition(
-      EventModel event, CompetitionDetail detail) async {
+    EventModel event,
+    CompetitionDetail detail,
+  ) async {
     // L'événement doit être de type competition
     final eventToCreate = event.copyWith(type: 'competition');
     final eventError = _eventService.validate(eventToCreate);
@@ -76,7 +80,9 @@ class CompetitionService {
   // -------------------------------------------------------------------------
 
   Future<ServiceResult<void>> updateCompetition(
-      EventModel event, CompetitionDetail detail) async {
+    EventModel event,
+    CompetitionDetail detail,
+  ) async {
     if (event.id == null) return ServiceResult.failure('ID manquant.');
     final eventToUpdate = event.copyWith(type: 'competition');
     final eventError = _eventService.validate(eventToUpdate);

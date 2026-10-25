@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/cart_item.dart';
 import '../data/repositories/cart_repository.dart';
@@ -45,8 +47,7 @@ class _CartScreenState extends State<CartScreen> {
     });
   }
 
-  bool get _hasBlockingIssues =>
-      _lines.any((l) => l.hasIssue);
+  bool get _hasBlockingIssues => _lines.any((l) => l.hasIssue);
 
   double get _subtotal => CartRepository.subtotal(_lines);
 
@@ -111,12 +112,14 @@ class _CartScreenState extends State<CartScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(
-                  fontFamily: ShopTheme.fontFamily,
-                  color: ShopTheme.secondaryText,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: ShopTheme.fontFamily,
+                color: ShopTheme.secondaryText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -135,11 +138,13 @@ class _CartScreenState extends State<CartScreen> {
                 _loadCart();
               }
             },
-            child: const Text('Clear',
-                style: TextStyle(
-                  fontFamily: ShopTheme.fontFamily,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: const Text(
+              'Clear',
+              style: TextStyle(
+                fontFamily: ShopTheme.fontFamily,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -188,22 +193,26 @@ class _CartScreenState extends State<CartScreen> {
         actions: [
           if (_lines.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.delete_sweep_outlined,
-                  color: ShopTheme.error),
+              icon: const Icon(
+                Icons.delete_sweep_outlined,
+                color: ShopTheme.error,
+              ),
               onPressed: _confirmClear,
             ),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: ShopTheme.mint))
+          ? const Center(
+              child: CircularProgressIndicator(color: ShopTheme.mint),
+            )
           : _lines.isEmpty
-              ? _buildEmptyState()
-              : Column(
-                  children: [
-                    Expanded(child: _buildList()),
-                    _buildBottomBar(),
-                  ],
-                ),
+          ? _buildEmptyState()
+          : Column(
+              children: [
+                Expanded(child: _buildList()),
+                _buildBottomBar(),
+              ],
+            ),
     );
   }
 
@@ -212,9 +221,11 @@ class _CartScreenState extends State<CartScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_cart_outlined,
-              size: 56,
-              color: ShopTheme.secondaryText.withValues(alpha: 0.4)),
+          Icon(
+            Icons.shopping_cart_outlined,
+            size: 56,
+            color: ShopTheme.secondaryText.withValues(alpha: 0.4),
+          ),
           const SizedBox(height: 16),
           Text(
             'Your cart is empty',
@@ -223,7 +234,10 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text('Browse the catalog to add products.', style: ShopTheme.bodyStyle),
+          Text(
+            'Browse the catalog to add products.',
+            style: ShopTheme.bodyStyle,
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -234,11 +248,13 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             onPressed: () => Navigator.pop(context),
-            child: const Text('Go to Catalog',
-                style: TextStyle(
-                  fontFamily: ShopTheme.fontFamily,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: const Text(
+              'Go to Catalog',
+              style: TextStyle(
+                fontFamily: ShopTheme.fontFamily,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -248,7 +264,10 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildList() {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(
-        ShopTheme.screenPadding, 8, ShopTheme.screenPadding, 16,
+        ShopTheme.screenPadding,
+        8,
+        ShopTheme.screenPadding,
+        16,
       ),
       itemCount: _lines.length,
       itemBuilder: (context, index) {
@@ -298,17 +317,21 @@ class _CartScreenState extends State<CartScreen> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, _) => Container(
                           color: ShopTheme.surfaceHigh,
-                          child: Icon(Icons.image_outlined,
-                              color: ShopTheme.secondaryText
-                                  .withValues(alpha: 0.4)),
+                          child: Icon(
+                            Icons.image_outlined,
+                            color: ShopTheme.secondaryText.withValues(
+                              alpha: 0.4,
+                            ),
+                          ),
                         ),
                         cacheWidth: 140,
                       )
                     : Container(
                         color: ShopTheme.surfaceHigh,
-                        child: Icon(Icons.image_outlined,
-                            color: ShopTheme.secondaryText
-                                .withValues(alpha: 0.4)),
+                        child: Icon(
+                          Icons.image_outlined,
+                          color: ShopTheme.secondaryText.withValues(alpha: 0.4),
+                        ),
                       ),
               ),
             ),
@@ -346,10 +369,9 @@ class _CartScreenState extends State<CartScreen> {
                       IconButton(
                         onPressed: line.unavailable || line.outOfStock
                             ? null
-                            : () => _updateQuantity(
-                                line, line.item.quantity - 1),
-                        icon: const Icon(Icons.remove_circle_outline,
-                            size: 20),
+                            : () =>
+                                  _updateQuantity(line, line.item.quantity - 1),
+                        icon: const Icon(Icons.remove_circle_outline, size: 20),
                         color: ShopTheme.violet,
                         disabledColor: ShopTheme.surfaceHigh,
                         padding: EdgeInsets.zero,
@@ -368,11 +390,13 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: line.unavailable || line.outOfStock ||
+                        onPressed:
+                            line.unavailable ||
+                                line.outOfStock ||
                                 line.item.quantity >= line.stock
                             ? null
-                            : () => _updateQuantity(
-                                line, line.item.quantity + 1),
+                            : () =>
+                                  _updateQuantity(line, line.item.quantity + 1),
                         icon: const Icon(Icons.add_circle_outline, size: 20),
                         color: ShopTheme.violet,
                         disabledColor: ShopTheme.surfaceHigh,
@@ -438,9 +462,7 @@ class _CartScreenState extends State<CartScreen> {
       decoration: BoxDecoration(
         color: ShopTheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        border: Border(
-          top: BorderSide(color: ShopTheme.surfaceHigh, width: 1),
-        ),
+        border: Border(top: BorderSide(color: ShopTheme.surfaceHigh, width: 1)),
       ),
       child: SafeArea(
         top: false,
@@ -450,12 +472,14 @@ class _CartScreenState extends State<CartScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Subtotal',
-                    style: TextStyle(
-                      fontFamily: ShopTheme.fontFamily,
-                      fontSize: 16,
-                      color: ShopTheme.secondaryText,
-                    )),
+                Text(
+                  'Subtotal',
+                  style: TextStyle(
+                    fontFamily: ShopTheme.fontFamily,
+                    fontSize: 16,
+                    color: ShopTheme.secondaryText,
+                  ),
+                ),
                 Text(
                   '${_subtotal.toStringAsFixed(2)} TND',
                   style: TextStyle(
@@ -479,16 +503,15 @@ class _CartScreenState extends State<CartScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: (_lines.isEmpty || _hasBlockingIssues || _userId == null)
+                onPressed:
+                    (_lines.isEmpty || _hasBlockingIssues || _userId == null)
                     ? null
                     : () async {
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CheckoutScreen(
-                              lines: _lines,
-                              userId: _userId!,
-                            ),
+                            builder: (context) =>
+                                CheckoutScreen(lines: _lines, userId: _userId!),
                           ),
                         );
                         if (!mounted) return;

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import 'core/theme/app_theme.dart';
 import 'features/user/screens/splash_screen.dart';
 import 'features/learning/data/favourites_repository.dart';

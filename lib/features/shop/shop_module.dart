@@ -10,6 +10,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_theme.dart';
 import 'widgets/shop_theme.dart';
@@ -80,10 +81,7 @@ class _ShopModuleState extends State<ShopModule> {
           Expanded(
             child: IndexedStack(
               index: _selectedTab,
-              children: const [
-                CatalogScreen(),
-                MyProductsScreen(),
-              ],
+              children: const [CatalogScreen(), MyProductsScreen()],
             ),
           ),
         ],
@@ -139,8 +137,10 @@ class _ShopModuleState extends State<ShopModule> {
                 clipBehavior: Clip.none,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.shopping_cart_outlined,
-                        color: Colors.white),
+                    icon: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -253,7 +253,9 @@ class _ShopModuleState extends State<ShopModule> {
       height: 100,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: ShopTheme.screenPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: ShopTheme.screenPadding,
+        ),
         itemCount: shopSections.length,
         separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
@@ -268,10 +270,7 @@ class _ShopModuleState extends State<ShopModule> {
     final isDimmed = !section.enabled;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: section.builder),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: section.builder));
       },
       child: Container(
         width: 80,

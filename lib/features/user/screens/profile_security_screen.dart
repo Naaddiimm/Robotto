@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -86,7 +87,10 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -106,7 +110,7 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
                 ],
               ),
             ),
-            
+
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
@@ -159,9 +163,11 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
                             _obscureOld = !_obscureOld;
                           });
                         },
-                        validator: (value) => value == null || value.isEmpty ? 'Old password is required' : null,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Old password is required'
+                            : null,
                       ),
-                      
+
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -170,7 +176,12 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
                             debugPrint("TODO: Forgot Password Flow");
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Forgot Password flow not implemented.', style: TextStyle(fontFamily: 'Plus Jakarta Sans')),
+                                content: Text(
+                                  'Forgot Password flow not implemented.',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                  ),
+                                ),
                                 backgroundColor: surfaceHigh,
                                 behavior: SnackBarBehavior.floating,
                               ),
@@ -200,13 +211,15 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
                           });
                         },
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'New password is required';
-                          if (value.length < 6) return 'Must be at least 6 characters';
+                          if (value == null || value.isEmpty)
+                            return 'New password is required';
+                          if (value.length < 6)
+                            return 'Must be at least 6 characters';
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
-                      
+
                       _buildPasswordField(
                         controller: _confirmPasswordController,
                         label: "Confirm New Password",
@@ -218,8 +231,10 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
                           });
                         },
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'Please confirm your password';
-                          if (value != _newPasswordController.text) return 'Passwords do not match';
+                          if (value == null || value.isEmpty)
+                            return 'Please confirm your password';
+                          if (value != _newPasswordController.text)
+                            return 'Passwords do not match';
                           return null;
                         },
                       ),
@@ -302,10 +317,16 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(color: secondaryText, fontSize: 14),
-            prefixIcon: const Icon(Icons.lock_outline, color: secondaryText, size: 20),
+            prefixIcon: const Icon(
+              Icons.lock_outline,
+              color: secondaryText,
+              size: 20,
+            ),
             suffixIcon: IconButton(
               icon: Icon(
-                obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
                 color: secondaryText,
                 size: 20,
               ),
@@ -313,7 +334,10 @@ class _ProfileSecurityScreenState extends State<ProfileSecurityScreen> {
             ),
             filled: true,
             fillColor: surface,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16.0,
+              horizontal: 16.0,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

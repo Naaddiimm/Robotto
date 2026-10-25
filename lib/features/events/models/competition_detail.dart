@@ -18,11 +18,7 @@ class CompetitionDetail {
     this.resultsPublished = false,
   });
 
-  static const List<String> participationTypes = [
-    'individual',
-    'team',
-    'both',
-  ];
+  static const List<String> participationTypes = ['individual', 'team', 'both'];
 
   static const Map<String, String> participationLabels = {
     'individual': 'Individuel',
@@ -42,14 +38,14 @@ class CompetitionDetail {
   ];
 
   Map<String, dynamic> toMap() => {
-        'id': eventId,
-        'participation_type': participationType,
-        'team_min_size': teamMinSize,
-        'team_max_size': teamMaxSize,
-        'robot_category': robotCategory,
-        'prize_description': prizeDescription,
-        'results_published': resultsPublished ? 1 : 0,
-      };
+    'id': eventId,
+    'participation_type': participationType,
+    'team_min_size': teamMinSize,
+    'team_max_size': teamMaxSize,
+    'robot_category': robotCategory,
+    'prize_description': prizeDescription,
+    'results_published': resultsPublished ? 1 : 0,
+  };
 
   factory CompetitionDetail.fromMap(Map<String, dynamic> map) =>
       CompetitionDetail(
@@ -70,14 +66,13 @@ class CompetitionDetail {
     String? robotCategory,
     String? prizeDescription,
     bool? resultsPublished,
-  }) =>
-      CompetitionDetail(
-        eventId: eventId ?? this.eventId,
-        participationType: participationType ?? this.participationType,
-        teamMinSize: teamMinSize ?? this.teamMinSize,
-        teamMaxSize: teamMaxSize ?? this.teamMaxSize,
-        robotCategory: robotCategory ?? this.robotCategory,
-        prizeDescription: prizeDescription ?? this.prizeDescription,
-        resultsPublished: resultsPublished ?? this.resultsPublished,
-      );
+  }) => CompetitionDetail(
+    eventId: eventId ?? this.eventId,
+    participationType: participationType ?? this.participationType,
+    teamMinSize: teamMinSize ?? this.teamMinSize,
+    teamMaxSize: teamMaxSize ?? this.teamMaxSize,
+    robotCategory: robotCategory ?? this.robotCategory,
+    prizeDescription: prizeDescription ?? this.prizeDescription,
+    resultsPublished: resultsPublished ?? this.resultsPublished,
+  );
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:record/record.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/audio_helper.dart';
 import '../models/project.dart';
@@ -57,7 +59,8 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
               backgroundColor: Colors.redAccent,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           );
         }
@@ -75,18 +78,23 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
 
       _recordingDuration = Duration.zero;
       _recordingTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (mounted) setState(() => _recordingDuration += const Duration(seconds: 1));
+        if (mounted)
+          setState(() => _recordingDuration += const Duration(seconds: 1));
       });
 
       AudioHelper.playClickSound();
       setState(() => _isRecording = true);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erreur démarrage enregistrement: $e',
-              style: GoogleFonts.poppins(fontSize: 12)),
-          backgroundColor: Colors.redAccent,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Erreur démarrage enregistrement: $e',
+              style: GoogleFonts.poppins(fontSize: 12),
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
       }
     }
   }
@@ -110,9 +118,7 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
   }
 
   void _showSaveNoteDialog(String filePath, Duration duration) {
-    final titleCtrl = TextEditingController(
-      text: 'Note du ${_formattedNow()}',
-    );
+    final titleCtrl = TextEditingController(text: 'Note du ${_formattedNow()}');
 
     showModalBottomSheet(
       context: context,
@@ -133,19 +139,32 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                const Icon(Icons.mic_rounded, color: AppTheme.accent, size: 22),
-                const SizedBox(width: 8),
-                Text('Enregistrer la note',
+              Row(
+                children: [
+                  const Icon(
+                    Icons.mic_rounded,
+                    color: AppTheme.accent,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Enregistrer la note',
                     style: GoogleFonts.poppins(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-              ]),
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 6),
-              Text('Durée : ${_formatDuration(duration)}',
-                  style: GoogleFonts.poppins(
-                      fontSize: 12, color: AppTheme.textSoft)),
+              Text(
+                'Durée : ${_formatDuration(duration)}',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: AppTheme.textSoft,
+                ),
+              ),
               const SizedBox(height: 16),
               TextField(
                 controller: titleCtrl,
@@ -153,10 +172,15 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                 style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
                 decoration: InputDecoration(
                   labelText: 'Titre de la note',
-                  labelStyle:
-                      GoogleFonts.poppins(color: AppTheme.accent, fontSize: 13),
-                  prefixIcon: const Icon(Icons.label_outline_rounded,
-                      color: AppTheme.accent, size: 18),
+                  labelStyle: GoogleFonts.poppins(
+                    color: AppTheme.accent,
+                    fontSize: 13,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.label_outline_rounded,
+                    color: AppTheme.accent,
+                    size: 18,
+                  ),
                   filled: true,
                   fillColor: AppTheme.bg,
                   border: OutlineInputBorder(
@@ -165,8 +189,10 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: AppTheme.accent, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: AppTheme.accent,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -178,7 +204,8 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.accent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24)),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
                   ),
                   onPressed: () {
                     final title = titleCtrl.text.trim().isNotEmpty
@@ -186,29 +213,39 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                         : 'Note vocale';
                     Navigator.pop(ctx);
                     setState(() {
-                      widget.project.voiceNotes.add(VoiceNote(
-                        id: 'vn_${DateTime.now().millisecondsSinceEpoch}',
-                        title: title,
-                        filePath: filePath,
-                        duration: duration,
-                        createdAt: _formattedNow(),
-                        createdBy: 'Vous',
-                      ));
+                      widget.project.voiceNotes.add(
+                        VoiceNote(
+                          id: 'vn_${DateTime.now().millisecondsSinceEpoch}',
+                          title: title,
+                          filePath: filePath,
+                          duration: duration,
+                          createdAt: _formattedNow(),
+                          createdBy: 'Vous',
+                        ),
+                      );
                     });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Note vocale enregistrée !',
-                          style: GoogleFonts.poppins(color: Colors.white)),
-                      backgroundColor: AppTheme.surface,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Note vocale enregistrée !',
+                          style: GoogleFonts.poppins(color: Colors.white),
+                        ),
+                        backgroundColor: AppTheme.surface,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
                   },
-                  child: Text('Sauvegarder',
-                      style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.bg)),
+                  child: Text(
+                    'Sauvegarder',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.bg,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -223,9 +260,13 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                       File(filePath).deleteSync();
                     } catch (_) {}
                   },
-                  child: Text('Annuler',
-                      style: GoogleFonts.poppins(
-                          fontSize: 14, color: AppTheme.textSoft)),
+                  child: Text(
+                    'Annuler',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: AppTheme.textSoft,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -290,20 +331,29 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.surfaceHigh,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Supprimer la note ?',
-            style: GoogleFonts.poppins(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-        content: Text('"${note.title}" sera définitivement supprimée.',
-            style:
-                GoogleFonts.poppins(color: AppTheme.textSoft, fontSize: 13)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Supprimer la note ?',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        content: Text(
+          '"${note.title}" sera définitivement supprimée.',
+          style: GoogleFonts.poppins(color: AppTheme.textSoft, fontSize: 13),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Annuler',
-                style:
-                    GoogleFonts.poppins(color: AppTheme.textDisabled, fontSize: 13)),
+            child: Text(
+              'Annuler',
+              style: GoogleFonts.poppins(
+                color: AppTheme.textDisabled,
+                fontSize: 13,
+              ),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -311,12 +361,17 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
               foregroundColor: Colors.redAccent,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text('Supprimer',
-                style: GoogleFonts.poppins(
-                    fontSize: 13, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Supprimer',
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -334,8 +389,9 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
       try {
         File(note.filePath).deleteSync();
       } catch (_) {}
-      setState(() =>
-          widget.project.voiceNotes.removeWhere((n) => n.id == note.id));
+      setState(
+        () => widget.project.voiceNotes.removeWhere((n) => n.id == note.id),
+      );
     }
   }
 
@@ -350,8 +406,18 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
   String _formattedNow() {
     final now = DateTime.now();
     const months = [
-      'jan.', 'fév.', 'mars', 'avr.', 'mai', 'juin',
-      'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'
+      'jan.',
+      'fév.',
+      'mars',
+      'avr.',
+      'mai',
+      'juin',
+      'juil.',
+      'août',
+      'sept.',
+      'oct.',
+      'nov.',
+      'déc.',
     ];
     return '${now.day} ${months[now.month - 1]} ${now.year}';
   }
@@ -418,9 +484,13 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                         children: [
                           _PulsingDot(),
                           const SizedBox(width: 6),
-                          Text('Enregistrement en cours...',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 11, color: Colors.white70)),
+                          Text(
+                            'Enregistrement en cours...',
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: Colors.white70,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -433,18 +503,24 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
         // ── Header ──
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Row(children: [
-            const Icon(Icons.library_music_rounded,
-                color: AppTheme.accent, size: 16),
-            const SizedBox(width: 6),
-            Text(
-              '${widget.project.voiceNotes.length} note${widget.project.voiceNotes.length != 1 ? 's' : ''} vocale${widget.project.voiceNotes.length != 1 ? 's' : ''}',
-              style: GoogleFonts.poppins(
+          child: Row(
+            children: [
+              const Icon(
+                Icons.library_music_rounded,
+                color: AppTheme.accent,
+                size: 16,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '${widget.project.voiceNotes.length} note${widget.project.voiceNotes.length != 1 ? 's' : ''} vocale${widget.project.voiceNotes.length != 1 ? 's' : ''}',
+                style: GoogleFonts.poppins(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textSoft),
-            ),
-          ]),
+                  color: AppTheme.textSoft,
+                ),
+              ),
+            ],
+          ),
         ),
 
         // ── List ──
@@ -454,31 +530,47 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.mic_off_rounded,
-                          size: 56, color: Color(0xFF1E2942)),
+                      const Icon(
+                        Icons.mic_off_rounded,
+                        size: 56,
+                        color: Color(0xFF1E2942),
+                      ),
                       const SizedBox(height: 12),
-                      Text('Aucune note vocale pour le moment',
-                          style: GoogleFonts.poppins(
-                              color: AppTheme.textSoft, fontSize: 13)),
+                      Text(
+                        'Aucune note vocale pour le moment',
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.textSoft,
+                          fontSize: 13,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       Text(
-                          'Appuyez sur le bouton pour enregistrer votre première note.',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                              color: const Color(0xFF4B5563), fontSize: 11)),
+                        'Appuyez sur le bouton pour enregistrer votre première note.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF4B5563),
+                          fontSize: 11,
+                        ),
+                      ),
                     ],
                   ),
                 )
               : ListView.builder(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   physics: const BouncingScrollPhysics(),
                   itemCount: widget.project.voiceNotes.length,
                   itemBuilder: (context, index) {
-                    final note = widget.project.voiceNotes[
-                        widget.project.voiceNotes.length - 1 - index];
-                    final isThisPlaying =
-                        _playingId == note.id && _isPlaying;
+                    final note =
+                        widget.project.voiceNotes[widget
+                                .project
+                                .voiceNotes
+                                .length -
+                            1 -
+                            index];
+                    final isThisPlaying = _playingId == note.id && _isPlaying;
                     final isThisActive = _playingId == note.id;
 
                     return Container(
@@ -507,8 +599,9 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                                   decoration: BoxDecoration(
                                     color: isThisActive
                                         ? AppTheme.accent
-                                        : AppTheme.accent
-                                            .withValues(alpha: 0.15),
+                                        : AppTheme.accent.withValues(
+                                            alpha: 0.15,
+                                          ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -530,24 +623,29 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                                     Text(
                                       note.title,
                                       style: GoogleFonts.poppins(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       'Par ${note.createdBy} · ${note.createdAt}  •  ${_formatDuration(note.duration)}',
                                       style: GoogleFonts.poppins(
-                                          fontSize: 11,
-                                          color: AppTheme.textDisabled),
+                                        fontSize: 11,
+                                        color: AppTheme.textDisabled,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline_rounded,
-                                    size: 18, color: AppTheme.textDisabled),
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: 18,
+                                  color: AppTheme.textDisabled,
+                                ),
                                 onPressed: () => _deleteNote(note),
                               ),
                             ],
@@ -556,35 +654,45 @@ class _VoiceNotesTabState extends State<VoiceNotesTab> {
                           // Progress bar (shown when active)
                           if (isThisActive) ...[
                             const SizedBox(height: 10),
-                            Row(children: [
-                              Text(_formatDuration(_playPosition),
+                            Row(
+                              children: [
+                                Text(
+                                  _formatDuration(_playPosition),
                                   style: GoogleFonts.poppins(
-                                      fontSize: 10, color: AppTheme.textSoft)),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: LinearProgressIndicator(
-                                    value: _playDuration.inMilliseconds > 0
-                                        ? (_playPosition.inMilliseconds /
-                                                _playDuration.inMilliseconds)
-                                            .clamp(0.0, 1.0)
-                                        : 0.0,
-                                    backgroundColor:
-                                        const Color(0xFF1E2942),
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                            AppTheme.accent),
-                                    minHeight: 4,
+                                    fontSize: 10,
+                                    color: AppTheme.textSoft,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(_formatDuration(_playDuration),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: LinearProgressIndicator(
+                                      value: _playDuration.inMilliseconds > 0
+                                          ? (_playPosition.inMilliseconds /
+                                                    _playDuration
+                                                        .inMilliseconds)
+                                                .clamp(0.0, 1.0)
+                                          : 0.0,
+                                      backgroundColor: const Color(0xFF1E2942),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                            AppTheme.accent,
+                                          ),
+                                      minHeight: 4,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _formatDuration(_playDuration),
                                   style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      color: AppTheme.textSoft)),
-                            ]),
+                                    fontSize: 10,
+                                    color: AppTheme.textSoft,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ],
                       ),
@@ -631,8 +739,7 @@ class _PulsingDotState extends State<_PulsingDot>
       animation: _anim,
       builder: (_, child) => Opacity(
         opacity: _anim.value,
-        child: const CircleAvatar(
-            radius: 4, backgroundColor: Colors.redAccent),
+        child: const CircleAvatar(radius: 4, backgroundColor: Colors.redAccent),
       ),
     );
   }

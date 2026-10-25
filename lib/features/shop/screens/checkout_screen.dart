@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/delivery.dart';
 import '../data/models/order.dart';
@@ -23,12 +24,7 @@ class CheckoutScreen extends StatefulWidget {
   final List<CartLine>? lines;
   final int? userId;
 
-  const CheckoutScreen({
-    super.key,
-    this.productId,
-    this.lines,
-    this.userId,
-  });
+  const CheckoutScreen({super.key, this.productId, this.lines, this.userId});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -102,15 +98,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (_isCartCheckout) {
       double total = 0;
       for (final g in _sellerGroups) {
-        final weight =
-            g.lines.fold(0.0, (s, l) => s + l.weightKg * l.item.quantity);
+        final weight = g.lines.fold(
+          0.0,
+          (s, l) => s + l.weightKg * l.item.quantity,
+        );
         total += DeliveryFeeCalculator.calculate(
-            _selectedZone, weight, _selectedMode);
+          _selectedZone,
+          weight,
+          _selectedMode,
+        );
       }
       return total;
     }
     return DeliveryFeeCalculator.calculate(
-        _selectedZone, _totalWeightKg, _selectedMode);
+      _selectedZone,
+      _totalWeightKg,
+      _selectedMode,
+    );
   }
 
   double get _totalWeightKg => (_product?.weightKg ?? 0) * _quantity;
@@ -178,8 +182,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           ),
                           if (isSelected)
-                            const Icon(Icons.check_circle,
-                                color: ShopTheme.mint),
+                            const Icon(
+                              Icons.check_circle,
+                              color: ShopTheme.mint,
+                            ),
                         ],
                       ),
                     ),
@@ -204,8 +210,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     setState(() => _isProcessing = true);
 
-    final buyerId =
-        _isCartCheckout ? widget.userId : await _authService.getCurrentUserId();
+    final buyerId = _isCartCheckout
+        ? widget.userId
+        : await _authService.getCurrentUserId();
     if (buyerId == null) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
@@ -221,8 +228,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<void> _confirmSingleOrder(int buyerId) async {
-    final qtyError =
-        OrderValidators.validateQuantity(_quantity.toString(), _product!.stock);
+    final qtyError = OrderValidators.validateQuantity(
+      _quantity.toString(),
+      _product!.stock,
+    );
     if (qtyError != null) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
@@ -285,10 +294,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           (route) => route.isFirst,
         );
       } else {
-        _showFlushbar(
-          result.failedProducts.join(', '),
-          isError: true,
-        );
+        _showFlushbar(result.failedProducts.join(', '), isError: true);
         setState(() => _isProcessing = false);
       }
     } catch (e) {
@@ -332,84 +338,83 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: SafeArea(
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: ShopTheme.mint))
+                child: CircularProgressIndicator(color: ShopTheme.mint),
+              )
             : !_isCartCheckout && _product == null
-                ? _buildNotFound()
-                : Column(
-                    children: [
-                      _buildHeader(),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(24),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                if (_isCartCheckout)
-                                  _buildCartSummary()
-                                else ...[
-                                  _buildProductInfo(),
-                                  const SizedBox(height: 24),
-                                  _buildQuantityStepper(),
-                                ],
-                                const SizedBox(height: 16),
-                                ShopTextField(
-                                  label: 'Recipient Name',
-                                  controller: _nameController,
-                                  hintText: 'Full name',
-                                  icon: Icons.person_outline,
-                                  validator:
-                                      OrderValidators.validateRecipientName,
-                                ),
-                                const SizedBox(height: 16),
-                                ShopTextField(
-                                  label: 'Phone Number',
-                                  controller: _phoneController,
-                                  hintText: '8-digit number',
-                                  icon: Icons.phone_outlined,
-                                  keyboardType: TextInputType.phone,
-                                  validator: OrderValidators.validatePhone,
-                                ),
-                                const SizedBox(height: 16),
-                                _buildDeliveryModeSelector(),
-                                const SizedBox(height: 16),
-                                _buildZoneDropdown(),
-                                const SizedBox(height: 16),
-                                ShopTextField(
-                                  label: 'City',
-                                  controller: _cityController,
-                                  hintText: 'City name',
-                                  icon: Icons.location_city_outlined,
-                                  validator: OrderValidators.validateCity,
-                                ),
-                                if (_selectedMode !=
-                                    Delivery.modeStorePickup) ...[
-                                  const SizedBox(height: 16),
-                                  AddressFieldWithMap(
-                                    label: 'Address',
-                                    controller: _addressController,
-                                    cityController: _cityController,
-                                    deliveryMode: _selectedMode,
-                                    onSuggestedZone: (zone) {
-                                      setState(() => _selectedZone = zone);
-                                    },
-                                  ),
-                                ],
-                                const SizedBox(height: 16),
-                                _buildPaymentSelector(),
-                                const SizedBox(height: 24),
-                                _buildSummary(),
-                                const SizedBox(height: 24),
-                                _buildConfirmButton(),
-                                const SizedBox(height: 24),
-                              ],
+            ? _buildNotFound()
+            : Column(
+                children: [
+                  _buildHeader(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (_isCartCheckout)
+                              _buildCartSummary()
+                            else ...[
+                              _buildProductInfo(),
+                              const SizedBox(height: 24),
+                              _buildQuantityStepper(),
+                            ],
+                            const SizedBox(height: 16),
+                            ShopTextField(
+                              label: 'Recipient Name',
+                              controller: _nameController,
+                              hintText: 'Full name',
+                              icon: Icons.person_outline,
+                              validator: OrderValidators.validateRecipientName,
                             ),
-                          ),
+                            const SizedBox(height: 16),
+                            ShopTextField(
+                              label: 'Phone Number',
+                              controller: _phoneController,
+                              hintText: '8-digit number',
+                              icon: Icons.phone_outlined,
+                              keyboardType: TextInputType.phone,
+                              validator: OrderValidators.validatePhone,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildDeliveryModeSelector(),
+                            const SizedBox(height: 16),
+                            _buildZoneDropdown(),
+                            const SizedBox(height: 16),
+                            ShopTextField(
+                              label: 'City',
+                              controller: _cityController,
+                              hintText: 'City name',
+                              icon: Icons.location_city_outlined,
+                              validator: OrderValidators.validateCity,
+                            ),
+                            if (_selectedMode != Delivery.modeStorePickup) ...[
+                              const SizedBox(height: 16),
+                              AddressFieldWithMap(
+                                label: 'Address',
+                                controller: _addressController,
+                                cityController: _cityController,
+                                deliveryMode: _selectedMode,
+                                onSuggestedZone: (zone) {
+                                  setState(() => _selectedZone = zone);
+                                },
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                            _buildPaymentSelector(),
+                            const SizedBox(height: 24),
+                            _buildSummary(),
+                            const SizedBox(height: 24),
+                            _buildConfirmButton(),
+                            const SizedBox(height: 24),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
+                ],
+              ),
       ),
     );
   }
@@ -419,7 +424,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: ShopTheme.secondaryText),
+          const Icon(
+            Icons.error_outline,
+            size: 48,
+            color: ShopTheme.secondaryText,
+          ),
           const SizedBox(height: 16),
           Text('Product not found', style: ShopTheme.bodyStyle),
           const SizedBox(height: 16),
@@ -444,8 +453,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.shopping_cart_outlined,
-                  color: ShopTheme.violet, size: 22),
+              const Icon(
+                Icons.shopping_cart_outlined,
+                color: ShopTheme.violet,
+                size: 22,
+              ),
               const SizedBox(width: 8),
               Text(
                 '${widget.lines!.length} item(s) from ${_sellerGroups.length} seller(s)',
@@ -459,34 +471,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          ...widget.lines!.map((line) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${line.productName} × ${line.item.quantity}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: ShopTheme.fontFamily,
-                          fontSize: 13,
-                          color: ShopTheme.secondaryText,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '${line.lineTotal.toStringAsFixed(2)} TND',
+          ...widget.lines!.map(
+            (line) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${line.productName} × ${line.item.quantity}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: ShopTheme.fontFamily,
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: ShopTheme.text,
+                        color: ShopTheme.secondaryText,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                  Text(
+                    '${line.lineTotal.toStringAsFixed(2)} TND',
+                    style: TextStyle(
+                      fontFamily: ShopTheme.fontFamily,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: ShopTheme.text,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -495,7 +509,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          horizontal: ShopTheme.screenPadding, vertical: 12),
+        horizontal: ShopTheme.screenPadding,
+        vertical: 12,
+      ),
       child: Row(
         children: [
           IconButton(
@@ -518,7 +534,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.shopping_bag_outlined, color: ShopTheme.violet, size: 28),
+          const Icon(
+            Icons.shopping_bag_outlined,
+            color: ShopTheme.violet,
+            size: 28,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -595,10 +615,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               disabledColor: ShopTheme.surfaceHigh,
             ),
             const SizedBox(width: 8),
-            Text(
-              'Max: ${_product!.stock}',
-              style: ShopTheme.captionStyle,
-            ),
+            Text('Max: ${_product!.stock}', style: ShopTheme.captionStyle),
           ],
         ),
       ],
@@ -625,7 +642,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: GestureDetector(
                 onTap: () => setState(() => _selectedMode = mode.$1),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 4,
+                  ),
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: isSelected
@@ -640,11 +660,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(mode.$3,
-                          size: 22,
-                          color: isSelected
-                              ? ShopTheme.mint
-                              : ShopTheme.secondaryText),
+                      Icon(
+                        mode.$3,
+                        size: 22,
+                        color: isSelected
+                            ? ShopTheme.mint
+                            : ShopTheme.secondaryText,
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         mode.$2,
@@ -652,8 +674,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         style: TextStyle(
                           fontFamily: ShopTheme.fontFamily,
                           fontSize: 10,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
                               ? ShopTheme.mint
                               : ShopTheme.secondaryText,
@@ -694,7 +717,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.map_outlined, color: ShopTheme.secondaryText, size: 20),
+                const Icon(
+                  Icons.map_outlined,
+                  color: ShopTheme.secondaryText,
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -706,8 +733,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down,
-                    color: ShopTheme.secondaryText, size: 20),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: ShopTheme.secondaryText,
+                  size: 20,
+                ),
               ],
             ),
           ),
@@ -720,7 +750,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final methods = [
       (Order.cashOnDelivery, 'Cash on Delivery', Icons.payments_outlined, true),
       (Order.card, 'Card', Icons.credit_card_outlined, false),
-      (Order.mobileWallet, 'Mobile Wallet', Icons.account_balance_wallet_outlined, false),
+      (
+        Order.mobileWallet,
+        'Mobile Wallet',
+        Icons.account_balance_wallet_outlined,
+        false,
+      ),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -756,7 +791,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     method.$3,
                     size: 22,
                     color: isEnabled
-                        ? (isSelected ? ShopTheme.mint : ShopTheme.secondaryText)
+                        ? (isSelected
+                              ? ShopTheme.mint
+                              : ShopTheme.secondaryText)
                         : ShopTheme.secondaryText.withValues(alpha: 0.3),
                   ),
                   const SizedBox(width: 12),
@@ -766,8 +803,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       style: TextStyle(
                         fontFamily: ShopTheme.fontFamily,
                         fontSize: 14,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         color: isEnabled
                             ? (isSelected ? ShopTheme.mint : ShopTheme.text)
                             : ShopTheme.secondaryText.withValues(alpha: 0.3),
@@ -784,7 +822,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     )
                   else if (isSelected)
-                    const Icon(Icons.check_circle, color: ShopTheme.mint, size: 20),
+                    const Icon(
+                      Icons.check_circle,
+                      color: ShopTheme.mint,
+                      size: 20,
+                    ),
                 ],
               ),
             ),
@@ -807,10 +849,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           if (_isCartCheckout) ...[
             ..._sellerGroups.map((g) {
               final gSubtotal = CartRepository.subtotal(g.lines);
-              final gWeight =
-                  g.lines.fold(0.0, (s, l) => s + l.weightKg * l.item.quantity);
+              final gWeight = g.lines.fold(
+                0.0,
+                (s, l) => s + l.weightKg * l.item.quantity,
+              );
               final gFee = DeliveryFeeCalculator.calculate(
-                  _selectedZone, gWeight, _selectedMode);
+                _selectedZone,
+                gWeight,
+                _selectedMode,
+              );
               return Column(
                 children: [
                   _summaryRow(
@@ -830,19 +877,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             }),
             const Divider(color: ShopTheme.surfaceHigh, height: 20),
             _summaryRow(
-                'Grand Total', '${_total.toStringAsFixed(2)} TND',
-                isBold: true),
+              'Grand Total',
+              '${_total.toStringAsFixed(2)} TND',
+              isBold: true,
+            ),
           ] else ...[
             _summaryRow('Subtotal', '${_subtotal.toStringAsFixed(2)} TND'),
             const SizedBox(height: 8),
             _summaryRow(
-                'Delivery Fee',
-                _selectedMode == Delivery.modeStorePickup
-                    ? 'Free (Store Pickup)'
-                    : '${_fee.toStringAsFixed(2)} TND'),
+              'Delivery Fee',
+              _selectedMode == Delivery.modeStorePickup
+                  ? 'Free (Store Pickup)'
+                  : '${_fee.toStringAsFixed(2)} TND',
+            ),
             const Divider(color: ShopTheme.surfaceHigh, height: 20),
-            _summaryRow('Total', '${_total.toStringAsFixed(2)} TND',
-                isBold: true),
+            _summaryRow(
+              'Total',
+              '${_total.toStringAsFixed(2)} TND',
+              isBold: true,
+            ),
           ],
         ],
       ),
@@ -893,7 +946,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
-                    color: ShopTheme.background, strokeWidth: 2),
+                  color: ShopTheme.background,
+                  strokeWidth: 2,
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,

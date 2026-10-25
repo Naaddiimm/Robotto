@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'signin_screen.dart';
 import 'interests_screen.dart';
 import '../../../core/services/auth_service.dart';
+import '../../../core/data/models/user.dart';
 import '../../../core/theme/app_theme.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -14,12 +16,12 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _authService = AuthService();
-  
+
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _isSubmitting = false;
   String? _registrationError;
@@ -42,7 +44,7 @@ class _SignupScreenState extends State<SignupScreen> {
     "Graduate",
     "Professional",
     "Self-taught",
-    "Other"
+    "Other",
   ];
 
   @override
@@ -57,7 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void _showEducationBottomSheet() {
     // Unfocus keyboard if open before showing bottom sheet
     FocusScope.of(context).unfocus();
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: bgColor,
@@ -77,7 +79,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
                     child: Text(
                       "Select Education Level",
                       style: TextStyle(
@@ -103,22 +108,33 @@ class _SignupScreenState extends State<SignupScreen> {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24.0,
+                                vertical: 16.0,
+                              ),
                               color: isSelected ? surface : Colors.transparent,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     option,
                                     style: TextStyle(
                                       fontFamily: 'Plus Jakarta Sans',
-                                      color: isSelected ? primaryMint : mainText,
+                                      color: isSelected
+                                          ? primaryMint
+                                          : mainText,
                                       fontSize: 16,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
                                     ),
                                   ),
                                   if (isSelected)
-                                    const Icon(Icons.check_circle, color: primaryMint),
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: primaryMint,
+                                    ),
                                 ],
                               ),
                             ),
@@ -155,17 +171,23 @@ class _SignupScreenState extends State<SignupScreen> {
           educationLevel: _selectedEducation,
         );
 
+        // Retrieve the newly created user's complete, persisted record
+        final User? registeredUser = await _authService.getUserById(userId);
+        if (registeredUser == null) {
+          throw Exception('Account created, but failed to retrieve user profile.');
+        }
+
         if (!mounted) return;
-        
+
         setState(() {
           _isSubmitting = false;
         });
 
-        // Show success dialog prototype
+        // Show success dialog using verified persisted user data
         showDialog(
           context: context,
           barrierDismissible: false, // Force them to hit continue
-          builder: (context) => AlertDialog(
+          builder: (dialogCtx) => AlertDialog(
             backgroundColor: surfaceLow,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -187,7 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
             ),
             content: Text(
-              "Welcome to ROBOTTO, ${_firstNameController.text.trim()}! You're ready to explore the community.",
+              "Welcome to ROBOTTO, ${registeredUser.firstName}! You're ready to explore the community.",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: 'Plus Jakarta Sans',
@@ -215,11 +237,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pop(context); // Close dialog
-                    // Navigate to Interests Screen (Step 1 of Onboarding), passing userId
+                    Navigator.of(dialogCtx).pop(); // Close dialog
+                    // Navigate to Interests Screen (Step 1 of Onboarding), passing userId and persisted user
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => InterestsScreen(userId: userId)),
+                      MaterialPageRoute(
+                        builder: (context) => InterestsScreen(
+                          userId: registeredUser.id ?? userId,
+                          user: registeredUser,
+                        ),
+                      ),
                     );
                   },
                   child: const Text(
@@ -256,7 +283,10 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -286,11 +316,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
             ),
-            
+
             // Scrollable Form Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -306,35 +339,36 @@ class _SignupScreenState extends State<SignupScreen> {
                                 color: primaryMint.withValues(alpha: 0.15),
                                 blurRadius: 40,
                                 spreadRadius: 10,
-                              )
+                              ),
                             ],
                           ),
                           child: Image.asset(
                             'assets/images/logo.png',
                             height: 60,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              height: 60,
-                              width: 60,
-                              decoration: const BoxDecoration(
-                                color: surface,
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                'LOGO\nMISSING',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: primaryMint,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: const BoxDecoration(
+                                    color: surface,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    'LOGO\nMISSING',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: primaryMint,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Headings
                       const Text(
                         "Create Your Account",
@@ -365,7 +399,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         controller: _firstNameController,
                         hintText: "Enter your first name",
                         icon: Icons.person_outline,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'First name is required' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'First name is required'
+                            : null,
                       ),
                       const SizedBox(height: 16),
 
@@ -375,7 +412,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         controller: _lastNameController,
                         hintText: "Enter your last name",
                         icon: Icons.badge_outlined,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'Last name is required' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'Last name is required'
+                            : null,
                       ),
                       const SizedBox(height: 16),
 
@@ -399,9 +439,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) return 'Email is required';
+                          if (value == null || value.trim().isEmpty)
+                            return 'Email is required';
                           final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                          if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+                          if (!emailRegex.hasMatch(value))
+                            return 'Enter a valid email';
                           return null;
                         },
                       ),
@@ -416,7 +458,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         obscureText: _obscurePassword,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: secondaryText,
                             size: 20,
                           ),
@@ -427,8 +471,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'Password is required';
-                          if (value.length < 6) return 'At least 6 characters required';
+                          if (value == null || value.isEmpty)
+                            return 'Password is required';
+                          if (value.length < 6)
+                            return 'At least 6 characters required';
                           return null;
                         },
                       ),
@@ -436,7 +482,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                         child: Row(
                           children: [
-                            const Icon(Icons.info_outline, color: secondaryText, size: 14),
+                            const Icon(
+                              Icons.info_outline,
+                              color: secondaryText,
+                              size: 14,
+                            ),
                             const SizedBox(width: 4),
                             const Text(
                               "At least 6 characters required",
@@ -456,7 +506,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       GestureDetector(
                         onTap: _showEducationBottomSheet,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
                           decoration: BoxDecoration(
                             color: surface,
                             borderRadius: BorderRadius.circular(12),
@@ -464,7 +517,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.school_outlined, color: secondaryText, size: 20),
+                              const Icon(
+                                Icons.school_outlined,
+                                color: secondaryText,
+                                size: 20,
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
@@ -476,7 +533,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
                               ),
-                              const Icon(Icons.keyboard_arrow_down, color: secondaryText, size: 20),
+                              const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: secondaryText,
+                                size: 20,
+                              ),
                             ],
                           ),
                         ),
@@ -498,7 +559,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               color: primaryMint.withValues(alpha: 0.3),
                               blurRadius: 15,
                               offset: const Offset(0, 5),
-                            )
+                            ),
                           ],
                         ),
                         child: ElevatedButton(
@@ -514,24 +575,31 @@ class _SignupScreenState extends State<SignupScreen> {
                               ? const SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: CircularProgressIndicator(color: bgColor, strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    color: bgColor,
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Create Account',
-                                style: TextStyle(
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  color: bgColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Create Account',
+                                      style: TextStyle(
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        color: bgColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: bgColor,
+                                      size: 20,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, color: bgColor, size: 20),
-                            ],
-                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -552,7 +620,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             onTap: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SignInScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => const SignInScreen(),
+                                ),
                               );
                             },
                             child: const Text(
@@ -573,7 +643,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.shield_outlined, color: primaryMint, size: 16),
+                          Icon(
+                            Icons.shield_outlined,
+                            color: primaryMint,
+                            size: 16,
+                          ),
                           SizedBox(width: 6),
                           Text(
                             "Your information is protected.",
@@ -632,10 +706,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          color: secondaryText,
-          fontSize: 14,
-        ),
+        hintStyle: const TextStyle(color: secondaryText, fontSize: 14),
         prefixIcon: Icon(icon, color: secondaryText, size: 20),
         suffixIcon: suffixIcon,
         filled: true,

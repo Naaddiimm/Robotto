@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../data/repositories/user_repository.dart';
 import '../data/models/user.dart';
+
 // core/services/auth_service.dart — part of core layer
 
 class AuthService {
@@ -15,21 +18,17 @@ class AuthService {
   Map<String, String> _hashPassword(String password, {String? existingSalt}) {
     final salt = existingSalt ?? _generateSalt();
     const iterations = 10000;
-    
+
     // Initial hash
     var bytes = utf8.encode(password + salt);
     var digest = sha256.convert(bytes);
-    
+
     // Stretch
     for (int i = 0; i < iterations - 1; i++) {
       digest = sha256.convert(digest.bytes);
     }
 
-    return {
-      'hash': digest.toString(),
-      'salt': salt,
-      'algorithm': 'sha256_10k',
-    };
+    return {'hash': digest.toString(), 'salt': salt, 'algorithm': 'sha256_10k'};
   }
 
   String _generateSalt([int length = 16]) {
@@ -41,6 +40,30 @@ class AuthService {
   /// Normalizes an email address.
   String normalizeEmail(String email) {
     return email.trim().toLowerCase();
+  }
+
+  /// Gets a user by ID
+  Future<User?> getUserById(int id) async {
+    return await _userRepository.getUserById(id);
+  }
+
+  /// Checks if an email exists locally
+  Future<bool> checkEmailExists(String email) async {
+    final normalizedEmail = normalizeEmail(email);
+    return await _userRepository.emailExists(normalizedEmail);
+  }
+
+  /// Gets a user by email
+  Future<User?> getUserByEmail(String email) async {
+    final normalizedEmail = normalizeEmail(email);
+    return await _userRepository.getUserByEmail(normalizedEmail);
+  }
+
+  /// Returns the complete User object for the currently logged-in user, or null if not logged in.
+  Future<User?> getCurrentUser() async {
+    final userId = await getCurrentUserId();
+    if (userId == null) return null;
+    return await getUserById(userId);
   }
 
   /// Attempts to register a new user. Returns the created user ID or throws an Exception.
@@ -61,7 +84,7 @@ class AuthService {
 
     // 2. Hash password
     final hashResult = _hashPassword(password);
-    
+
     // 3. Prepare User object
     final now = DateTime.now().toIso8601String();
     final user = User(
@@ -76,18 +99,21 @@ class AuthService {
     // 4. Insert User
     try {
       final userId = await _userRepository.createUser(user);
-      
+
       // 5. Insert Credentials
       await _userRepository.saveUserCredentials(
-        userId, 
-        hashResult['hash']!, 
-        hashResult['salt']!, 
-        hashResult['algorithm']!
+        userId,
+        hashResult['hash']!,
+        hashResult['salt']!,
+        hashResult['algorithm']!,
       );
-      
+
+      // 6. Establish session for newly registered user (consistent with loginUser)
+      await _saveSession(userId);
+
       return userId;
     } catch (e) {
-      throw Exception('Database constraint violation or internal error.');
+      throw Exception('Database constraint violation or internal error: $e');
     }
   }
 
@@ -115,7 +141,7 @@ class AuthService {
 
     // 3. Hash the provided password with the DB salt
     final hashResult = _hashPassword(password, existingSalt: salt);
-    
+
     // 4. Compare the hashes securely
     if (hashResult['hash'] != dbHash) {
       throw Exception('Invalid email or password.');
@@ -143,7 +169,7 @@ class AuthService {
 
     // 2. Hash the provided old password with the DB salt
     final oldHashResult = _hashPassword(oldPassword, existingSalt: oldSalt);
-    
+
     // 3. Compare the hashes securely
     if (oldHashResult['hash'] != dbHash) {
       throw Exception('Incorrect current password.');
@@ -161,13 +187,39 @@ class AuthService {
     );
   }
 
+  /// Forcibly resets the user's password locally AFTER backend token authorization.
+  Future<void> resetPasswordLocally({
+    required String email,
+    required String newPassword,
+  }) async {
+    final normalizedEmail = normalizeEmail(email);
+    final user = await _userRepository.getUserByEmail(normalizedEmail);
+    if (user == null || user.id == null) {
+      throw Exception('Local account not found.');
+    }
+
+    final newHashResult = _hashPassword(newPassword);
+
+    await _userRepository.updateUserCredentials(
+      user.id!,
+      newHashResult['hash']!,
+      newHashResult['salt']!,
+      newHashResult['algorithm']!,
+    );
+  }
+
   // --- Session Management ---
 
   static const String _sessionKey = 'session_user_id';
 
-  Future<void> _saveSession(int userId) async {
+  /// Saves the active user session ID to persistent storage.
+  Future<void> saveSession(int userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_sessionKey, userId);
+  }
+
+  Future<void> _saveSession(int userId) async {
+    await saveSession(userId);
   }
 
   /// Returns the ID of the currently logged-in user, or null if not logged in.

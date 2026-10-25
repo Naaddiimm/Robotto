@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/product.dart';
 import '../data/models/product_image.dart';
@@ -22,11 +24,7 @@ class ProductFormScreen extends StatefulWidget {
   /// Existing images for edit mode.
   final List<ProductImage>? images;
 
-  const ProductFormScreen({
-    super.key,
-    this.product,
-    this.images,
-  });
+  const ProductFormScreen({super.key, this.product, this.images});
 
   @override
   State<ProductFormScreen> createState() => _ProductFormScreenState();
@@ -74,8 +72,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       _selectedLevel = p.level;
       _manualPath = p.manualPath;
       _manualName = p.manualName;
-      _initialPhotoPaths =
-          (widget.images ?? []).map((e) => e.path).toList();
+      _initialPhotoPaths = (widget.images ?? []).map((e) => e.path).toList();
       _photoPaths = List.from(_initialPhotoPaths);
       _initialManualPath = p.manualPath;
     } else {
@@ -145,7 +142,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 8.0),
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
                     child: Text(
                       title,
                       style: TextStyle(
@@ -170,7 +169,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 24.0, vertical: 16.0),
+                                horizontal: 24.0,
+                                vertical: 16.0,
+                              ),
                               color: isSelected
                                   ? ShopTheme.surface
                                   : Colors.transparent,
@@ -192,8 +193,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                     ),
                                   ),
                                   if (isSelected)
-                                    const Icon(Icons.check_circle,
-                                        color: ShopTheme.mint),
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: ShopTheme.mint,
+                                    ),
                                 ],
                               ),
                             ),
@@ -229,8 +232,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         margin: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),
         backgroundColor: ShopTheme.error,
-        icon: const Icon(Icons.error_outline,
-            color: ShopTheme.background, size: 24),
+        icon: const Icon(
+          Icons.error_outline,
+          color: ShopTheme.background,
+          size: 24,
+        ),
         messageText: Text(
           photoError,
           style: const TextStyle(
@@ -270,8 +276,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           savedPhotoPaths.add(path);
         } else {
           // New file — copy to app storage
-          final newPath =
-              await _fileStorage.saveProductImage(File(path));
+          final newPath = await _fileStorage.saveProductImage(File(path));
           copiedPaths.add(newPath);
           savedPhotoPaths.add(newPath);
         }
@@ -281,8 +286,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       String? savedManualPath;
       String? savedManualName;
       if (_manualPath != null && _manualPath != _initialManualPath) {
-        savedManualPath =
-            await _fileStorage.saveManual(File(_manualPath!));
+        savedManualPath = await _fileStorage.saveManual(File(_manualPath!));
         copiedManualPath = savedManualPath;
         savedManualName = _manualName;
       } else if (_manualPath != null) {
@@ -302,11 +306,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             ? null
             : _brandController.text.trim(),
         level: _selectedLevel,
-        price: double.parse(
-            _priceController.text.trim().replaceAll(',', '.')),
+        price: double.parse(_priceController.text.trim().replaceAll(',', '.')),
         stock: int.parse(_stockController.text.trim()),
         weightKg: double.parse(
-            _weightController.text.trim().replaceAll(',', '.')),
+          _weightController.text.trim().replaceAll(',', '.'),
+        ),
         manualPath: savedManualPath,
         manualName: savedManualName,
         createdAt: widget.product?.createdAt ?? now,
@@ -316,11 +320,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       // 4. Build ProductImage list
       final images = <ProductImage>[];
       for (int i = 0; i < savedPhotoPaths.length; i++) {
-        images.add(ProductImage(
-          productId: product.id ?? 0,
-          path: savedPhotoPaths[i],
-          position: i,
-        ));
+        images.add(
+          ProductImage(
+            productId: product.id ?? 0,
+            path: savedPhotoPaths[i],
+            position: i,
+          ),
+        );
       }
 
       // 5. Write to DB
@@ -336,8 +342,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           await _fileStorage.deleteFile(oldPath);
         }
       }
-      if (_initialManualPath != null &&
-          _initialManualPath != _manualPath) {
+      if (_initialManualPath != null && _initialManualPath != _manualPath) {
         await _fileStorage.deleteFile(_initialManualPath);
       }
 
@@ -364,8 +369,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       margin: const EdgeInsets.all(16),
       borderRadius: BorderRadius.circular(12),
       backgroundColor: ShopTheme.error,
-      icon: const Icon(Icons.error_outline,
-          color: ShopTheme.background, size: 24),
+      icon: const Icon(
+        Icons.error_outline,
+        color: ShopTheme.background,
+        size: 24,
+      ),
       messageText: Text(
         message,
         style: const TextStyle(
@@ -392,7 +400,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             // Header
             Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: ShopTheme.screenPadding, vertical: 12.0),
+                horizontal: ShopTheme.screenPadding,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -411,7 +421,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 16.0),
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -472,11 +484,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         controller: _priceController,
                         hintText: '0.00',
                         icon: Icons.attach_money_outlined,
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[\d.,]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
                         ],
                         validator: ProductValidators.validatePrice,
                       ),
@@ -502,11 +514,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         controller: _weightController,
                         hintText: '0.000',
                         icon: Icons.scale_outlined,
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[\d.,]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
                         ],
                         validator: ProductValidators.validateWeightKg,
                       ),
@@ -522,8 +534,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       // Manual PDF
                       PdfPickerField(
                         initialPath: _initialManualPath,
-                        initialName:
-                            _isEditMode ? widget.product?.manualName : null,
+                        initialName: _isEditMode
+                            ? widget.product?.manualName
+                            : null,
                         onChanged: (path, name) {
                           _manualPath = path;
                           _manualName = name;
@@ -619,8 +632,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     ),
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down,
-                    color: ShopTheme.secondaryText, size: 20),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: ShopTheme.secondaryText,
+                  size: 20,
+                ),
               ],
             ),
           ),

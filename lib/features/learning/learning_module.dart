@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../core/theme/app_theme.dart';
 import 'learning_theme.dart';
 import 'screens/cours_catalogue_screen.dart';
@@ -64,8 +65,11 @@ class _LearningModuleState extends State<LearningModule> {
                 Stack(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.notifications_outlined,
-                          color: Colors.white, size: 24),
+                      icon: const Icon(
+                        Icons.notifications_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                       onPressed: () {},
                     ),
                     Positioned(
@@ -107,7 +111,9 @@ class _LearningModuleState extends State<LearningModule> {
   Widget _buildSegmentedSwitch() {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          horizontal: LearningTheme.screenPadding, vertical: 12.0),
+        horizontal: LearningTheme.screenPadding,
+        vertical: 12.0,
+      ),
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -115,10 +121,7 @@ class _LearningModuleState extends State<LearningModule> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
-          children: [
-            _buildSegment('Cours', 0),
-            _buildSegment('Formations', 1),
-          ],
+          children: [_buildSegment('Cours', 0), _buildSegment('Formations', 1)],
         ),
       ),
     );
@@ -138,8 +141,7 @@ class _LearningModuleState extends State<LearningModule> {
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             border: isSelected
-                ? Border.all(
-                    color: LearningTheme.violet.withValues(alpha: 0.5))
+                ? Border.all(color: LearningTheme.violet.withValues(alpha: 0.5))
                 : Border.all(color: Colors.transparent),
           ),
           child: Text(
@@ -149,8 +151,7 @@ class _LearningModuleState extends State<LearningModule> {
               fontFamily: LearningTheme.font,
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-              color:
-                  isSelected ? LearningTheme.mint : LearningTheme.textSecond,
+              color: isSelected ? LearningTheme.mint : LearningTheme.textSecond,
             ),
           ),
         ),

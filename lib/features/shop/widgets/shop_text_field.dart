@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'shop_theme.dart';
 
 /// Reusable styled text field matching the signup_screen.dart input style.
@@ -45,10 +46,7 @@ class ShopTextField extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
-          child: Text(
-            label,
-            style: ShopTheme.labelStyle,
-          ),
+          child: Text(label, style: ShopTheme.labelStyle),
         ),
         TextFormField(
           controller: controller,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../data/models/delivery.dart';
 import '../data/repositories/order_repository.dart';
@@ -51,7 +52,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   double get _estimatedFee {
     final weight = double.tryParse(_weightInput.replaceAll(',', '.')) ?? 0;
-    return DeliveryFeeCalculator.calculate(_estimateZone, weight, _estimateMode);
+    return DeliveryFeeCalculator.calculate(
+      _estimateZone,
+      weight,
+      _estimateMode,
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -70,10 +75,15 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         title: Text('Delivery', style: ShopTheme.titleStyle),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: ShopTheme.mint))
+          ? const Center(
+              child: CircularProgressIndicator(color: ShopTheme.mint),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(
-                ShopTheme.screenPadding, 8, ShopTheme.screenPadding, 32,
+                ShopTheme.screenPadding,
+                8,
+                ShopTheme.screenPadding,
+                32,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +130,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.calculate_outlined, color: ShopTheme.mint, size: 20),
+              const Icon(
+                Icons.calculate_outlined,
+                color: ShopTheme.mint,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Estimate Delivery Fee',
@@ -143,7 +157,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               return GestureDetector(
                 onTap: () => setState(() => _estimateZone = z),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? ShopTheme.violet.withValues(alpha: 0.2)
@@ -160,9 +177,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     style: TextStyle(
                       fontFamily: ShopTheme.fontFamily,
                       fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? ShopTheme.mint : ShopTheme.secondaryText,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? ShopTheme.mint
+                          : ShopTheme.secondaryText,
                     ),
                   ),
                 ),
@@ -179,7 +199,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               return GestureDetector(
                 onTap: () => setState(() => _estimateMode = m),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? ShopTheme.violet.withValues(alpha: 0.2)
@@ -196,9 +219,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     style: TextStyle(
                       fontFamily: ShopTheme.fontFamily,
                       fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? ShopTheme.mint : ShopTheme.secondaryText,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? ShopTheme.mint
+                          : ShopTheme.secondaryText,
                     ),
                   ),
                 ),
@@ -221,8 +247,9 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               SizedBox(
                 width: 80,
                 child: TextField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   style: TextStyle(
                     color: ShopTheme.text,
                     fontFamily: ShopTheme.fontFamily,
@@ -231,8 +258,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: ShopTheme.surfaceHigh,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -308,8 +337,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.local_shipping_outlined,
-                    color: ShopTheme.violet, size: 22),
+                Icon(
+                  Icons.local_shipping_outlined,
+                  color: ShopTheme.violet,
+                  size: 22,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Order #${delivery.orderId}',

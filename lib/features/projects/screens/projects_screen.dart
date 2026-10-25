@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import '../models/project.dart';
 import '../../../core/widgets/background_waves.dart';
 import '../../../core/widgets/animated_button.dart';
@@ -22,7 +26,8 @@ class ProjectsScreen extends StatefulWidget {
 
 class _ProjectsScreenState extends State<ProjectsScreen>
     with SingleTickerProviderStateMixin {
-  String _activeMainTab = 'Tous les projets'; // 'Tous les projets' | 'Mes projets'
+  String _activeMainTab =
+      'Tous les projets'; // 'Tous les projets' | 'Mes projets'
   String _selectedCategory = 'Tous';
   String _selectedStatus = 'Tous';
   bool _showSearchInput = false;
@@ -104,7 +109,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
     if (_activeMainTab == 'Tous les projets') {
       return _allProjects.where((p) {
-        final matchesSearch = p.title.toLowerCase().contains(query) ||
+        final matchesSearch =
+            p.title.toLowerCase().contains(query) ||
             p.category.toLowerCase().contains(query);
         final matchesCat =
             _selectedCategory == 'Tous' || p.category == _selectedCategory;
@@ -113,12 +119,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     } else {
       // 'Mes projets'
       return _allProjects.where((p) {
-        final matchesSearch = p.title.toLowerCase().contains(query) ||
+        final matchesSearch =
+            p.title.toLowerCase().contains(query) ||
             p.category.toLowerCase().contains(query);
         final matchesUser = (p.userId == _currentUserId) || p.isJoined;
         // 'Terminés' pill maps to 'Terminé' in the model
-        final statusFilter =
-            _selectedStatus == 'Terminés' ? 'Terminé' : _selectedStatus;
+        final statusFilter = _selectedStatus == 'Terminés'
+            ? 'Terminé'
+            : _selectedStatus;
         final matchesStatus =
             statusFilter == 'Tous' || p.status == statusFilter;
         return matchesSearch && matchesUser && matchesStatus;
@@ -166,7 +174,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  isJoining ? 'Confirmer la participation' : 'Quitter le projet ?',
+                  isJoining
+                      ? 'Confirmer la participation'
+                      : 'Quitter le projet ?',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -206,8 +216,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                 _toggleProjectParticipation(project);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    isJoining ? AppTheme.accent : Colors.redAccent,
+                backgroundColor: isJoining ? AppTheme.accent : Colors.redAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -251,14 +260,19 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               Expanded(
                 child: Text(
                   'Vous participez maintenant au projet "${project.title}" !',
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.5),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 12.5,
+                  ),
                 ),
               ),
             ],
           ),
           backgroundColor: AppTheme.surface,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } else {
@@ -266,7 +280,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       setState(() {
         project.isJoined = false;
         project.members.removeWhere(
-            (m) => m.id == 'user_$_currentUserId' || m.name == 'Vous');
+          (m) => m.id == 'user_$_currentUserId' || m.name == 'Vous',
+        );
       });
       _saveProjects();
 
@@ -280,14 +295,19 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               Expanded(
                 child: Text(
                   'Vous avez quitté le projet "${project.title}".',
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.5),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 12.5,
+                  ),
                 ),
               ),
             ],
           ),
           backgroundColor: AppTheme.surface,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     }
@@ -327,8 +347,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           ),
           title: Row(
             children: [
-              const Icon(Icons.delete_forever_rounded,
-                  color: Colors.redAccent, size: 24),
+              const Icon(
+                Icons.delete_forever_rounded,
+                color: Colors.redAccent,
+                size: 24,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -428,17 +451,13 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       body: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(
-              painter: BackgroundWavesPainter(),
-            ),
+            child: CustomPaint(painter: BackgroundWavesPainter()),
           ),
           Positioned.fill(
             child: SafeArea(
               child: _isLoading
                   ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppTheme.accent,
-                      ),
+                      child: CircularProgressIndicator(color: AppTheme.accent),
                     )
                   : FadeTransition(
                       opacity: _fadeAnim,
@@ -478,8 +497,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: AppTheme.accent
-                                                .withValues(alpha: 0.6),
+                                            color: AppTheme.accent.withValues(
+                                              alpha: 0.6,
+                                            ),
                                             blurRadius: 6,
                                           ),
                                         ],
@@ -547,7 +567,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                 controller: _searchController,
                                 onChanged: (_) => setState(() {}),
                                 style: GoogleFonts.poppins(
-                                    color: Colors.white, fontSize: 13.5),
+                                  color: Colors.white,
+                                  fontSize: 13.5,
+                                ),
                                 decoration: InputDecoration(
                                   hintText: 'Rechercher un projet, thème...',
                                   hintStyle: GoogleFonts.poppins(
@@ -568,12 +590,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(24),
                                     borderSide: const BorderSide(
-                                        color: AppTheme.surfaceHigh),
+                                      color: AppTheme.surfaceHigh,
+                                    ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(24),
                                     borderSide: const BorderSide(
-                                        color: AppTheme.surfaceHigh),
+                                      color: AppTheme.surfaceHigh,
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(24),
@@ -620,7 +644,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         _activeMainTab == 'Tous les projets'
@@ -661,8 +686,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: AppTheme.accent
-                                              .withValues(alpha: 0.35),
+                                          color: AppTheme.accent.withValues(
+                                            alpha: 0.35,
+                                          ),
                                           blurRadius: 10,
                                           offset: const Offset(0, 3),
                                         ),
@@ -751,45 +777,49 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   physics: const BouncingScrollPhysics(),
-                                  children: [
-                                    'Tous',
-                                    'Bras Robotique',
-                                    'Robotique mobile',
-                                    'Drone',
-                                    'IoT & Domotique',
-                                    'Électronique',
-                                  ].map((cat) {
-                                    final isSelected =
-                                        _selectedCategory == cat;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: ChoiceChip(
-                                        label: Text(cat),
-                                        selected: isSelected,
-                                        onSelected: (val) {
-                                          AudioHelper.playClickSound();
-                                          setState(
-                                              () => _selectedCategory = cat);
-                                        },
-                                        selectedColor: AppTheme.accent,
-                                        backgroundColor: AppTheme.surface,
-                                        labelStyle: GoogleFonts.poppins(
-                                          color: isSelected
-                                              ? AppTheme.bg
-                                              : Colors.white70,
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.w500,
-                                          fontSize: 11.5,
-                                        ),
-                                        side: BorderSide(
-                                          color: isSelected
-                                              ? AppTheme.accent
-                                              : AppTheme.surfaceHigh,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
+                                  children:
+                                      [
+                                        'Tous',
+                                        'Bras Robotique',
+                                        'Robotique mobile',
+                                        'Drone',
+                                        'IoT & Domotique',
+                                        'Électronique',
+                                      ].map((cat) {
+                                        final isSelected =
+                                            _selectedCategory == cat;
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 8,
+                                          ),
+                                          child: ChoiceChip(
+                                            label: Text(cat),
+                                            selected: isSelected,
+                                            onSelected: (val) {
+                                              AudioHelper.playClickSound();
+                                              setState(
+                                                () => _selectedCategory = cat,
+                                              );
+                                            },
+                                            selectedColor: AppTheme.accent,
+                                            backgroundColor: AppTheme.surface,
+                                            labelStyle: GoogleFonts.poppins(
+                                              color: isSelected
+                                                  ? AppTheme.bg
+                                                  : Colors.white70,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.w500,
+                                              fontSize: 11.5,
+                                            ),
+                                            side: BorderSide(
+                                              color: isSelected
+                                                  ? AppTheme.accent
+                                                  : AppTheme.surfaceHigh,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
                                 ),
                               ),
                             ],
@@ -799,8 +829,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                             // Elegant Animated List of Projects
                             if (_displayedProjects.isEmpty)
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 50),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 50,
+                                ),
                                 child: Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -849,17 +880,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         ),
                       ),
                     ),
-        ),
+            ),
+          ),
+        ],
       ),
-    ],
-  ),
-);
+    );
   }
 
-  Widget _buildMainTabButton({
-    required String title,
-    required IconData icon,
-  }) {
+  Widget _buildMainTabButton({required String title, required IconData icon}) {
     final isSelected = _activeMainTab == title;
 
     return Expanded(
@@ -912,9 +940,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         decoration: BoxDecoration(
           color: AppTheme.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppTheme.surfaceHigh,
-          ),
+          border: Border.all(color: AppTheme.surfaceHigh),
         ),
         child: Column(
           children: [
@@ -938,10 +964,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             Text(
               label,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 9,
-                color: AppTheme.textSoft,
-              ),
+              style: GoogleFonts.poppins(fontSize: 9, color: AppTheme.textSoft),
             ),
           ],
         ),
@@ -1055,25 +1078,26 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                         width: 85,
                         height: 85,
                         color: AppTheme.bg,
-                        child: (project.imagePath != null &&
+                        child:
+                            (project.imagePath != null &&
                                 project.imagePath!.isNotEmpty)
                             ? (kIsWeb
-                                ? Image.network(
-                                    project.imagePath!,
-                                    width: 85,
-                                    height: 85,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (ctx, err, stack) =>
-                                        _buildDefaultThumbnail(project),
-                                  )
-                                : Image.file(
-                                    File(project.imagePath!),
-                                    width: 85,
-                                    height: 85,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (ctx, err, stack) =>
-                                        _buildDefaultThumbnail(project),
-                                  ))
+                                  ? Image.network(
+                                      project.imagePath!,
+                                      width: 85,
+                                      height: 85,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (ctx, err, stack) =>
+                                          _buildDefaultThumbnail(project),
+                                    )
+                                  : Image.file(
+                                      File(project.imagePath!),
+                                      width: 85,
+                                      height: 85,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (ctx, err, stack) =>
+                                          _buildDefaultThumbnail(project),
+                                    ))
                             : _buildDefaultThumbnail(project),
                       ),
                     ),
@@ -1118,7 +1142,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                 ),
                               ),
                               // Edit / Delete menu (if owner or in "Mes projets")
-                              if (isOwner || _activeMainTab == 'Mes projets') ...[
+                              if (isOwner ||
+                                  _activeMainTab == 'Mes projets') ...[
                                 const SizedBox(width: 4),
                                 PopupMenuButton<String>(
                                   icon: const Icon(
@@ -1141,14 +1166,19 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                       value: 'edit',
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.edit_rounded,
-                                              size: 16,
-                                              color: AppTheme.accent),
+                                          const Icon(
+                                            Icons.edit_rounded,
+                                            size: 16,
+                                            color: AppTheme.accent,
+                                          ),
                                           const SizedBox(width: 10),
-                                          Text('Modifier',
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  color: Colors.white)),
+                                          Text(
+                                            'Modifier',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -1158,14 +1188,18 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                       child: Row(
                                         children: [
                                           const Icon(
-                                              Icons.delete_outline_rounded,
-                                              size: 16,
-                                              color: Colors.redAccent),
+                                            Icons.delete_outline_rounded,
+                                            size: 16,
+                                            color: Colors.redAccent,
+                                          ),
                                           const SizedBox(width: 10),
-                                          Text('Supprimer',
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  color: Colors.redAccent)),
+                                          Text(
+                                            'Supprimer',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -1197,8 +1231,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                                     backgroundColor: AppTheme.surfaceHigh,
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
-                                      AppTheme.accent,
-                                    ),
+                                          AppTheme.accent,
+                                        ),
                                   ),
                                 ),
                               ),
@@ -1260,8 +1294,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                             ),
                             decoration: BoxDecoration(
                               color: project.isJoined
-                                  ? AppTheme.accent
-                                      .withValues(alpha: 0.2)
+                                  ? AppTheme.accent.withValues(alpha: 0.2)
                                   : AppTheme.accent,
                               borderRadius: BorderRadius.circular(14),
                               border: project.isJoined
@@ -1345,13 +1378,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         color: AppTheme.bg,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Center(
-        child: Icon(
-          icon,
-          size: 38,
-          color: AppTheme.accent,
-        ),
-      ),
+      child: Center(child: Icon(icon, size: 38, color: AppTheme.accent)),
     );
   }
 }

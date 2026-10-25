@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'signup_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_theme.dart';
+import 'forgot_password_screen.dart'; // Import the new screen
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -16,7 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _resetEmailController = TextEditingController();
-  
+
   final AuthService _authService = AuthService();
 
   bool _obscurePassword = true;
@@ -32,6 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
   static const Color mainText = AppTheme.text;
   static const Color secondaryText = AppTheme.textSoft;
   static const Color errorColor = AppTheme.error;
+
 
   @override
   void dispose() {
@@ -55,188 +58,85 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void _showResetPasswordModal() {
-    // Pre-fill the reset email if the user has already typed one
-    _resetEmailController.text = _emailController.text;
-    final GlobalKey<FormState> resetFormKey = GlobalKey<FormState>();
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: bgColor,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: resetFormKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Reset Access",
-                          style: TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            color: mainText,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: secondaryText),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Enter your registered email address to receive a reset key.",
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        color: secondaryText,
-                        fontSize: 14,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildLabel("Transmission Address"),
-                    _buildTextField(
-                      controller: _resetEmailController,
-                      hintText: "pilot@robotto.ai",
-                      icon: Icons.email_outlined,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) return 'Email is required';
-                        final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                        if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 32),
-                    _buildPrimaryButton(
-                      text: "Transmit Reset Key",
-                      onPressed: () {
-                        if (resetFormKey.currentState!.validate()) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                "Reset key transmitted (Prototype)",
-                                style: TextStyle(fontFamily: 'Plus Jakarta Sans'),
-                              ),
-                              backgroundColor: primaryMint,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
-                          color: secondaryText,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _submitSignIn() async {
+  Future<void> _submitSignIn() async {
     _hideErrorBanner();
-    
-    if (_formKey.currentState!.validate()) {
+
+    if (!_formKey.currentState!.validate()) {
+      _showErrorBanner("Please correct your credentials.");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // 1. Authenticate using local SQLite
+      await _authService.loginUser(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (!mounted) return;
+
       setState(() {
-        _isLoading = true;
+        _isLoading = false;
       });
 
-      try {
-        // Authenticate via DB
-        await _authService.loginUser(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-
-        if (!mounted) return;
-
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Show success banner
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Terminal Authenticated",
-                  style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    color: bgColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+      // 2. Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Terminal Authenticated",
+                style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  color: bgColor,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  "Connecting to ROBOTTO Command Grid...",
-                  style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    color: bgColor,
-                    fontSize: 12,
-                  ),
+              ),
+              Text(
+                "Connecting to ROBOTTO successfully...",
+                style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  color: bgColor,
+                  fontSize: 12,
                 ),
-              ],
-            ),
-            backgroundColor: primaryMint,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+              ),
+            ],
           ),
-        );
-        
-        // Navigate to Home Screen after authenticating
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+          backgroundColor: primaryMint,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
 
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          _showErrorBanner(e.toString().replaceAll("Exception: ", ""));
-        }
-      }
-    } else {
-      _showErrorBanner("Please correct your credentials.");
+      // 3. Navigate to Home Screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      _showErrorBanner(
+        e.toString().replaceFirst("Exception: ", ""),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +147,10 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -268,11 +171,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
             ),
-            
+
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -284,12 +190,18 @@ class _SignInScreenState extends State<SignInScreen> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: errorColor.withValues(alpha: 0.1),
-                            border: Border.all(color: errorColor.withValues(alpha: 0.5)),
+                            border: Border.all(
+                              color: errorColor.withValues(alpha: 0.5),
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.error_outline, color: errorColor, size: 20),
+                              const Icon(
+                                Icons.error_outline,
+                                color: errorColor,
+                                size: 20,
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
@@ -320,27 +232,28 @@ class _SignInScreenState extends State<SignInScreen> {
                                 color: primaryMint.withValues(alpha: 0.15),
                                 blurRadius: 40,
                                 spreadRadius: 5,
-                              )
+                              ),
                             ],
                           ),
                           child: Center(
                             child: Image.asset(
                               'assets/images/logo.png',
                               height: 50,
-                              errorBuilder: (context, error, stackTrace) => const Text(
-                                'LOGO\nMISSING',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: primaryMint,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                ),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Text(
+                                    'LOGO\nMISSING',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: primaryMint,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                    ),
+                                  ),
                             ),
                           ),
                         ),
                       ),
-                      
+
                       // Status dot under logo (like the reference)
                       const SizedBox(height: 16),
                       Center(
@@ -399,9 +312,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         autofillHints: const [AutofillHints.email],
                         onChanged: (_) => _hideErrorBanner(),
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) return 'Email is required';
+                          if (value == null || value.trim().isEmpty)
+                            return 'Email is required';
                           final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                          if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+                          if (!emailRegex.hasMatch(value))
+                            return 'Enter a valid email';
                           return null;
                         },
                       ),
@@ -417,7 +332,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         onChanged: (_) => _hideErrorBanner(),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: secondaryText,
                             size: 20,
                           ),
@@ -428,8 +345,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'Password is required';
-                          if (value.length < 6) return 'At least 6 characters required';
+                          if (value == null || value.isEmpty)
+                            return 'Password is required';
+                          if (value.length < 6)
+                            return 'At least 6 characters required';
                           return null;
                         },
                       ),
@@ -439,7 +358,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: _showResetPasswordModal,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
                           child: const Text(
                             "Forgot Password?",
                             style: TextStyle(
@@ -477,7 +404,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             onTap: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SignupScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupScreen(),
+                                ),
                               );
                             },
                             child: const Text(
@@ -498,7 +427,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.shield_outlined, color: secondaryText, size: 14),
+                          Icon(
+                            Icons.shield_outlined,
+                            color: secondaryText,
+                            size: 14,
+                          ),
                           SizedBox(width: 6),
                           Text(
                             "Your robotics journey continues here.",
@@ -561,10 +494,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          color: secondaryText,
-          fontSize: 14,
-        ),
+        hintStyle: const TextStyle(color: secondaryText, fontSize: 14),
         prefixIcon: Icon(icon, color: secondaryText, size: 20),
         suffixIcon: suffixIcon,
         filled: true,
@@ -619,7 +549,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   color: primaryMint.withValues(alpha: 0.3),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
-                )
+                ),
               ],
       ),
       child: ElevatedButton(

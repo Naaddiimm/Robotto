@@ -9,9 +9,10 @@ class DatabaseHelper {
   DatabaseHelper._init();
 
   Future<Database> get database async {
-    // sqflite is not supported on web — throw clearly instead of crashing silently
     if (kIsWeb) {
-      throw UnsupportedError('DatabaseHelper is not available on web platform.');
+      throw UnsupportedError(
+        'DatabaseHelper is not available on web platform.',
+      );
     }
     if (_database != null) return _database!;
     _database = await _initDB('robotto.db');
@@ -24,8 +25,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
       onConfigure: _configureDB,
     );
   }
@@ -82,6 +84,68 @@ class DatabaseHelper {
         UNIQUE(user_id, goal_name)
       )
     ''');
+
+    // Create Forum tables for Version 2
+    await _createForumTables(db);
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await _createForumTables(db);
+    }
+  }
+
+  Future<void> _createForumTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS forum_posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        category TEXT NOT NULL,
+        post_type TEXT NOT NULL DEFAULT 'discussion' CHECK(post_type IN ('question', 'project', 'tutorial', 'discussion')),
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS forum_replies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        post_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        content TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (post_id) REFERENCES forum_posts (id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS forum_likes (
+        post_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (post_id, user_id),
+        FOREIGN KEY (post_id) REFERENCES forum_posts (id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_forum_posts_user_id ON forum_posts(user_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_forum_posts_created_at ON forum_posts(created_at)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_forum_replies_post_id ON forum_replies(post_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_forum_likes_user_id ON forum_likes(user_id)',
+    );
   }
 
   Future<void> close() async {

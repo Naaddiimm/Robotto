@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
+
 import '../data/location_service.dart';
 import '../data/address_formatter.dart';
 import '../validators/order_validators.dart';
@@ -161,7 +162,9 @@ class _AddressFieldWithMapState extends State<AddressFieldWithMap> {
     final permission = await _locationService.requestPermission();
     if (!mounted) return;
     if (permission == LocationPermissionResult.denied) {
-      _showFlushbar('Location permission denied. You can type the address manually.');
+      _showFlushbar(
+        'Location permission denied. You can type the address manually.',
+      );
       setState(() => _manualTyping = true);
       return;
     }
@@ -210,12 +213,14 @@ class _AddressFieldWithMapState extends State<AddressFieldWithMap> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(
-                  fontFamily: ShopTheme.fontFamily,
-                  color: ShopTheme.secondaryText,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: ShopTheme.fontFamily,
+                color: ShopTheme.secondaryText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -230,11 +235,13 @@ class _AddressFieldWithMapState extends State<AddressFieldWithMap> {
               Navigator.pop(context);
               _locationService.openAppSettings();
             },
-            child: const Text('Open App Settings',
-                style: TextStyle(
-                  fontFamily: ShopTheme.fontFamily,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: const Text(
+              'Open App Settings',
+              style: TextStyle(
+                fontFamily: ShopTheme.fontFamily,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

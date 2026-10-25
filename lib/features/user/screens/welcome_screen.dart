@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../core/theme/app_theme.dart';
 import 'signup_screen.dart';
 import 'signin_screen.dart';
@@ -22,9 +23,7 @@ class WelcomeScreen extends StatelessWidget {
 
     // Apply dark status bar style
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.transparent,
-      ),
+      SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
     );
 
     return Scaffold(
@@ -32,12 +31,15 @@ class WelcomeScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 24.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 12),
-                
+
                 // 1 & 2. ROBOTTO Logo with subtle mint glow
                 Container(
                   decoration: BoxDecoration(
@@ -47,7 +49,7 @@ class WelcomeScreen extends StatelessWidget {
                         color: primaryMint.withValues(alpha: 0.15),
                         blurRadius: 60,
                         spreadRadius: 20,
-                      )
+                      ),
                     ],
                   ),
                   child: Image.asset(
@@ -65,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                         'LOGO\nMISSING',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: primaryMint, 
+                          color: primaryMint,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
@@ -90,7 +92,7 @@ class WelcomeScreen extends StatelessWidget {
                     children: [
                       TextSpan(text: "Your World of Robotics,\n"),
                       TextSpan(
-                        text: "Connected.", 
+                        text: "Connected.",
                         style: TextStyle(color: primaryMint),
                       ),
                     ],
@@ -132,39 +134,39 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.shopping_cart_outlined, 
-                        iconColor: primaryMint, 
-                        title: 'Components', 
-                        subtitle: 'Kits & Parts', 
-                        surface: surface, 
-                        surfaceLow: surfaceLow, 
-                        mainText: mainText, 
+                        icon: Icons.shopping_cart_outlined,
+                        iconColor: primaryMint,
+                        title: 'Components',
+                        subtitle: 'Kits & Parts',
+                        surface: surface,
+                        surfaceLow: surfaceLow,
+                        mainText: mainText,
                         secondaryText: secondaryText,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.calendar_today, 
-                        iconColor: mainText.withValues(alpha: 0.7), 
-                        title: 'Events', 
-                        subtitle: 'Challenges & Arenas', 
-                        surface: surface, 
-                        surfaceLow: surfaceLow, 
-                        mainText: mainText, 
+                        icon: Icons.calendar_today,
+                        iconColor: mainText.withValues(alpha: 0.7),
+                        title: 'Events',
+                        subtitle: 'Challenges & Arenas',
+                        surface: surface,
+                        surfaceLow: surfaceLow,
+                        mainText: mainText,
                         secondaryText: secondaryText,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.precision_manufacturing, 
-                        iconColor: mainText.withValues(alpha: 0.7), 
-                        title: 'Projects', 
-                        subtitle: 'Creations & Demos', 
-                        surface: surface, 
-                        surfaceLow: surfaceLow, 
-                        mainText: mainText, 
+                        icon: Icons.precision_manufacturing,
+                        iconColor: mainText.withValues(alpha: 0.7),
+                        title: 'Projects',
+                        subtitle: 'Creations & Demos',
+                        surface: surface,
+                        surfaceLow: surfaceLow,
+                        mainText: mainText,
                         secondaryText: secondaryText,
                       ),
                     ),
@@ -177,26 +179,26 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.school_outlined, 
-                        iconColor: courseAccent, 
-                        title: 'Courses', 
-                        subtitle: 'Classes & Tutorials', 
-                        surface: surface, 
-                        surfaceLow: surfaceLow, 
-                        mainText: mainText, 
+                        icon: Icons.school_outlined,
+                        iconColor: courseAccent,
+                        title: 'Courses',
+                        subtitle: 'Classes & Tutorials',
+                        surface: surface,
+                        surfaceLow: surfaceLow,
+                        mainText: mainText,
                         secondaryText: secondaryText,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.people_outline, 
-                        iconColor: communityAccent, 
-                        title: 'Community', 
-                        subtitle: 'Maker Sharing', 
-                        surface: surface, 
-                        surfaceLow: surfaceLow, 
-                        mainText: mainText, 
+                        icon: Icons.people_outline,
+                        iconColor: communityAccent,
+                        title: 'Community',
+                        subtitle: 'Maker Sharing',
+                        surface: surface,
+                        surfaceLow: surfaceLow,
+                        mainText: mainText,
                         secondaryText: secondaryText,
                       ),
                     ),
@@ -221,15 +223,30 @@ class WelcomeScreen extends StatelessWidget {
                           children: [
                             Positioned(
                               left: 0,
-                              child: _buildBadge('#1', primaryMint, bgColor, primaryMint),
+                              child: _buildBadge(
+                                '#1',
+                                primaryMint,
+                                bgColor,
+                                primaryMint,
+                              ),
                             ),
                             Positioned(
                               left: 20,
-                              child: _buildBadge('#2', mainText, bgColor, mainText.withValues(alpha: 0.3)),
+                              child: _buildBadge(
+                                '#2',
+                                mainText,
+                                bgColor,
+                                mainText.withValues(alpha: 0.3),
+                              ),
                             ),
                             Positioned(
                               left: 40,
-                              child: _buildBadge('#3', mainText, bgColor, mainText.withValues(alpha: 0.3)),
+                              child: _buildBadge(
+                                '#3',
+                                mainText,
+                                bgColor,
+                                mainText.withValues(alpha: 0.3),
+                              ),
                             ),
                           ],
                         ),
@@ -242,9 +259,9 @@ class WelcomeScreen extends StatelessWidget {
                             Text(
                               "14,280+ Active Makers",
                               style: TextStyle(
-                                fontFamily: 'Plus Jakarta Sans', 
-                                color: mainText, 
-                                fontSize: 13, 
+                                fontFamily: 'Plus Jakarta Sans',
+                                color: mainText,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -252,15 +269,19 @@ class WelcomeScreen extends StatelessWidget {
                             Text(
                               "Building ROS2, Arduino & Quadruped rigs",
                               style: TextStyle(
-                                fontFamily: 'Plus Jakarta Sans', 
-                                color: secondaryText, 
+                                fontFamily: 'Plus Jakarta Sans',
+                                color: secondaryText,
                                 fontSize: 11,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.trending_up, color: primaryMint, size: 20),
+                      const Icon(
+                        Icons.trending_up,
+                        color: primaryMint,
+                        size: 20,
+                      ),
                     ],
                   ),
                 ),
@@ -282,7 +303,7 @@ class WelcomeScreen extends StatelessWidget {
                         color: primaryMint.withValues(alpha: 0.3),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
-                      )
+                      ),
                     ],
                   ),
                   child: ElevatedButton(
@@ -296,18 +317,20 @@ class WelcomeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignupScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const SignupScreen(),
+                        ),
                       );
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Get Started', 
+                          'Get Started',
                           style: TextStyle(
-                            fontFamily: 'Plus Jakarta Sans', 
-                            color: bgColor, 
-                            fontSize: 16, 
+                            fontFamily: 'Plus Jakarta Sans',
+                            color: bgColor,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -324,10 +347,10 @@ class WelcomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Already have an account? ", 
+                      "Already have an account? ",
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans', 
-                        color: secondaryText, 
+                        fontFamily: 'Plus Jakarta Sans',
+                        color: secondaryText,
                         fontSize: 14,
                       ),
                     ),
@@ -335,21 +358,23 @@ class WelcomeScreen extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignInScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => const SignInScreen(),
+                          ),
                         );
                       },
                       child: const Text(
-                        "Sign In", 
+                        "Sign In",
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans', 
-                          color: primaryMint, 
-                          fontSize: 14, 
-                          fontWeight: FontWeight.bold, 
+                          fontFamily: 'Plus Jakarta Sans',
+                          color: primaryMint,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
                           decorationColor: primaryMint,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -362,13 +387,13 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   Widget _buildFeatureCard({
-    required IconData icon, 
-    required Color iconColor, 
-    required String title, 
-    required String subtitle, 
-    required Color surface, 
-    required Color surfaceLow, 
-    required Color mainText, 
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required Color surface,
+    required Color surfaceLow,
+    required Color mainText,
     required Color secondaryText,
   }) {
     return Container(
@@ -392,9 +417,9 @@ class WelcomeScreen extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans', 
-              color: mainText, 
-              fontSize: 12, 
+              fontFamily: 'Plus Jakarta Sans',
+              color: mainText,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -403,8 +428,8 @@ class WelcomeScreen extends StatelessWidget {
           Text(
             subtitle,
             style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans', 
-              color: secondaryText, 
+              fontFamily: 'Plus Jakarta Sans',
+              color: secondaryText,
               fontSize: 10,
             ),
             textAlign: TextAlign.center,
@@ -414,7 +439,12 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBadge(String text, Color textColor, Color bgColor, Color borderColor) {
+  Widget _buildBadge(
+    String text,
+    Color textColor,
+    Color bgColor,
+    Color borderColor,
+  ) {
     return Container(
       width: 32,
       height: 32,
@@ -427,9 +457,9 @@ class WelcomeScreen extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Plus Jakarta Sans', 
-          color: textColor, 
-          fontSize: 12, 
+          fontFamily: 'Plus Jakarta Sans',
+          color: textColor,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
       ),

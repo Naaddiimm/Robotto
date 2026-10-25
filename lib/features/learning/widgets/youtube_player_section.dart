@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import '../learning_theme.dart';
 
 class YouTubePlayerSection extends StatefulWidget {
@@ -31,7 +32,8 @@ class _YouTubePlayerSectionState extends State<YouTubePlayerSection> {
     final id = widget.videoId;
     if (id == null || id.isEmpty) return;
 
-    final html = '''
+    final html =
+        '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,9 +60,11 @@ class _YouTubePlayerSectionState extends State<YouTubePlayerSection> {
         'AppleWebKit/537.36 (KHTML, like Gecko) '
         'Chrome/120.0.0.0 Mobile Safari/537.36',
       )
-      ..setNavigationDelegate(NavigationDelegate(
-        onPageFinished: (_) => setState(() => _loading = false),
-      ))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (_) => setState(() => _loading = false),
+        ),
+      )
       ..loadHtmlString(html);
   }
 
@@ -78,17 +82,25 @@ class _YouTubePlayerSectionState extends State<YouTubePlayerSection> {
         // Label
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Row(children: [
-            const Icon(Icons.play_circle_fill_rounded,
-                color: LearningTheme.mint, size: 18),
-            const SizedBox(width: 6),
-            Text(widget.label,
+          child: Row(
+            children: [
+              const Icon(
+                Icons.play_circle_fill_rounded,
+                color: LearningTheme.mint,
+                size: 18,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                widget.label,
                 style: const TextStyle(
-                    fontFamily: LearningTheme.font,
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700)),
-          ]),
+                  fontFamily: LearningTheme.font,
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
 
         // Player
@@ -97,17 +109,21 @@ class _YouTubePlayerSectionState extends State<YouTubePlayerSection> {
           child: SizedBox(
             width: double.infinity,
             height: playerH,
-            child: Stack(children: [
-              WebViewWidget(controller: _controller!),
-              if (_loading)
-                Container(
-                  color: LearningTheme.surface,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                        color: LearningTheme.mint, strokeWidth: 2),
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _controller!),
+                if (_loading)
+                  Container(
+                    color: LearningTheme.surface,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: LearningTheme.mint,
+                        strokeWidth: 2,
+                      ),
+                    ),
                   ),
-                ),
-            ]),
+              ],
+            ),
           ),
         ),
       ],
@@ -127,17 +143,25 @@ class _Placeholder extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Row(children: [
-            const Icon(Icons.play_circle_outline_rounded,
-                color: LearningTheme.textSecond, size: 18),
-            const SizedBox(width: 6),
-            Text(label,
+          child: Row(
+            children: [
+              const Icon(
+                Icons.play_circle_outline_rounded,
+                color: LearningTheme.textSecond,
+                size: 18,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
                 style: const TextStyle(
-                    fontFamily: LearningTheme.font,
-                    color: LearningTheme.textSecond,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700)),
-          ]),
+                  fontFamily: LearningTheme.font,
+                  color: LearningTheme.textSecond,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
         Container(
           width: double.infinity,
@@ -147,42 +171,55 @@ class _Placeholder extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: LearningTheme.border),
           ),
-          child: Stack(children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    LearningTheme.mint.withValues(alpha: 0.08),
-                    LearningTheme.background.withValues(alpha: 0.6),
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      LearningTheme.mint.withValues(alpha: 0.08),
+                      LearningTheme.background.withValues(alpha: 0.6),
+                    ],
+                  ),
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: LearningTheme.mint.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: LearningTheme.mint.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.smart_display_rounded,
+                        color: LearningTheme.mint,
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Vidéo bientôt disponible',
+                      style: TextStyle(
+                        fontFamily: LearningTheme.font,
+                        color: LearningTheme.textSecond,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            Center(
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Container(
-                  width: 56, height: 56,
-                  decoration: BoxDecoration(
-                    color: LearningTheme.mint.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        color: LearningTheme.mint.withValues(alpha: 0.4)),
-                  ),
-                  child: const Icon(Icons.smart_display_rounded,
-                      color: LearningTheme.mint, size: 30),
-                ),
-                const SizedBox(height: 12),
-                const Text('Vidéo bientôt disponible',
-                    style: TextStyle(
-                        fontFamily: LearningTheme.font,
-                        color: LearningTheme.textSecond,
-                        fontSize: 13)),
-              ]),
-            ),
-          ]),
+            ],
+          ),
         ),
       ],
     );

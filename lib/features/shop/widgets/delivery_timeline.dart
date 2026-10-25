@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../data/models/order.dart';
 import 'shop_theme.dart';
 
@@ -13,10 +14,7 @@ import 'shop_theme.dart';
 class DeliveryTimeline extends StatelessWidget {
   final String status;
 
-  const DeliveryTimeline({
-    super.key,
-    required this.status,
-  });
+  const DeliveryTimeline({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +75,9 @@ class DeliveryTimeline extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: ShopTheme.fontFamily,
                         fontSize: 9,
-                        fontWeight:
-                            isCurrent ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isCurrent
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         color: isCompleted || isCurrent
                             ? ShopTheme.text
                             : ShopTheme.secondaryText.withValues(alpha: 0.5),

@@ -62,7 +62,11 @@ class OrderRepository {
 
     final subtotal = product.price * quantity;
     final totalWeightKg = product.weightKg * quantity;
-    final fee = DeliveryFeeCalculator.calculate(zone, totalWeightKg, deliveryMode);
+    final fee = DeliveryFeeCalculator.calculate(
+      zone,
+      totalWeightKg,
+      deliveryMode,
+    );
     final total = subtotal + fee;
     final now = DateTime.now().toIso8601String();
 
@@ -220,11 +224,14 @@ class OrderRepository {
         whereArgs: [orderId],
         limit: 1,
       );
-      final currentDelivery =
-          deliveryRows.isNotEmpty ? Delivery.fromMap(deliveryRows.first) : null;
+      final currentDelivery = deliveryRows.isNotEmpty
+          ? Delivery.fromMap(deliveryRows.first)
+          : null;
 
-      final effectiveMode = deliveryMode ?? currentDelivery?.mode ?? Delivery.modeHome;
-      final effectiveZone = zone ?? currentDelivery?.zone ?? Delivery.zoneGrandTunis;
+      final effectiveMode =
+          deliveryMode ?? currentDelivery?.mode ?? Delivery.modeHome;
+      final effectiveZone =
+          zone ?? currentDelivery?.zone ?? Delivery.zoneGrandTunis;
 
       // Get product weight for fee
       final productRows = await txn.rawQuery(
@@ -241,7 +248,10 @@ class OrderRepository {
       final subtotal = unitPrice * newQuantity;
       final totalWeightKg = weightKg * newQuantity;
       final fee = DeliveryFeeCalculator.calculate(
-          effectiveZone, totalWeightKg, effectiveMode);
+        effectiveZone,
+        totalWeightKg,
+        effectiveMode,
+      );
       final total = subtotal + fee;
       final now = DateTime.now().toIso8601String();
 
@@ -259,10 +269,9 @@ class OrderRepository {
       );
 
       // Update delivery
-      final deliveryUpdate = <String, dynamic>{
-        'status_updated_at': now,
-      };
-      if (recipientName != null) deliveryUpdate['recipient_name'] = recipientName;
+      final deliveryUpdate = <String, dynamic>{'status_updated_at': now};
+      if (recipientName != null)
+        deliveryUpdate['recipient_name'] = recipientName;
       if (phone != null) deliveryUpdate['phone'] = phone;
       if (city != null) deliveryUpdate['city'] = city;
       if (deliveryMode != null) {
@@ -350,10 +359,7 @@ class OrderRepository {
 
   /// Buyer cancels the order. Stock is restored in the same transaction.
   /// Only allowed from pending or preparing status.
-  Future<void> cancelOrder({
-    required int orderId,
-    required int buyerId,
-  }) async {
+  Future<void> cancelOrder({required int orderId, required int buyerId}) async {
     final db = await _dbProvider.database;
     await db.transaction((txn) async {
       final orderRows = await txn.query(
@@ -367,7 +373,9 @@ class OrderRepository {
       }
       final status = orderRows.first['status'] as String;
       if (!OrderValidators.canCancel(status)) {
-        throw Exception('This order can only be cancelled while pending or preparing.');
+        throw Exception(
+          'This order can only be cancelled while pending or preparing.',
+        );
       }
 
       // Restore stock
@@ -406,10 +414,7 @@ class OrderRepository {
 
   /// Buyer deletes an order from history. Hard delete (cascade removes
   /// items and delivery). Only allowed for cancelled or delivered orders.
-  Future<void> deleteOrder({
-    required int orderId,
-    required int buyerId,
-  }) async {
+  Future<void> deleteOrder({required int orderId, required int buyerId}) async {
     final db = await _dbProvider.database;
     await db.transaction((txn) async {
       final orderRows = await txn.query(
@@ -426,11 +431,7 @@ class OrderRepository {
         throw Exception('Only cancelled or delivered orders can be deleted.');
       }
 
-      await txn.delete(
-        'orders',
-        where: 'id = ?',
-        whereArgs: [orderId],
-      );
+      await txn.delete('orders', where: 'id = ?', whereArgs: [orderId]);
     });
   }
 
@@ -568,26 +569,27 @@ class OrderRepository {
             if (productRows.isEmpty) {
               failedProducts.add(line.productName);
               throw Exception(
-                  'Product "${line.productName}" is no longer available.');
+                'Product "${line.productName}" is no longer available.',
+              );
             }
             final stock = productRows.first['stock'] as int;
             final sellerId = productRows.first['seller_id'] as int;
             if (sellerId == buyerId) {
               failedProducts.add(line.productName);
               throw Exception(
-                  'You cannot order your own product "${line.productName}".');
+                'You cannot order your own product "${line.productName}".',
+              );
             }
             if (stock < line.item.quantity) {
               failedProducts.add(line.productName);
               throw Exception(
-                  'Insufficient stock for "${line.productName}" '
-                  '(only $stock left).');
+                'Insufficient stock for "${line.productName}" '
+                '(only $stock left).',
+              );
             }
 
-            final unitPrice =
-                (productRows.first['price'] as num).toDouble();
-            final weightKg =
-                (productRows.first['weight_kg'] as num).toDouble();
+            final unitPrice = (productRows.first['price'] as num).toDouble();
+            final weightKg = (productRows.first['weight_kg'] as num).toDouble();
             final qty = line.item.quantity;
 
             groupSubtotal += unitPrice * qty;
@@ -603,7 +605,10 @@ class OrderRepository {
           }
 
           final fee = DeliveryFeeCalculator.calculate(
-              zone, groupWeight, deliveryMode);
+            zone,
+            groupWeight,
+            deliveryMode,
+          );
           final total = groupSubtotal + fee;
 
           // Insert order
@@ -621,10 +626,7 @@ class OrderRepository {
 
           // Insert order_items (snapshot)
           for (final item in snapshotItems) {
-            await txn.insert('order_items', {
-              'order_id': orderId,
-              ...item,
-            });
+            await txn.insert('order_items', {'order_id': orderId, ...item});
           }
 
           // Insert delivery (status pending)
@@ -633,8 +635,7 @@ class OrderRepository {
             'mode': deliveryMode,
             'recipient_name': recipientName,
             'phone': phone,
-            'address':
-                deliveryMode == Delivery.modeStorePickup ? '' : address,
+            'address': deliveryMode == Delivery.modeStorePickup ? '' : address,
             'city': city,
             'zone': zone,
             'total_weight_kg': groupWeight,
@@ -647,8 +648,11 @@ class OrderRepository {
           for (final item in snapshotItems) {
             await txn.rawUpdate(
               'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
-              [item['quantity'] as int, item['product_id'] as int,
-               item['quantity'] as int],
+              [
+                item['quantity'] as int,
+                item['product_id'] as int,
+                item['quantity'] as int,
+              ],
             );
           }
         }
@@ -671,8 +675,9 @@ class OrderRepository {
     } catch (e) {
       return CartCheckoutResult(
         success: false,
-        failedProducts:
-            failedProducts.isNotEmpty ? failedProducts : [e.toString()],
+        failedProducts: failedProducts.isNotEmpty
+            ? failedProducts
+            : [e.toString()],
       );
     }
   }

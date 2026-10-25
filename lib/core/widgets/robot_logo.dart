@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_theme.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class RobotLogo extends StatelessWidget {
@@ -24,9 +26,7 @@ class RobotLogo extends StatelessWidget {
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               // Custom vector robot painter fallback if image file is not yet added
-              return CustomPaint(
-                painter: RobotIconPainter(),
-              );
+              return CustomPaint(painter: RobotIconPainter());
             },
           ),
         ),
@@ -53,10 +53,7 @@ class RobotLogo extends StatelessWidget {
               margin: const EdgeInsets.only(left: 1),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppTheme.accent,
-                  width: 3.5,
-                ),
+                border: Border.all(color: AppTheme.accent, width: 3.5),
                 boxShadow: [
                   BoxShadow(
                     color: AppTheme.accent.withValues(alpha: 0.6),
@@ -112,7 +109,11 @@ class RobotIconPainter extends CustomPainter {
     canvas.translate(center.dx, center.dy);
     canvas.rotate(-0.35); // tilt orbit
     canvas.drawOval(
-      Rect.fromCenter(center: Offset.zero, width: size.width * 0.95, height: size.height * 0.35),
+      Rect.fromCenter(
+        center: Offset.zero,
+        width: size.width * 0.95,
+        height: size.height * 0.35,
+      ),
       orbitPaint,
     );
     canvas.restore();
@@ -124,15 +125,39 @@ class RobotIconPainter extends CustomPainter {
     final antennaLine = Paint()
       ..color = Colors.white
       ..strokeWidth = 2;
-    canvas.drawLine(Offset(center.dx, center.dy - 30), Offset(center.dx, center.dy - 22), antennaLine);
+    canvas.drawLine(
+      Offset(center.dx, center.dy - 30),
+      Offset(center.dx, center.dy - 22),
+      antennaLine,
+    );
 
     // Robot Head Base
     final headPath = Path();
     headPath.moveTo(center.dx - 20, center.dy - 20);
-    headPath.quadraticBezierTo(center.dx, center.dy - 26, center.dx + 20, center.dy - 20);
-    headPath.quadraticBezierTo(center.dx + 26, center.dy + 8, center.dx + 18, center.dy + 18);
-    headPath.quadraticBezierTo(center.dx, center.dy + 24, center.dx - 18, center.dy + 18);
-    headPath.quadraticBezierTo(center.dx - 26, center.dy + 8, center.dx - 20, center.dy - 20);
+    headPath.quadraticBezierTo(
+      center.dx,
+      center.dy - 26,
+      center.dx + 20,
+      center.dy - 20,
+    );
+    headPath.quadraticBezierTo(
+      center.dx + 26,
+      center.dy + 8,
+      center.dx + 18,
+      center.dy + 18,
+    );
+    headPath.quadraticBezierTo(
+      center.dx,
+      center.dy + 24,
+      center.dx - 18,
+      center.dy + 18,
+    );
+    headPath.quadraticBezierTo(
+      center.dx - 26,
+      center.dy + 8,
+      center.dx - 20,
+      center.dy - 20,
+    );
 
     final headPaint = Paint()
       ..color = Colors.white
@@ -142,10 +167,30 @@ class RobotIconPainter extends CustomPainter {
     // Visor Area
     final visorPath = Path();
     visorPath.moveTo(center.dx - 16, center.dy - 12);
-    visorPath.quadraticBezierTo(center.dx, center.dy - 16, center.dx + 16, center.dy - 12);
-    visorPath.quadraticBezierTo(center.dx + 18, center.dy + 4, center.dx + 14, center.dy + 10);
-    visorPath.quadraticBezierTo(center.dx, center.dy + 14, center.dx - 14, center.dy + 10);
-    visorPath.quadraticBezierTo(center.dx - 18, center.dy + 4, center.dx - 16, center.dy - 12);
+    visorPath.quadraticBezierTo(
+      center.dx,
+      center.dy - 16,
+      center.dx + 16,
+      center.dy - 12,
+    );
+    visorPath.quadraticBezierTo(
+      center.dx + 18,
+      center.dy + 4,
+      center.dx + 14,
+      center.dy + 10,
+    );
+    visorPath.quadraticBezierTo(
+      center.dx,
+      center.dy + 14,
+      center.dx - 14,
+      center.dy + 10,
+    );
+    visorPath.quadraticBezierTo(
+      center.dx - 18,
+      center.dy + 4,
+      center.dx - 16,
+      center.dy - 12,
+    );
 
     final visorPaint = Paint()..color = const Color(0xFF0B1220);
     canvas.drawPath(visorPath, visorPaint);
@@ -160,13 +205,23 @@ class RobotIconPainter extends CustomPainter {
     // Left Eye Arc
     final leftEyePath = Path();
     leftEyePath.moveTo(center.dx - 11, center.dy + 1);
-    leftEyePath.quadraticBezierTo(center.dx - 7, center.dy - 5, center.dx - 3, center.dy + 1);
+    leftEyePath.quadraticBezierTo(
+      center.dx - 7,
+      center.dy - 5,
+      center.dx - 3,
+      center.dy + 1,
+    );
     canvas.drawPath(leftEyePath, eyePaint);
 
     // Right Eye Arc
     final rightEyePath = Path();
     rightEyePath.moveTo(center.dx + 3, center.dy + 1);
-    rightEyePath.quadraticBezierTo(center.dx + 7, center.dy - 5, center.dx + 11, center.dy + 1);
+    rightEyePath.quadraticBezierTo(
+      center.dx + 7,
+      center.dy - 5,
+      center.dx + 11,
+      center.dy + 1,
+    );
     canvas.drawPath(rightEyePath, eyePaint);
 
     // Neck / Base accent

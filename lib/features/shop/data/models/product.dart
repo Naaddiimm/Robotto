@@ -35,11 +35,7 @@ class Product {
   ];
 
   /// Skill/expertise level options.
-  static const List<String> levels = [
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-  ];
+  static const List<String> levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   /// Statuses that indicate an active order is in progress.
   /// A product cannot be deleted while it has an order in any of these statuses.

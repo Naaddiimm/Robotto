@@ -12,6 +12,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../learning_theme.dart';
 
 class OrientationAwareWrapper extends StatefulWidget {
@@ -39,9 +40,7 @@ class _OrientationAwareWrapperState extends State<OrientationAwareWrapper> {
   @override
   void dispose() {
     // Re-lock to portrait when leaving the content screen.
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -72,9 +71,10 @@ class _RotateHintBadgeState extends State<RotateHintBadge>
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     )..repeat(reverse: true);
-    _angle = Tween<double>(begin: -0.25, end: 0.25).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _angle = Tween<double>(
+      begin: -0.25,
+      end: 0.25,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -96,10 +96,14 @@ class _RotateHintBadgeState extends State<RotateHintBadge>
             color: LearningTheme.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-                color: LearningTheme.mint.withValues(alpha: 0.6)),
+              color: LearningTheme.mint.withValues(alpha: 0.6),
+            ),
           ),
-          child: const Icon(Icons.screen_rotation_rounded,
-              color: LearningTheme.mint, size: 22),
+          child: const Icon(
+            Icons.screen_rotation_rounded,
+            color: LearningTheme.mint,
+            size: 22,
+          ),
         ),
       ),
     );

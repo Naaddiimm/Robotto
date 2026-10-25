@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../models/event_model.dart';
 import '../services/event_service.dart';
 import '../widgets/event_theme.dart';
@@ -54,26 +55,28 @@ class _EventFormScreenState extends State<EventFormScreen> {
   void initState() {
     super.initState();
     final e = widget.existingEvent;
-    _titleCtrl         = TextEditingController(text: e?.title ?? '');
-    _descCtrl          = TextEditingController(text: e?.description ?? '');
-    _locationCtrl      = TextEditingController(text: e?.location ?? '');
-    _addressCtrl       = TextEditingController(text: e?.address ?? '');
-    _onlineLinkCtrl    = TextEditingController(text: e?.onlineLink ?? '');
-    _capacityCtrl      = TextEditingController(text: e != null ? '${e.capacity}' : '');
-    _priceCtrl         = TextEditingController(text: e != null ? '${e.price}' : '0');
-    _programCtrl       = TextEditingController(text: e?.program ?? '');
-    _rulesCtrl         = TextEditingController(text: e?.rules ?? '');
-    _contactEmailCtrl  = TextEditingController(text: e?.contactEmail ?? '');
-    _contactPhoneCtrl  = TextEditingController(text: e?.contactPhone ?? '');
+    _titleCtrl = TextEditingController(text: e?.title ?? '');
+    _descCtrl = TextEditingController(text: e?.description ?? '');
+    _locationCtrl = TextEditingController(text: e?.location ?? '');
+    _addressCtrl = TextEditingController(text: e?.address ?? '');
+    _onlineLinkCtrl = TextEditingController(text: e?.onlineLink ?? '');
+    _capacityCtrl = TextEditingController(
+      text: e != null ? '${e.capacity}' : '',
+    );
+    _priceCtrl = TextEditingController(text: e != null ? '${e.price}' : '0');
+    _programCtrl = TextEditingController(text: e?.program ?? '');
+    _rulesCtrl = TextEditingController(text: e?.rules ?? '');
+    _contactEmailCtrl = TextEditingController(text: e?.contactEmail ?? '');
+    _contactPhoneCtrl = TextEditingController(text: e?.contactPhone ?? '');
 
     if (e != null) {
-      _type     = e.type;
+      _type = e.type;
       _category = e.category;
-      _level    = e.level;
-      _mode     = e.mode;
-      _status   = e.status;
-      _startDate            = DateTime.tryParse(e.startDate);
-      _endDate              = DateTime.tryParse(e.endDate);
+      _level = e.level;
+      _mode = e.mode;
+      _status = e.status;
+      _startDate = DateTime.tryParse(e.startDate);
+      _endDate = DateTime.tryParse(e.endDate);
       _registrationDeadline = e.registrationDeadline != null
           ? DateTime.tryParse(e.registrationDeadline!)
           : null;
@@ -83,9 +86,17 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   void dispose() {
     for (final c in [
-      _titleCtrl, _descCtrl, _locationCtrl, _addressCtrl, _onlineLinkCtrl,
-      _capacityCtrl, _priceCtrl, _programCtrl, _rulesCtrl,
-      _contactEmailCtrl, _contactPhoneCtrl,
+      _titleCtrl,
+      _descCtrl,
+      _locationCtrl,
+      _addressCtrl,
+      _onlineLinkCtrl,
+      _capacityCtrl,
+      _priceCtrl,
+      _programCtrl,
+      _rulesCtrl,
+      _contactEmailCtrl,
+      _contactPhoneCtrl,
     ]) {
       c.dispose();
     }
@@ -96,9 +107,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
   // Date pickers
   // -------------------------------------------------------------------------
 
-  Future<void> _pickDate(BuildContext context,
-      {required DateTime? current,
-      required ValueChanged<DateTime> onPicked}) async {
+  Future<void> _pickDate(
+    BuildContext context, {
+    required DateTime? current,
+    required ValueChanged<DateTime> onPicked,
+  }) async {
     final picked = await showDatePicker(
       context: context,
       initialDate: current ?? DateTime.now(),
@@ -136,29 +149,41 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
     final now = DateTime.now().toIso8601String();
     final event = EventModel(
-      id:                   widget.existingEvent?.id,
-      organizerId:          widget.organizerId,
-      title:                _titleCtrl.text.trim(),
-      description:          _descCtrl.text.trim(),
-      type:                 _type,
-      category:             _category,
-      level:                _level,
-      mode:                 _mode,
-      status:               _status,
-      location:             _locationCtrl.text.trim().isEmpty ? null : _locationCtrl.text.trim(),
-      address:              _addressCtrl.text.trim().isEmpty ? null : _addressCtrl.text.trim(),
-      onlineLink:           _onlineLinkCtrl.text.trim().isEmpty ? null : _onlineLinkCtrl.text.trim(),
-      startDate:            _startDate!.toIso8601String(),
-      endDate:              _endDate!.toIso8601String(),
+      id: widget.existingEvent?.id,
+      organizerId: widget.organizerId,
+      title: _titleCtrl.text.trim(),
+      description: _descCtrl.text.trim(),
+      type: _type,
+      category: _category,
+      level: _level,
+      mode: _mode,
+      status: _status,
+      location: _locationCtrl.text.trim().isEmpty
+          ? null
+          : _locationCtrl.text.trim(),
+      address: _addressCtrl.text.trim().isEmpty
+          ? null
+          : _addressCtrl.text.trim(),
+      onlineLink: _onlineLinkCtrl.text.trim().isEmpty
+          ? null
+          : _onlineLinkCtrl.text.trim(),
+      startDate: _startDate!.toIso8601String(),
+      endDate: _endDate!.toIso8601String(),
       registrationDeadline: _registrationDeadline?.toIso8601String(),
-      capacity:             int.tryParse(_capacityCtrl.text.trim()) ?? 0,
-      price:                double.tryParse(_priceCtrl.text.trim()) ?? 0,
-      program:              _programCtrl.text.trim().isEmpty ? null : _programCtrl.text.trim(),
-      rules:                _rulesCtrl.text.trim().isEmpty ? null : _rulesCtrl.text.trim(),
-      contactEmail:         _contactEmailCtrl.text.trim().isEmpty ? null : _contactEmailCtrl.text.trim(),
-      contactPhone:         _contactPhoneCtrl.text.trim().isEmpty ? null : _contactPhoneCtrl.text.trim(),
-      createdAt:            widget.existingEvent?.createdAt ?? now,
-      updatedAt:            now,
+      capacity: int.tryParse(_capacityCtrl.text.trim()) ?? 0,
+      price: double.tryParse(_priceCtrl.text.trim()) ?? 0,
+      program: _programCtrl.text.trim().isEmpty
+          ? null
+          : _programCtrl.text.trim(),
+      rules: _rulesCtrl.text.trim().isEmpty ? null : _rulesCtrl.text.trim(),
+      contactEmail: _contactEmailCtrl.text.trim().isEmpty
+          ? null
+          : _contactEmailCtrl.text.trim(),
+      contactPhone: _contactPhoneCtrl.text.trim().isEmpty
+          ? null
+          : _contactPhoneCtrl.text.trim(),
+      createdAt: widget.existingEvent?.createdAt ?? now,
+      updatedAt: now,
     );
 
     setState(() => _isLoading = true);
@@ -184,7 +209,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
   void _showError(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(msg, style: const TextStyle(fontFamily: EventTheme.fontFamily)),
+        content: Text(
+          msg,
+          style: const TextStyle(fontFamily: EventTheme.fontFamily),
+        ),
         backgroundColor: EventTheme.error,
         behavior: SnackBarBehavior.floating,
       ),
@@ -212,9 +240,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
               padding: EdgeInsets.only(right: 16),
               child: Center(
                 child: SizedBox(
-                  width: 20, height: 20,
+                  width: 20,
+                  height: 20,
                   child: CircularProgressIndicator(
-                    color: EventTheme.mint, strokeWidth: 2,
+                    color: EventTheme.mint,
+                    strokeWidth: 2,
                   ),
                 ),
               ),
@@ -253,10 +283,17 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Titre
             TextFormField(
               controller: _titleCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
-              decoration: EventTheme.inputDecoration(label: 'Titre *', hint: 'Titre de l\'événement'),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
+              decoration: EventTheme.inputDecoration(
+                label: 'Titre *',
+                hint: 'Titre de l\'événement',
+              ),
               validator: (v) {
-                if (v == null || v.trim().isEmpty) return 'Le titre est obligatoire.';
+                if (v == null || v.trim().isEmpty)
+                  return 'Le titre est obligatoire.';
                 if (v.trim().length < 3) return 'Minimum 3 caractères.';
                 return null;
               },
@@ -266,11 +303,15 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Description
             TextFormField(
               controller: _descCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(label: 'Description *'),
               maxLines: 4,
               validator: (v) {
-                if (v == null || v.trim().isEmpty) return 'La description est obligatoire.';
+                if (v == null || v.trim().isEmpty)
+                  return 'La description est obligatoire.';
                 return null;
               },
             ),
@@ -319,9 +360,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
             _buildDateField(
               label: 'Date de début *',
               value: _startDate,
-              onTap: () => _pickDate(context,
-                  current: _startDate,
-                  onPicked: (d) => setState(() => _startDate = d)),
+              onTap: () => _pickDate(
+                context,
+                current: _startDate,
+                onPicked: (d) => setState(() => _startDate = d),
+              ),
             ),
             const SizedBox(height: 14),
 
@@ -329,15 +372,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
             _buildDateField(
               label: 'Date de fin *',
               value: _endDate,
-              onTap: () => _pickDate(context,
-                  current: _endDate,
-                  onPicked: (d) {
-                    if (_startDate != null && !d.isAfter(_startDate!)) {
-                      _showError('La date de fin doit être après la date de début.');
-                      return;
-                    }
-                    setState(() => _endDate = d);
-                  }),
+              onTap: () => _pickDate(
+                context,
+                current: _endDate,
+                onPicked: (d) {
+                  if (_startDate != null && !d.isAfter(_startDate!)) {
+                    _showError(
+                      'La date de fin doit être après la date de début.',
+                    );
+                    return;
+                  }
+                  setState(() => _endDate = d);
+                },
+              ),
             ),
             const SizedBox(height: 14),
 
@@ -345,9 +392,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
             _buildDateField(
               label: 'Date limite d\'inscription (optionnel)',
               value: _registrationDeadline,
-              onTap: () => _pickDate(context,
-                  current: _registrationDeadline,
-                  onPicked: (d) => setState(() => _registrationDeadline = d)),
+              onTap: () => _pickDate(
+                context,
+                current: _registrationDeadline,
+                onPicked: (d) => setState(() => _registrationDeadline = d),
+              ),
               canClear: true,
               onClear: () => setState(() => _registrationDeadline = null),
             ),
@@ -359,10 +408,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Lieu
             TextFormField(
               controller: _locationCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Lieu', hint: 'Ville, salle, université…',
-                  prefix: const Icon(Icons.location_on_outlined, color: EventTheme.textSoft, size: 20)),
+                label: 'Lieu',
+                hint: 'Ville, salle, université…',
+                prefix: const Icon(
+                  Icons.location_on_outlined,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
               validator: (v) {
                 if (_mode == 'presentiel' && (v == null || v.trim().isEmpty)) {
                   return 'Le lieu est obligatoire pour un événement présentiel.';
@@ -375,19 +433,32 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Adresse
             TextFormField(
               controller: _addressCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
-              decoration: EventTheme.inputDecoration(label: 'Adresse complète (optionnel)'),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
+              decoration: EventTheme.inputDecoration(
+                label: 'Adresse complète (optionnel)',
+              ),
             ),
             const SizedBox(height: 14),
 
             // Lien en ligne
             TextFormField(
               controller: _onlineLinkCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Lien Google Meet / en ligne',
-                  hint: 'https://meet.google.com/xxx-yyyy-zzz',
-                  prefix: const Icon(Icons.videocam_outlined, color: EventTheme.textSoft, size: 20)),
+                label: 'Lien Google Meet / en ligne',
+                hint: 'https://meet.google.com/xxx-yyyy-zzz',
+                prefix: const Icon(
+                  Icons.videocam_outlined,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
               keyboardType: TextInputType.url,
               validator: (v) {
                 if (_mode == 'enligne' && (v == null || v.trim().isEmpty)) {
@@ -410,15 +481,24 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Capacité
             TextFormField(
               controller: _capacityCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Capacité (places) *',
-                  prefix: const Icon(Icons.people_outline, color: EventTheme.textSoft, size: 20)),
+                label: 'Capacité (places) *',
+                prefix: const Icon(
+                  Icons.people_outline,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               validator: (v) {
                 final n = int.tryParse(v ?? '');
-                if (n == null || n <= 0) return 'Capacité invalide (entier > 0).';
+                if (n == null || n <= 0)
+                  return 'Capacité invalide (entier > 0).';
                 return null;
               },
             ),
@@ -427,11 +507,22 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Prix
             TextFormField(
               controller: _priceCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Prix (DZD)', hint: '0 = gratuit',
-                  prefix: const Icon(Icons.payments_outlined, color: EventTheme.textSoft, size: 20)),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                label: 'Prix (DZD)',
+                hint: '0 = gratuit',
+                prefix: const Icon(
+                  Icons.payments_outlined,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (v) {
                 final n = double.tryParse(v ?? '');
                 if (n == null || n < 0) return 'Prix invalide (≥ 0).';
@@ -446,9 +537,14 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Programme
             TextFormField(
               controller: _programCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Programme (optionnel)', hint: 'Déroulement de l\'événement…'),
+                label: 'Programme (optionnel)',
+                hint: 'Déroulement de l\'événement…',
+              ),
               maxLines: 3,
             ),
             const SizedBox(height: 14),
@@ -456,9 +552,14 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Règlement
             TextFormField(
               controller: _rulesCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Règlement (optionnel)', hint: 'Règles et conditions…'),
+                label: 'Règlement (optionnel)',
+                hint: 'Règles et conditions…',
+              ),
               maxLines: 3,
             ),
 
@@ -469,10 +570,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Email contact
             TextFormField(
               controller: _contactEmailCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'E-mail de contact', hint: 'contact@exemple.com',
-                  prefix: const Icon(Icons.email_outlined, color: EventTheme.textSoft, size: 20)),
+                label: 'E-mail de contact',
+                hint: 'contact@exemple.com',
+                prefix: const Icon(
+                  Icons.email_outlined,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
               keyboardType: TextInputType.emailAddress,
               validator: (v) {
                 if (v != null && v.trim().isNotEmpty) {
@@ -487,10 +597,18 @@ class _EventFormScreenState extends State<EventFormScreen> {
             // Téléphone contact
             TextFormField(
               controller: _contactPhoneCtrl,
-              style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily),
+              style: const TextStyle(
+                color: EventTheme.text,
+                fontFamily: EventTheme.fontFamily,
+              ),
               decoration: EventTheme.inputDecoration(
-                  label: 'Téléphone de contact',
-                  prefix: const Icon(Icons.phone_outlined, color: EventTheme.textSoft, size: 20)),
+                label: 'Téléphone de contact',
+                prefix: const Icon(
+                  Icons.phone_outlined,
+                  color: EventTheme.textSoft,
+                  size: 20,
+                ),
+              ),
               keyboardType: TextInputType.phone,
             ),
 
@@ -514,7 +632,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
     return DropdownButtonFormField<T>(
       initialValue: value,
       dropdownColor: EventTheme.surfaceHigh,
-      style: const TextStyle(color: EventTheme.text, fontFamily: EventTheme.fontFamily, fontSize: 14),
+      style: const TextStyle(
+        color: EventTheme.text,
+        fontFamily: EventTheme.fontFamily,
+        fontSize: 14,
+      ),
       decoration: EventTheme.inputDecoration(label: label),
       items: items.entries
           .map((e) => DropdownMenuItem<T>(value: e.key, child: Text(e.value)))
@@ -532,8 +654,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }) {
     final display = value != null
         ? '${value.day.toString().padLeft(2, '0')}/'
-          '${value.month.toString().padLeft(2, '0')}/'
-          '${value.year}'
+              '${value.month.toString().padLeft(2, '0')}/'
+              '${value.year}'
         : 'Sélectionner une date';
 
     return GestureDetector(
@@ -544,14 +666,18 @@ class _EventFormScreenState extends State<EventFormScreen> {
           color: EventTheme.surfaceHigh,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: value != null
-                  ? EventTheme.mint.withValues(alpha: 0.5)
-                  : EventTheme.textSoft.withValues(alpha: 0.25)),
+            color: value != null
+                ? EventTheme.mint.withValues(alpha: 0.5)
+                : EventTheme.textSoft.withValues(alpha: 0.25),
+          ),
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today_outlined,
-                size: 18, color: EventTheme.textSoft),
+            const Icon(
+              Icons.calendar_today_outlined,
+              size: 18,
+              color: EventTheme.textSoft,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -564,7 +690,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     style: TextStyle(
                       fontFamily: EventTheme.fontFamily,
                       fontSize: 14,
-                      color: value != null ? EventTheme.text : EventTheme.textSoft,
+                      color: value != null
+                          ? EventTheme.text
+                          : EventTheme.textSoft,
                     ),
                   ),
                 ],
@@ -573,10 +701,18 @@ class _EventFormScreenState extends State<EventFormScreen> {
             if (canClear && value != null)
               GestureDetector(
                 onTap: onClear,
-                child: const Icon(Icons.close, size: 18, color: EventTheme.textSoft),
+                child: const Icon(
+                  Icons.close,
+                  size: 18,
+                  color: EventTheme.textSoft,
+                ),
               ),
             if (!(canClear && value != null))
-              const Icon(Icons.chevron_right, color: EventTheme.textSoft, size: 20),
+              const Icon(
+                Icons.chevron_right,
+                color: EventTheme.textSoft,
+                size: 20,
+              ),
           ],
         ),
       ),
@@ -592,10 +728,14 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(width: 3, height: 16,
-            decoration: BoxDecoration(
-                color: EventTheme.mint,
-                borderRadius: BorderRadius.circular(2))),
+        Container(
+          width: 3,
+          height: 16,
+          decoration: BoxDecoration(
+            color: EventTheme.mint,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
         const SizedBox(width: 8),
         Text(title, style: EventTheme.sectionTitle),
       ],

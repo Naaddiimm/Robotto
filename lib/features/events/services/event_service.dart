@@ -132,15 +132,14 @@ class EventService {
     String? mode,
     String? status,
     String? searchQuery,
-  }) =>
-      _repo.filterEvents(
-        type: type,
-        category: category,
-        level: level,
-        mode: mode,
-        status: status,
-        searchQuery: searchQuery,
-      );
+  }) => _repo.filterEvents(
+    type: type,
+    category: category,
+    level: level,
+    mode: mode,
+    status: status,
+    searchQuery: searchQuery,
+  );
 
   // -------------------------------------------------------------------------
   // UPDATE
@@ -162,7 +161,10 @@ class EventService {
   /// NOTE v1 : aucune restriction de rôle — tout utilisateur connecté peut publier.
   /// TODO v2 : restreindre à requesterId == organizerId quand les rôles seront gérés.
   Future<ServiceResult<void>> publishEvent(
-      int id, int requesterId, int organizerId) async {
+    int id,
+    int requesterId,
+    int organizerId,
+  ) async {
     try {
       await _repo.updateEventStatus(id, 'published');
       return ServiceResult.success(null);
@@ -173,7 +175,10 @@ class EventService {
 
   /// Annule un événement.
   Future<ServiceResult<void>> cancelEvent(
-      int id, int requesterId, int organizerId) async {
+    int id,
+    int requesterId,
+    int organizerId,
+  ) async {
     try {
       await _repo.updateEventStatus(id, 'cancelled');
       return ServiceResult.success(null);
@@ -190,7 +195,10 @@ class EventService {
   /// NOTE v1 : aucune restriction de rôle — tout utilisateur connecté peut supprimer.
   /// TODO v2 : restreindre à requesterId == organizerId quand les rôles seront gérés.
   Future<ServiceResult<void>> deleteEvent(
-      int id, int requesterId, int organizerId) async {
+    int id,
+    int requesterId,
+    int organizerId,
+  ) async {
     try {
       await _repo.deleteEvent(id);
       return ServiceResult.success(null);

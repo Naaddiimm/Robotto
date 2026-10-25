@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+
 import 'shop_theme.dart';
 
 /// PDF manual upload field. Uses file_picker with FileType.custom and
@@ -125,10 +127,7 @@ class _PdfPickerFieldState extends State<PdfPickerField> {
             style: ShopTheme.labelStyle,
           ),
         ),
-        if (_path != null && _name != null)
-          _fileChip()
-        else
-          _uploadButton(),
+        if (_path != null && _name != null) _fileChip() else _uploadButton(),
         if (_error != null)
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 4.0),
@@ -186,9 +185,7 @@ class _PdfPickerFieldState extends State<PdfPickerField> {
       decoration: BoxDecoration(
         color: ShopTheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: ShopTheme.violet.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: ShopTheme.violet.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -256,11 +253,7 @@ class _PdfPickerFieldState extends State<PdfPickerField> {
                 color: ShopTheme.error.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.close,
-                size: 16,
-                color: ShopTheme.error,
-              ),
+              child: Icon(Icons.close, size: 16, color: ShopTheme.error),
             ),
           ),
         ],

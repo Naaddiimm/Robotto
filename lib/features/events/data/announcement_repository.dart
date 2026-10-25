@@ -25,13 +25,16 @@ class AnnouncementRepository {
   /// Annonces liées à un événement précis.
   Future<List<EventAnnouncement>> getByEvent(int eventId) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT a.*, e.title as event_title
       FROM event_announcements a
       LEFT JOIN events e ON e.id = a.event_id
       WHERE a.event_id = ?
       ORDER BY a.is_pinned DESC, a.created_at DESC
-    ''', [eventId]);
+    ''',
+      [eventId],
+    );
     return maps.map(EventAnnouncement.fromMap).toList();
   }
 
@@ -48,13 +51,16 @@ class AnnouncementRepository {
 
   Future<EventAnnouncement?> getById(int id) async {
     final db = await _db.database;
-    final maps = await db.rawQuery('''
+    final maps = await db.rawQuery(
+      '''
       SELECT a.*, e.title as event_title
       FROM event_announcements a
       LEFT JOIN events e ON e.id = a.event_id
       WHERE a.id = ?
       LIMIT 1
-    ''', [id]);
+    ''',
+      [id],
+    );
     if (maps.isEmpty) return null;
     return EventAnnouncement.fromMap(maps.first);
   }
@@ -63,14 +69,21 @@ class AnnouncementRepository {
     final db = await _db.database;
     final map = a.toMap();
     map['updated_at'] = DateTime.now().toIso8601String();
-    return await db.update('event_announcements', map,
-        where: 'id = ?', whereArgs: [a.id]);
+    return await db.update(
+      'event_announcements',
+      map,
+      where: 'id = ?',
+      whereArgs: [a.id],
+    );
   }
 
   Future<int> delete(int id) async {
     final db = await _db.database;
-    return await db.delete('event_announcements',
-        where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'event_announcements',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<int> togglePin(int id, bool pinned) async {

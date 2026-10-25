@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import '../data/repositories/product_repository.dart';
 import 'shop_theme.dart';
 
@@ -9,16 +11,13 @@ class ProductCard extends StatelessWidget {
   final ProductWithCover item;
   final VoidCallback onTap;
 
-  const ProductCard({
-    super.key,
-    required this.item,
-    required this.onTap,
-  });
+  const ProductCard({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final product = item.product;
-    final hasCover = item.coverPath != null && File(item.coverPath!).existsSync();
+    final hasCover =
+        item.coverPath != null && File(item.coverPath!).existsSync();
 
     return GestureDetector(
       onTap: onTap,

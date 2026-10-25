@@ -32,16 +32,16 @@ class EventAnnouncement {
   };
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'event_id': eventId,
-        'author_id': authorId,
-        'title': title,
-        'content': content,
-        'type': type,
-        'is_pinned': isPinned ? 1 : 0,
-        'created_at': createdAt,
-        'updated_at': updatedAt,
-      };
+    'id': id,
+    'event_id': eventId,
+    'author_id': authorId,
+    'title': title,
+    'content': content,
+    'type': type,
+    'is_pinned': isPinned ? 1 : 0,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+  };
 
   factory EventAnnouncement.fromMap(Map<String, dynamic> map) =>
       EventAnnouncement(

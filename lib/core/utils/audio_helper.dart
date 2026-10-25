@@ -19,7 +19,11 @@ class AudioHelper {
       await SystemSound.play(SystemSoundType.click);
       await HapticFeedback.mediumImpact();
       // Play crisp sci-fi beep sound
-      await _player.play(UrlSource('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'));
+      await _player.play(
+        UrlSource(
+          'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
+        ),
+      );
     } catch (_) {}
   }
 

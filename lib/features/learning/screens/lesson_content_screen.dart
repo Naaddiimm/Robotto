@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
+
 import '../learning_theme.dart';
 import '../data/learning_models.dart';
 import '../widgets/orientation_aware_wrapper.dart';
@@ -15,7 +16,8 @@ final Map<int, String> _kLessonContent = {
   // ── Formation: Initiation à Arduino ──────────────────────────────────────
 
   // Module 1 · Introduction
-  101: "Arduino est une plateforme électronique open-source conçue pour rendre "
+  101:
+      "Arduino est une plateforme électronique open-source conçue pour rendre "
       "la programmation matérielle accessible à tous — des débutants aux experts.\n\n"
       "**Qu'est-ce qu'Arduino ?**\n\n"
       "- Une carte électronique avec un microcontrôleur (AVR ou ARM)\n"
@@ -43,7 +45,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Téléversez ce sketch et observez la LED clignoter — vous venez de programmer votre premier projet !",
 
-  102: "Avant d'écrire du code Arduino, vous devez installer et configurer l'IDE "
+  102:
+      "Avant d'écrire du code Arduino, vous devez installer et configurer l'IDE "
       "(Integrated Development Environment).\n\n"
       "**Téléchargement**\n\n"
       "1. Rendez-vous sur arduino.cc/en/software\n"
@@ -66,7 +69,8 @@ final Map<int, String> _kLessonContent = {
       "Si vous voyez « Téléversement terminé », votre environnement est prêt !",
 
   // Module 2 · Capteurs (reuse ids from kSampleCours lessons = ids 11-15 already defined below)
-  201: "Un capteur est un composant électronique qui mesure une grandeur physique "
+  201:
+      "Un capteur est un composant électronique qui mesure une grandeur physique "
       "(température, lumière, distance…) et la convertit en signal électrique "
       "lisible par Arduino.\n\n"
       "**Branchement de base**\n\n"
@@ -83,7 +87,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Une fois câblé, vous pouvez lire la valeur avec analogRead(A0) dans votre sketch.",
 
-  202: "Après avoir branché votre capteur, il est temps de lire ses données depuis le code.\n\n"
+  202:
+      "Après avoir branché votre capteur, il est temps de lire ses données depuis le code.\n\n"
       "**Fonction analogRead()**\n\n"
       "```cpp\n"
       "int valeur = analogRead(A0);\n"
@@ -110,7 +115,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Ouvrez le Moniteur Série pour observer les données en temps réel.",
 
-  203: "Afficher les valeurs du capteur sur l'écran LCD ou le Moniteur Série vous permet "
+  203:
+      "Afficher les valeurs du capteur sur l'écran LCD ou le Moniteur Série vous permet "
       "de déboguer et de comprendre le comportement de votre montage.\n\n"
       "**Avec le Moniteur Série**\n\n"
       "Utilisez Serial.println() pour envoyer les données au PC via USB.\n\n"
@@ -135,7 +141,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Connectez l'écran LCD : SDA → A4, SCL → A5, VCC → 5 V, GND → GND.",
 
-  204: "Dans ce mini-projet, vous allez combiner tout ce que vous avez appris "
+  204:
+      "Dans ce mini-projet, vous allez combiner tout ce que vous avez appris "
       "pour créer un système d'alerte simple.\n\n"
       "**Objectif**\n\n"
       "Allumer une LED lorsque la valeur du capteur dépasse un seuil.\n\n"
@@ -159,7 +166,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Ajustez la valeur de SEUIL selon votre capteur.",
 
-  205: "**Quiz — Module 2 · Capteurs**\n\n"
+  205:
+      "**Quiz — Module 2 · Capteurs**\n\n"
       "Répondez aux questions suivantes pour valider vos acquis.\n\n"
       "1. Quelle fonction lit une valeur sur une broche analogique ?\n"
       "   - a) digitalRead()\n"
@@ -183,7 +191,8 @@ final Map<int, String> _kLessonContent = {
       "   - c) Résistance",
 
   // Module 3 · Actionneurs
-  301: "Un moteur à courant continu (DC) tourne lorsqu'un courant le traverse. "
+  301:
+      "Un moteur à courant continu (DC) tourne lorsqu'un courant le traverse. "
       "Pour le contrôler depuis Arduino, on utilise un pont en H (ex. L298N ou L9110S).\n\n"
       "**Câblage L298N**\n\n"
       "```\n"
@@ -222,7 +231,8 @@ final Map<int, String> _kLessonContent = {
       "}\n"
       "```",
 
-  302: "Un servomoteur tourne avec précision vers un angle donné (généralement 0° à 180°).\n\n"
+  302:
+      "Un servomoteur tourne avec précision vers un angle donné (généralement 0° à 180°).\n\n"
       "**Câblage**\n\n"
       "| Fil servomoteur | Arduino |\n"
       "|----------------|---------|\n"
@@ -248,7 +258,8 @@ final Map<int, String> _kLessonContent = {
       "Astuce : évitez d'alimenter un servomoteur puissant directement depuis le 5 V Arduino "
       "— utilisez une alimentation externe partagée sur le GND.",
 
-  303: "**Projet final — Robot éviteur d'obstacles**\n\n"
+  303:
+      "**Projet final — Robot éviteur d'obstacles**\n\n"
       "Combinez un capteur ultrasonique HC-SR04, deux moteurs DC et un pont en H "
       "pour créer un robot qui évite les obstacles.\n\n"
       "**Matériel**\n"
@@ -283,7 +294,8 @@ final Map<int, String> _kLessonContent = {
   // ── Formation: Python & IA ─────────────────────────────────────────────────
 
   // Module 1 · Python avancé
-  401: "La programmation orientée objet (POO) vous permet d'organiser votre code "
+  401:
+      "La programmation orientée objet (POO) vous permet d'organiser votre code "
       "autour de classes et d'objets, rendant vos programmes plus modulaires et réutilisables.\n\n"
       "**Définir une classe**\n\n"
       "```python\n"
@@ -323,7 +335,8 @@ final Map<int, String> _kLessonContent = {
       "        return self.__capacite\n"
       "```",
 
-  402: "Les générateurs permettent de produire des valeurs une à une, sans charger "
+  402:
+      "Les générateurs permettent de produire des valeurs une à une, sans charger "
       "toute la séquence en mémoire — idéal pour traiter de grands flux de données.\n\n"
       "**yield — le mot-clé clé**\n\n"
       "```python\n"
@@ -358,7 +371,8 @@ final Map<int, String> _kLessonContent = {
       "    print(f'Temp: {temperature} °C')\n"
       "```",
 
-  403: "Les décorateurs permettent d'ajouter un comportement à une fonction existante "
+  403:
+      "Les décorateurs permettent d'ajouter un comportement à une fonction existante "
       "sans la modifier — un principe fondamental de la programmation fonctionnelle.\n\n"
       "**Principe de base**\n\n"
       "```python\n"
@@ -397,7 +411,8 @@ final Map<int, String> _kLessonContent = {
       "- **@functools.lru_cache** : mémoïsation automatique",
 
   // Module 2 · NumPy & Pandas
-  501: "NumPy est la bibliothèque de calcul numérique de référence en Python. "
+  501:
+      "NumPy est la bibliothèque de calcul numérique de référence en Python. "
       "Elle fournit des tableaux multidimensionnels (ndarray) hautement performants.\n\n"
       "**Installer et importer**\n\n"
       "```python\n"
@@ -435,7 +450,8 @@ final Map<int, String> _kLessonContent = {
       "print(filtrees.mean())   # Moyenne sans le bruit\n"
       "```",
 
-  502: "Pandas est la bibliothèque Python pour la manipulation de données tabulaires. "
+  502:
+      "Pandas est la bibliothèque Python pour la manipulation de données tabulaires. "
       "Elle repose sur deux structures : la Series (colonne) et le DataFrame (tableau).\n\n"
       "**Installer et importer**\n\n"
       "```python\n"
@@ -477,7 +493,8 @@ final Map<int, String> _kLessonContent = {
       "un pipeline complet d'analyse de données.",
 
   // ── Cours standalone (kSampleCours lessons) ───────────────────────────────
-  11: "Un capteur est un composant électronique qui mesure une grandeur physique "
+  11:
+      "Un capteur est un composant électronique qui mesure une grandeur physique "
       "(température, lumière, distance…) et la convertit en signal électrique "
       "lisible par Arduino.\n\n"
       "**Branchement de base**\n\n"
@@ -494,7 +511,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Une fois câblé, vous pouvez lire la valeur avec analogRead(A0) dans votre sketch.",
 
-  12: "Après avoir branché votre capteur, il est temps de lire ses données depuis le code.\n\n"
+  12:
+      "Après avoir branché votre capteur, il est temps de lire ses données depuis le code.\n\n"
       "**Fonction analogRead()**\n\n"
       "```cpp\n"
       "int valeur = analogRead(A0);\n"
@@ -521,7 +539,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Ouvrez le Moniteur Série pour observer les données en temps réel.",
 
-  13: "Afficher les valeurs du capteur sur l'écran LCD ou le Moniteur Série vous permet "
+  13:
+      "Afficher les valeurs du capteur sur l'écran LCD ou le Moniteur Série vous permet "
       "de déboguer et de comprendre le comportement de votre montage.\n\n"
       "**Avec le Moniteur Série**\n\n"
       "Utilisez Serial.println() pour envoyer les données au PC via USB.\n\n"
@@ -546,7 +565,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Connectez l'écran LCD : SDA → A4, SCL → A5, VCC → 5 V, GND → GND.",
 
-  14: "Dans ce mini-projet, vous allez combiner tout ce que vous avez appris "
+  14:
+      "Dans ce mini-projet, vous allez combiner tout ce que vous avez appris "
       "pour créer un système d'alerte simple.\n\n"
       "**Objectif**\n\n"
       "Allumer une LED lorsque la valeur du capteur dépasse un seuil.\n\n"
@@ -570,7 +590,8 @@ final Map<int, String> _kLessonContent = {
       "```\n\n"
       "Ajustez la valeur de SEUIL selon votre capteur.",
 
-  15: "**Quiz — Module 2 · Capteurs**\n\n"
+  15:
+      "**Quiz — Module 2 · Capteurs**\n\n"
       "Répondez aux questions suivantes pour valider vos acquis.\n\n"
       "1. Quelle fonction lit une valeur sur une broche analogique ?\n"
       "   - a) digitalRead()\n"
@@ -593,7 +614,8 @@ final Map<int, String> _kLessonContent = {
       "   - **b) Capteur ✓**\n"
       "   - c) Résistance",
 
-  21: "Python est un langage de programmation interprété, lisible et polyvalent. "
+  21:
+      "Python est un langage de programmation interprété, lisible et polyvalent. "
       "Il est idéal pour débuter en programmation.\n\n"
       "**Variables et types de base**\n\n"
       "```python\n"
@@ -619,7 +641,8 @@ final Map<int, String> _kLessonContent = {
       "Python détermine automatiquement le type lors de l'assignation — "
       "pas besoin de le déclarer.",
 
-  22: "Les conditions permettent d'exécuter du code uniquement si une certaine "
+  22:
+      "Les conditions permettent d'exécuter du code uniquement si une certaine "
       "expression est vraie.\n\n"
       "**Structure if / elif / else**\n\n"
       "```python\n"
@@ -648,7 +671,8 @@ final Map<int, String> _kLessonContent = {
       '    print("Accès autorisé")\n'
       "```",
 
-  23: "Les boucles permettent de répéter un bloc de code plusieurs fois.\n\n"
+  23:
+      "Les boucles permettent de répéter un bloc de code plusieurs fois.\n\n"
       "**Boucle for**\n\n"
       "```python\n"
       "for i in range(5):\n"
@@ -678,7 +702,8 @@ final Map<int, String> _kLessonContent = {
       "    print(i)\n"
       "```",
 
-  24: "Une fonction est un bloc de code réutilisable qui effectue une tâche précise.\n\n"
+  24:
+      "Une fonction est un bloc de code réutilisable qui effectue une tâche précise.\n\n"
       "**Définir une fonction**\n\n"
       "```python\n"
       "def saluer(nom):\n"
@@ -702,7 +727,8 @@ final Map<int, String> _kLessonContent = {
       "Bonne pratique : une fonction = une seule responsabilité. "
       "Donnez-lui un nom de verbe (calculer_, afficher_, lire_).",
 
-  31: "Un moteur à courant continu (DC) tourne lorsqu'un courant le traverse. "
+  31:
+      "Un moteur à courant continu (DC) tourne lorsqu'un courant le traverse. "
       "Pour le contrôler depuis Arduino, on utilise un pont en H (ex. L298N ou L9110S).\n\n"
       "**Câblage L298N**\n\n"
       "```\n"
@@ -741,7 +767,8 @@ final Map<int, String> _kLessonContent = {
       "}\n"
       "```",
 
-  32: "Un servomoteur tourne avec précision vers un angle donné (généralement 0° à 180°).\n\n"
+  32:
+      "Un servomoteur tourne avec précision vers un angle donné (généralement 0° à 180°).\n\n"
       "**Câblage**\n\n"
       "| Fil servomoteur | Arduino |\n"
       "|----------------|---------|\n"
@@ -767,7 +794,8 @@ final Map<int, String> _kLessonContent = {
       "Astuce : évitez d'alimenter un servomoteur puissant directement depuis le 5 V Arduino "
       "— utilisez une alimentation externe partagée sur le GND.",
 
-  33: "**Projet final — Robot éviteur d'obstacles**\n\n"
+  33:
+      "**Projet final — Robot éviteur d'obstacles**\n\n"
       "Combinez un capteur ultrasonique HC-SR04, deux moteurs DC et un pont en H "
       "pour créer un robot qui évite les obstacles.\n\n"
       "**Matériel**\n"
@@ -849,125 +877,168 @@ class LessonContentScreen extends StatelessWidget {
   }
 
   // ── Portrait layout ────────────────────────────────────────────────────────
-  Widget _buildPortrait(BuildContext context, String content, bool active, bool done) =>
-      Column(children: [
-        _buildHeader(context, done, active),
-        if (lesson.videoId != null && lesson.videoId!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: YouTubePlayerSection(videoId: lesson.videoId, label: 'Vidéo de la leçon'),
-          ),
-        _buildMetaBar(active),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-            children: _buildContent(content),
+  Widget _buildPortrait(
+    BuildContext context,
+    String content,
+    bool active,
+    bool done,
+  ) => Column(
+    children: [
+      _buildHeader(context, done, active),
+      if (lesson.videoId != null && lesson.videoId!.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: YouTubePlayerSection(
+            videoId: lesson.videoId,
+            label: 'Vidéo de la leçon',
           ),
         ),
-        _buildBottomBar(context),
-      ]);
+      _buildMetaBar(active),
+      Expanded(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+          children: _buildContent(content),
+        ),
+      ),
+      _buildBottomBar(context),
+    ],
+  );
 
   // ── Landscape layout — everything scrollable ───────────────────────────────
-  Widget _buildLandscape(BuildContext context, String content, bool active, bool done) =>
-      Column(children: [
-        _buildHeader(context, done, active),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            children: [
-              if (lesson.videoId != null && lesson.videoId!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: YouTubePlayerSection(videoId: lesson.videoId, label: 'Vidéo de la leçon'),
+  Widget _buildLandscape(
+    BuildContext context,
+    String content,
+    bool active,
+    bool done,
+  ) => Column(
+    children: [
+      _buildHeader(context, done, active),
+      Expanded(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          children: [
+            if (lesson.videoId != null && lesson.videoId!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: YouTubePlayerSection(
+                  videoId: lesson.videoId,
+                  label: 'Vidéo de la leçon',
                 ),
-              _buildMetaBar(active),
-              ..._buildContent(content),
-              const SizedBox(height: 12),
-              _buildBottomBar(context),
+              ),
+            _buildMetaBar(active),
+            ..._buildContent(content),
+            const SizedBox(height: 12),
+            _buildBottomBar(context),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildHeader(BuildContext context, bool done, bool active) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: LearningTheme.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: LearningTheme.border),
+            ),
+            child: const Icon(
+              Icons.chevron_left,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                coursTitle,
+                style: LearningTheme.captionStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                lesson.title,
+                style: const TextStyle(
+                  fontFamily: LearningTheme.font,
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
         ),
-      ]);
-
-  Widget _buildHeader(BuildContext context, bool done, bool active) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: LearningTheme.surface,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: LearningTheme.border),
-                ),
-                child: const Icon(Icons.chevron_left,
-                    color: Colors.white, size: 28),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(coursTitle,
-                      style: LearningTheme.captionStyle,
-                      overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 2),
-                  Text(lesson.title,
-                      style: const TextStyle(
-                          fontFamily: LearningTheme.font,
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700),
-                      overflow: TextOverflow.ellipsis),
-                ],
-              ),
-            ),
-            if (done)
-              _StateBadge(
-                  icon: Icons.check_circle_rounded,
-                  label: 'Terminée',
-                  color: LearningTheme.mint)
-            else if (active)
-              _StateBadge(
-                  icon: Icons.play_circle_rounded,
-                  label: 'En cours',
-                  color: LearningTheme.violet),
-            const SizedBox(width: 8),
-            const RotateHintBadge(),
-          ],
-        ),
-      );
+        if (done)
+          _StateBadge(
+            icon: Icons.check_circle_rounded,
+            label: 'Terminée',
+            color: LearningTheme.mint,
+          )
+        else if (active)
+          _StateBadge(
+            icon: Icons.play_circle_rounded,
+            label: 'En cours',
+            color: LearningTheme.violet,
+          ),
+        const SizedBox(width: 8),
+        const RotateHintBadge(),
+      ],
+    ),
+  );
 
   Widget _buildMetaBar(bool active) => Container(
     margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    decoration: LearningTheme.cardDeco(border: active ? LearningTheme.mint : null),
-    child: Row(children: [
-      const Icon(Icons.menu_book_rounded, color: LearningTheme.mint, size: 18),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Text(lesson.title,
+    decoration: LearningTheme.cardDeco(
+      border: active ? LearningTheme.mint : null,
+    ),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.menu_book_rounded,
+          color: LearningTheme.mint,
+          size: 18,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            lesson.title,
             style: const TextStyle(
-                fontFamily: LearningTheme.font,
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w600)),
-      ),
-      const Icon(Icons.access_time_rounded,
-          color: LearningTheme.textSecond, size: 14),
-      const SizedBox(width: 4),
-      Text(lesson.duration, style: LearningTheme.captionStyle),
-    ]),
+              fontFamily: LearningTheme.font,
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const Icon(
+          Icons.access_time_rounded,
+          color: LearningTheme.textSecond,
+          size: 14,
+        ),
+        const SizedBox(width: 4),
+        Text(lesson.duration, style: LearningTheme.captionStyle),
+      ],
+    ),
   );
 
   Widget _buildBottomBar(BuildContext context) => Container(
     padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
     decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: LearningTheme.border))),
+      border: Border(top: BorderSide(color: LearningTheme.border)),
+    ),
     child: GestureDetector(
       onTap: () => Navigator.pop(context),
       child: Container(
@@ -975,7 +1046,8 @@ class LessonContentScreen extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           gradient: const LinearGradient(
-              colors: [LearningTheme.mint, LearningTheme.mintDark]),
+            colors: [LearningTheme.mint, LearningTheme.mintDark],
+          ),
         ),
         alignment: Alignment.center,
         child: const Text('Retour au cours', style: LearningTheme.buttonStyle),
@@ -1010,54 +1082,60 @@ class LessonContentScreen extends StatelessWidget {
 
       // Bold heading **text**
       if (line.startsWith('**') && line.endsWith('**') && line.length > 4) {
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 8),
-          child: Text(
-            line.replaceAll('**', ''),
-            style: const TextStyle(
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 8),
+            child: Text(
+              line.replaceAll('**', ''),
+              style: const TextStyle(
                 fontFamily: LearningTheme.font,
                 color: Colors.white,
                 fontSize: 16,
-                fontWeight: FontWeight.w700),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ));
+        );
         continue;
       }
 
       // Numbered list
       if (RegExp(r'^\d+\.').hasMatch(line.trim())) {
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 24,
-                height: 24,
-                margin: const EdgeInsets.only(right: 10, top: 1),
-                decoration: const BoxDecoration(
-                  color: LearningTheme.surface,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  line.trim().split('.').first,
-                  style: const TextStyle(
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  margin: const EdgeInsets.only(right: 10, top: 1),
+                  decoration: const BoxDecoration(
+                    color: LearningTheme.surface,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    line.trim().split('.').first,
+                    style: const TextStyle(
                       fontFamily: LearningTheme.font,
                       color: LearningTheme.mint,
                       fontSize: 11,
-                      fontWeight: FontWeight.w700),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Text(
-                  line.trim().replaceFirst(RegExp(r'^\d+\.\s*'), ''),
-                  style: LearningTheme.bodyStyle,
+                Expanded(
+                  child: Text(
+                    line.trim().replaceFirst(RegExp(r'^\d+\.\s*'), ''),
+                    style: LearningTheme.bodyStyle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ));
+        );
         continue;
       }
 
@@ -1065,42 +1143,43 @@ class LessonContentScreen extends StatelessWidget {
       if (line.trim().startsWith('- ')) {
         final text = line.trim().substring(2);
         final isBold = text.startsWith('**') && text.contains('**');
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 7, right: 10),
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: isBold
-                        ? LearningTheme.mint
-                        : LearningTheme.textSecond,
-                    shape: BoxShape.circle,
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 7, right: 10),
+                  child: Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: isBold
+                          ? LearningTheme.mint
+                          : LearningTheme.textSecond,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Text(
-                  text.replaceAll('**', ''),
-                  style: TextStyle(
+                Expanded(
+                  child: Text(
+                    text.replaceAll('**', ''),
+                    style: TextStyle(
                       fontFamily: LearningTheme.font,
                       color: isBold
                           ? LearningTheme.mint
                           : LearningTheme.textSecond,
                       fontSize: 14,
                       height: 1.6,
-                      fontWeight: isBold
-                          ? FontWeight.w600
-                          : FontWeight.w400),
+                      fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ));
+        );
         continue;
       }
 
@@ -1112,22 +1191,25 @@ class LessonContentScreen extends StatelessWidget {
             .map((c) => c.trim())
             .where((c) => c.isNotEmpty)
             .toList();
-        widgets.add(Container(
-          margin: const EdgeInsets.only(bottom: 2),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: LearningTheme.surface,
-            border: Border.all(color: LearningTheme.border),
-          ),
-          child: Row(
-            children: cells
-                .map((c) => Expanded(
+        widgets.add(
+          Container(
+            margin: const EdgeInsets.only(bottom: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: LearningTheme.surface,
+              border: Border.all(color: LearningTheme.border),
+            ),
+            child: Row(
+              children: cells
+                  .map(
+                    (c) => Expanded(
                       child: Text(c, style: LearningTheme.captionStyle),
-                    ))
-                .toList(),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
-        ));
+        );
         continue;
       }
 
@@ -1138,10 +1220,12 @@ class LessonContentScreen extends StatelessWidget {
       }
 
       // Normal paragraph
-      widgets.add(Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Text(line, style: LearningTheme.bodyStyle),
-      ));
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(line, style: LearningTheme.bodyStyle),
+        ),
+      );
     }
 
     return widgets;
@@ -1186,8 +1270,11 @@ class _StateBadge extends StatelessWidget {
   final String label;
   final Color color;
 
-  const _StateBadge(
-      {required this.icon, required this.label, required this.color});
+  const _StateBadge({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1203,12 +1290,15 @@ class _StateBadge extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 14),
           const SizedBox(width: 5),
-          Text(label,
-              style: TextStyle(
-                  fontFamily: LearningTheme.font,
-                  color: color,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: LearningTheme.font,
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );

@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'shop_theme.dart';
 
 /// Multi-photo upload field. Opens a bottom sheet with Gallery / Camera
@@ -53,7 +55,10 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 24.0,
+              horizontal: 16.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -252,10 +257,7 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
-          child: Text(
-            'Photos',
-            style: ShopTheme.labelStyle,
-          ),
+          child: Text('Photos', style: ShopTheme.labelStyle),
         ),
         SizedBox(
           height: 120,
@@ -272,9 +274,7 @@ class _PhotoPickerFieldState extends State<PhotoPickerField> {
                     decoration: BoxDecoration(
                       color: ShopTheme.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: ShopTheme.surfaceHigh,
-                      ),
+                      border: Border.all(color: ShopTheme.surfaceHigh),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

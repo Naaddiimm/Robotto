@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/data/repositories/user_repository.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -19,7 +20,8 @@ class ProfilePersonalInfoScreen extends StatefulWidget {
   });
 
   @override
-  State<ProfilePersonalInfoScreen> createState() => _ProfilePersonalInfoScreenState();
+  State<ProfilePersonalInfoScreen> createState() =>
+      _ProfilePersonalInfoScreenState();
 }
 
 class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
@@ -34,7 +36,7 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final UserRepository _userRepo = UserRepository();
-  
+
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
@@ -101,7 +103,10 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -121,7 +126,7 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
                 ],
               ),
             ),
-            
+
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
@@ -154,14 +159,20 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
                         controller: _firstNameController,
                         label: "First Name",
                         icon: Icons.person_outline,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'First name is required' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'First name is required'
+                            : null,
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(
                         controller: _lastNameController,
                         label: "Last Name",
                         icon: Icons.badge_outlined,
-                        validator: (value) => value == null || value.trim().isEmpty ? 'Last name is required' : null,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'Last name is required'
+                            : null,
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(
@@ -170,8 +181,10 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) return 'Email is required';
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return 'Enter a valid email';
+                          if (value == null || value.trim().isEmpty)
+                            return 'Email is required';
+                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value))
+                            return 'Enter a valid email';
                           return null;
                         },
                       ),
@@ -224,12 +237,17 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             foregroundColor: secondaryText,
-                            side: const BorderSide(color: surfaceHigh, width: 2),
+                            side: const BorderSide(
+                              color: surfaceHigh,
+                              width: 2,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          onPressed: _isSaving ? null : () => Navigator.pop(context),
+                          onPressed: _isSaving
+                              ? null
+                              : () => Navigator.pop(context),
                           child: const Text(
                             'Cancel',
                             style: TextStyle(
@@ -288,7 +306,10 @@ class _ProfilePersonalInfoScreenState extends State<ProfilePersonalInfoScreen> {
             prefixIcon: Icon(icon, color: secondaryText, size: 20),
             filled: true,
             fillColor: surface,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 16.0,
+              horizontal: 16.0,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
