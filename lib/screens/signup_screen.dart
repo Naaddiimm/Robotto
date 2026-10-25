@@ -24,7 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _registrationError;
   String _selectedEducation = "Secondary School";
 
-  // Design system tokens based on DESIGN.md
+  // Design system based on DESIGN.md
   static const Color bgColor = Color(0xFF091422);
   static const Color surfaceLow = Color(0xFF111C2B);
   static const Color surface = Color(0xFF15202F);

@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: bgColor,
-        canvasColor: bgColor, // Prevents white flashes in transitions and bottom sheets
+        canvasColor: bgColor,
         colorScheme: const ColorScheme.dark(
           surface: bgColor,
           primary: primaryMint,
